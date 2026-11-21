@@ -1,0 +1,21 @@
+# AI-generated configuration (Codex): local environments, credentials and runtime data.
+.venv/
+.tools/
+.env
+.env.*
+!.env.example
+.secrets/
+*.pem
+*.key
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+/data/
+/models/
+/artifacts/
+/volumes/
+*.vhdx

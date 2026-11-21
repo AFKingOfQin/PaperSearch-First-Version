@@ -1,0 +1,233 @@
+PaperSearch / M0 host and smoke evidence / 2026-11-21
+Working directory E:\PaperSearch. New repository, no HEAD or index entries.
+Pre-restart checkpoint: M0 BLOCKED at the time of these checks. For the subsequent successful live runs see phase0-services.txt.
+Values below are host observations and configuration checks, not performance benchmarks.
+
+Windows PowerShell 5.1.26100.9818. The Windows NT CurrentVersion registry values were
+EditionID Core, DisplayVersion 25H2, CurrentBuild 26200, UBR 9974.
+Get-CimInstance Win32_OperatingSystem: Microsoft Windows 11 Home, 64-bit.
+Get-CimInstance Win32_ComputerSystem: LENOVO, 82VB, HypervisorPresent True.
+Get-CimInstance Win32_Processor: i7-12700H, VirtualizationFirmwareEnabled False;
+VMMonitorModeExtensions False; SecondLevelAddressTranslationExtensions False.
+The sandbox initially denied CIM; read-only host queries returned these values.
+Treat firmware readiness for WSL as unconfirmed pending the Windows/WSL check.
+wsl --version, wsl --status and wsl --list --verbose all reported WSL absent.
+Get-Command docker,docker-compose returned no commands, and both standard
+Docker Desktop binary locations checked were absent. No system setup was performed.
+
+Verified portable Docker Compose 2.39.4 in .tools using Get-FileHash against
+docker-compose-windows-x86_64.exe.sha256 from Docker's GitHub release:
+6b3bccfabcdd172e1d9e15d011b54c9b5b13b93b1153148108f55e4349055955
+Docker Hub v2 tag metadata returned the image digests in the Compose model below.
+The Docker named pipe check used the standalone client. No daemon was available.
+
+Doctor
+.\.venv\Scripts\papersearch doctor
+
+Windows-11-10.0.26200-SP0 AMD64 | Python 3.14.4 | E:\PaperSearch\.venv\Scripts\python.exe
+CPU: 14 physical / 20 logical; RAM: 12.62 GiB available / 31.73 GiB usable
+C:\ 256.44 GiB free / 500.00 GiB
+D:\ 233.09 GiB free / 300.00 GiB
+E:\ 23.83 GiB free / 151.64 GiB
+OK Git: git version 2.56.1.windows.1
+Windows firmware virtualization flag: False (confirm in Task Manager if false)
+BLOCKED WSL package: The Windows Subsystem for Linux is not installed. You can install by running 'wsl.exe --install'.
+For more information please visit https://aka.ms/wslinstall
+BLOCKED WSL distributions: The Windows Subsystem for Linux is not installed. You can install by running 'wsl.exe --install'.
+For more information please visit https://aka.ms/wslinstall
+BLOCKED WSL 2: no distribution verified as version 2
+BLOCKED Docker CLI: docker missing from PATH
+BLOCKED Compose plugin: docker missing from PATH
+BLOCKED Docker engine (OS, version, CPUs, RAM bytes, root directory): docker missing from PATH
+
+Final test run
+.\.venv\Scripts\python -m pytest -q
+if ($LASTEXITCODE -ne 0) {exit $LASTEXITCODE}
+.\.venv\Scripts\ruff check src migrations tests
+.\.venv\Scripts\python -m pip check
+
+.....                                                                [100%]
+5 passed, 4 subtests passed in 0.17s
+All checks passed!
+No broken requirements found.
+
+Offline migration template
+.\.venv\Scripts\python -c "from mako.template import Template; t=Template(filename='migrations/script.py.mako'); s=t.render(message='template check',up_revision='test',down_revision=None,branch_labels=None,depends_on=None,imports='',upgrades='',downgrades=''); compile(s,'<in-memory revision>','exec'); print('PASS migration template renders and compiles')" 
+
+PASS migration template renders and compiles
+
+Mutable local config
+.\.venv\Scripts\python -c "from pathlib import Path; import secrets; s=Path('.env.example').read_text(); f=open('.env','x'); f.write(s.replace('MYSQL_PASSWORD=\n','MYSQL_PASSWORD='+secrets.token_hex(24)+'\n').replace('MYSQL_ROOT_PASSWORD=\n','MYSQL_ROOT_PASSWORD='+secrets.token_hex(24)+'\n')); f.close()"
+if ($LASTEXITCODE -ne 0) {exit $LASTEXITCODE}
+.\.tools\docker-compose --profile '*' config --quiet
+if ($LASTEXITCODE -ne 0) {exit $LASTEXITCODE}
+Write-Output 'PASS Compose validation with ignored local configuration'
+.\.venv\Scripts\papersearch config
+
+PASS Compose validation with ignored local configuration
+Core reserve 5 GiB, scale reserve 100 GiB
+
+Final profile validation
+$env:MYSQL_PASSWORD='validation-only'
+$env:MYSQL_ROOT_PASSWORD='validation-only-root'
+.\.tools\docker-compose --env-file .env.example --profile '*' config --quiet
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+Write-Output 'PASS Compose model'
+foreach ($profile in 'core','test','batch','embedding') {
+    Write-Output $profile
+    .\.tools\docker-compose --env-file .env.example --profile $profile config --services
+    if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+}
+.\.tools\docker-compose --env-file .env.example --profile '*' config --images
+
+PASS Compose model
+core
+kafka
+mysql
+test
+cli
+batch
+spark
+embedding
+embedding
+apache/kafka:4.1.2@sha256:5cc2a2fd93fa2687b44015eee04fb2c3edd9e526bd64bf8bec5ff1e268772e0e
+papersearch-cli
+spark:4.1.1-scala2.13-java17-python3-ubuntu@sha256:6383b28979b5356455c51dff1153e603b182ee1b250938bf20261590dca0b1ad
+python:3.14.4-slim-bookworm@sha256:fc74d22ffd0d5ac395a4b7bdda75a4539758862c49ebf3005647084631e63789
+mysql:8.4.13@sha256:a81d043930e51745522bd5c430961cf8286f0a23f0a9a2a6e0108f7ea71b0902
+
+Credentials required
+.\.tools\docker-compose --env-file .env.example --profile core config --quiet
+
+error while interpolating services.cli.environment.MYSQL_PASSWORD: required variable MYSQL_PASSWORD is missing a value: set MYSQL_PASSWORD in .env
+
+Disk preflight (with missing Docker location and explicit test inputs)
+.\.venv\Scripts\papersearch --env-file .env.example preflight
+Write-Output "missing disk location exit $LASTEXITCODE"
+$env:DOCKER_DISK_DIR = 'C:\'
+.\.venv\Scripts\papersearch --env-file .env.example preflight
+Write-Output "core test input exit $LASTEXITCODE"
+.\.venv\Scripts\papersearch --env-file .env.example preflight --scale
+Write-Output "scale test input exit $LASTEXITCODE"
+
+BLOCKED: Set DOCKER_DISK_DIR to Docker Desktop's existing disk image directory
+missing disk location exit 1
+Artifacts E:\PaperSearch: 23.83 GiB free, require 5 GiB: PASS
+Docker data disk C:\: 256.44 GiB free, require 5 GiB: PASS
+core test input exit 0
+Artifacts E:\PaperSearch: 23.83 GiB free, require 100 GiB: BLOCKED
+Docker data disk C:\: 256.44 GiB free, require 100 GiB: PASS
+scale test input exit 1
+
+Independent negative connection tests (deliberately closed loopback endpoints)
+$env:MYSQL_HOST='127.0.0.1'
+$env:MYSQL_PASSWORD='probe-only'
+$env:KAFKA_BOOTSTRAP='127.0.0.1:9092'
+.\.venv\Scripts\papersearch smoke mysql
+Write-Output "mysql smoke exit $LASTEXITCODE"
+.\.venv\Scripts\papersearch smoke kafka
+Write-Output "kafka smoke exit $LASTEXITCODE"
+
+BLOCKED: (mysql.connector.errors.DatabaseError) 2003 (HY000): Can't connect to MySQL server on '127.0.0.1:3306' (10061)
+(Background on this error at: https://sqlalche.me/e/20/4xp6)
+mysql smoke exit 1
+BLOCKED: NoBrokersAvailable
+kafka smoke exit 1
+
+Verification entry point
+$errorsFound=$null
+[void][System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path 'scripts/verify-core.ps1'),[ref]$null,[ref]$errorsFound)
+if ($errorsFound.Count -gt 0) { throw $errorsFound[0] }
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\verify-core.ps1
+
+Windows-11-10.0.26200-SP0 AMD64 | Python 3.14.4 | E:\PaperSearch\.venv\Scripts\python.exe
+CPU: 14 physical / 20 logical; RAM: 12.65 GiB available / 31.73 GiB usable
+C:\ 256.44 GiB free / 500.00 GiB
+D:\ 233.09 GiB free / 300.00 GiB
+E:\ 23.83 GiB free / 151.64 GiB
+OK Git: git version 2.56.1.windows.1
+Windows firmware virtualization flag: False (confirm in Task Manager if false)
+BLOCKED WSL package: The Windows Subsystem for Linux is not installed. You can install by running 'wsl.exe --install'.
+For more information please visit https://aka.ms/wslinstall
+BLOCKED WSL distributions: The Windows Subsystem for Linux is not installed. You can install by running 'wsl.exe --install'.
+For more information please visit https://aka.ms/wslinstall
+BLOCKED WSL 2: no distribution verified as version 2
+BLOCKED Docker CLI: docker missing from PATH
+BLOCKED Compose plugin: docker missing from PATH
+BLOCKED Docker engine (OS, version, CPUs, RAM bytes, root directory): docker missing from PATH
+Host or Linux engine check failed.
+At E:\PaperSearch\scripts\verify-core.ps1:10 char:32
++ ...  ($LASTEXITCODE -ne 0) { throw 'Host or Linux engine check failed.' }
++                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Host or Linux engine check failed.:String) [], RuntimeException
+    + FullyQualifiedErrorId : Host or Linux engine check failed.
+
+fingerprint
+.\.venv\Scripts\python -c "import hashlib; from pathlib import Path; roots=['.dockerignore','.gitignore','.env.example','pyproject.toml','requirements.lock','requirements-dev.lock','Dockerfile','compose.yaml','alembic.ini']; paths=sorted([Path(p) for p in roots]+list(Path('src/papersearch').glob('*.py'))+list(Path('scripts').glob('*.ps1'))+list(Path('tests/unit').glob('*.py'))+[Path('migrations/env.py'),Path('migrations/script.py.mako')],key=Path.as_posix); manifest=''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.as_posix()+chr(10) for p in paths); print(manifest,end=''); print('manifest SHA-256',hashlib.sha256(manifest.encode()).hexdigest())"
+
+f28d22adaa104bbeb054f79b990d9ddb2ed1c3a073c2fc4c67be45ba134ba45d  .dockerignore
+ee5535187c21215ea9457a24500da74cded58f778e4768133d3778dc5e039452  .env.example
+a1e99b9d9ba14b30c579ecec0380aec7564ee9052b4f11792f92f6f22d0abd77  .gitignore
+42e60e5c7f4f24033f04e7006004138eb73ab44168ef4aad2b421ddb119d8b10  Dockerfile
+ab204ff4d3787b09c6c8e5483538a9c15ea157d3bae812ab4b35a7566e0aec16  alembic.ini
+04274422a83318f2bd9f253bbe6c705e2b7e55a7d13282b1e085113ff28dd5f4  compose.yaml
+b15c7f037e5506b0899b832b1d94ebe64272b26ca84d3463b543afd7876d62a6  migrations/env.py
+c799453264cbf3d0248dc780dcfcba3636c29f5b01e8cac512b0da206e749c56  migrations/script.py.mako
+1dd5f534e55eb56de9d4c664ebfdff7abcefe9b263224e04d84b67ace259364a  pyproject.toml
+5c3903b2b1d61bf7682f8e90310f753838e7f96abf73bed571ff96ab87a42ab1  requirements-dev.lock
+5c19d41f36fbfbe38a28045700784ccd3a4a3cb2cc075d1bf2e0b24cc5ef6114  requirements.lock
+6397df41dc70560a5f354dd545b171b7d889a164b2a2739095578ed39984eaa4  scripts/verify-core.ps1
+cd6aa91d3c4ccb0e35ee5701849bec82db719b01a232dde76c7567853558e898  src/papersearch/__init__.py
+93aa7e2d7907f0c5ec5a5f46004fd1e0f7edc3947c972c33add20e4e46f4cad1  src/papersearch/cli.py
+99e3da3351601ba0b1eb4c448ff273abc92eb0bd713702c54f0e0ef9829e7bf5  src/papersearch/config.py
+e4e8760cd461f2a3fbbc40f4d00c86dfb98ef861a314e6b60444c1b21c8ef2f4  src/papersearch/doctor.py
+4cd1911e13c25e09fe288cba85be88c312bf5f8e65efaf0baf3a55b307219b3e  tests/unit/test_phase0.py
+manifest SHA-256 c37a0e1583c4673e1f1f50400a1cdf2df522aa704c5ab8bfe0952dab5993afc1
+
+Standalone engine probe with validation-only environment values
+.tools\docker-compose --env-file .env.example --profile core ps
+error during connect: in the default daemon configuration on Windows, the docker client must be run with elevated privileges to connect: Get "http://%2F%2F.%2Fpipe%2Fdocker_engine/v1.51/containers/json?filters=%7B%22label%22%3A%7B%22com.docker.compose.config-hash%22%3Atrue%2C%22com.docker.compose.oneoff%3DFalse%22%3Atrue%2C%22com.docker.compose.project%3Dpapersearch%22%3Atrue%7D%7D": open //./pipe/docker_engine: The system cannot find the file specified.
+
+Verified environment versions
+alembic==1.18.4
+colorama==0.4.6
+greenlet==3.5.6
+iniconfig==2.3.1
+kafka-python==2.3.2
+Mako==1.4.3
+MarkupSafe==3.0.4
+mysql-connector-python==9.6.0
+packaging==26.3
+papersearch==0.0.1
+pip==26.0.1
+pluggy==1.7.0
+psutil==7.2.2
+Pygments==2.21.0
+pytest==9.1.1
+python-dotenv==1.2.2
+ruff==0.15.12
+setuptools==81.0.0
+SQLAlchemy==2.0.49
+typing_extensions==4.16.0
+alembic heads exit 0 (empty history expected)
+
+2026-11-21 Windows setup follow-up (before required restart)
+winget show: Microsoft.WSL 3.0.5 and Docker.DockerDesktop 4.99.0.
+Initial WSL package install: checksum verified; 0x80073d28, administrator required.
+Elevated DISM /Online /Enable-Feature /FeatureName:VirtualMachinePlatform /All /NoRestart
+DISM exit 3010. Servicing log: "Image session has been closed. Reboot required=yes."
+Elevated winget install --id Microsoft.WSL --version 3.0.5 --exact --source winget
+Elevated WSL install exit 0.
+winget install --id Docker.DockerDesktop --version 4.99.0 --exact --source winget --override "install --user --quiet --backend=wsl-2" --disable-interactivity --accept-source-agreements
+Successfully verified installer hash / Successfully installed. ProductVersion 4.99.0.245822.
+wsl --version: WSL 3.0.5.0, kernel 6.18.58.1-1, Windows 10.0.26200.9974 (exit 0).
+wsl --status: Default Version: 2; WSL2 is unable to start since virtualization is not enabled on this machine.
+wsl --list --verbose: Windows Subsystem for Linux has no installed distributions.
+Per-user Docker bin directory added to this PowerShell process for verification.
+docker --version: Docker version 29.9.3, build 5457199
+docker compose version: Docker Compose version v5.7.0
+docker compose --profile '*' config --quiet: exit 0
+docker info: open //./pipe/docker_engine: The system cannot find the file specified (exit 1).
+.venv\Scripts\python -m pytest -q: 5 passed, 4 subtests passed in 0.14s.
+LocalAppData/Docker/wsl directory absent at last check. No Docker disk location inferred.
+No live container acceptance results in this pre-restart run.

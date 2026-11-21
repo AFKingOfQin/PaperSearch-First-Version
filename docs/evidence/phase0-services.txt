@@ -1,0 +1,95 @@
+PaperSearch M0 / Windows post-restart acceptance / 2026-11-21
+Result: PASS on the intended laptop. No source commit yet. Excerpts from actual commands.
+Project: E:\PaperSearch. Compose project: papersearch-m0.
+
+wsl --status / wsl -l -v / docker context show
+Default Distribution: docker-desktop
+Default Version: 2
+* docker-desktop    Running         2
+desktop-linux
+
+docker info --format '{{.OSType}} {{.ServerVersion}} {{.NCPU}} {{.MemTotal}} {{.DockerRootDir}}'
+linux 29.9.3 20 16626061312 /var/lib/docker
+
+First run of powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\verify-core.ps1
+Windows-11-10.0.26200-SP0 AMD64 | Python 3.14.4
+CPU: 14 physical / 20 logical; RAM: 10.39 GiB available / 31.73 GiB usable
+C:\ 250.72 GiB free / 500.00 GiB
+D:\ 233.09 GiB free / 300.00 GiB
+E:\ 23.79 GiB free / 151.64 GiB
+WSL 3.0.5.0, kernel 6.18.58.1-1. Docker CLI 29.9.3, Compose v5.7.0.
+Located %LOCALAPPDATA%\Docker\wsl\disk\docker_data.vhdx. The ignored .env uses its parent directory.
+The host preflight required 5 GiB each on the Docker and artifact filesystems and passed.
+The script validated Compose, built the Linux CLI, started MySQL/Kafka, ran independent
+client probes and alembic current, then replaced the two test containers and inspected limits.
+Exit code 0. Selected service output:
+ Container papersearch-m0-kafka-1 Healthy 
+ Container papersearch-m0-mysql-1 Healthy 
+PASS MySQL SELECT 1 = 1, version 8.4.13, server UUID 4f9f4d45-e588-11f1-a1b2-fa0824b2cb21
+PASS Kafka cluster 7vQpYv_4RkSzt14LWjLjlw, brokers 1
+Created topic papersearch.m0.volume-check.
+ Container papersearch-m0-mysql-1 Recreated 
+ Container papersearch-m0-kafka-1 Recreated 
+ Container papersearch-m0-mysql-1 Healthy 
+ Container papersearch-m0-kafka-1 Healthy 
+PASS MySQL SELECT 1 = 1, version 8.4.13, server UUID 4f9f4d45-e588-11f1-a1b2-fa0824b2cb21
+PASS Kafka cluster 7vQpYv_4RkSzt14LWjLjlw, brokers 1
+Topic: papersearch.m0.volume-check	TopicId: P1Kk6sMFTBSWwH0-_3X6RQ	PartitionCount: 3	ReplicationFactor: 1	Configs: min.insync.replicas=1,segment.bytes=16777216,retention.bytes=134217728
+	Topic: papersearch.m0.volume-check	Partition: 0	Leader: 1	Replicas: 1	Isr: 1	Elr: 	LastKnownElr: 
+	Topic: papersearch.m0.volume-check	Partition: 1	Leader: 1	Replicas: 1	Isr: 1	Elr: 	LastKnownElr: 
+	Topic: papersearch.m0.volume-check	Partition: 2	Leader: 1	Replicas: 1	Isr: 1	Elr: 	LastKnownElr: 
+/papersearch-m0-mysql-1 cpu_nano=1000000000 memory_bytes=805306368
+/papersearch-m0-kafka-1 cpu_nano=1000000000 memory_bytes=1073741824
+PASS M0 service checks: same MySQL server UUID and Kafka topic after container replacement.
+
+Follow-up commands (docker compose -p papersearch-m0):
+exec -T -e 'KAFKA_HEAP_OPTS=-Xms16m -Xmx96m' kafka /opt/kafka/bin/kafka-topics.sh --version -> 4.1.2
+run --rm --no-deps --entrypoint python cli -m pip check -> No broken requirements found.
+Host: .venv\Scripts\python -m pytest -q -> 5 passed, 4 subtests passed in 0.20s.
+Host: .venv\Scripts\ruff check src migrations tests -> All checks passed!
+Host: .venv\Scripts\python -m pip check -> No broken requirements found.
+
+Repeat run, same script with existing volumes. Linux lockfile comment updated; pins unchanged.
+Exit code 0. Final stop used docker compose -p papersearch-m0 --profile core stop mysql kafka.
+docker volume ls --filter label=com.docker.compose.project=papersearch-m0 confirmed both named volumes.
+ Container papersearch-m0-mysql-1 Healthy 
+ Container papersearch-m0-kafka-1 Healthy 
+PASS MySQL SELECT 1 = 1, version 8.4.13, server UUID 4f9f4d45-e588-11f1-a1b2-fa0824b2cb21
+PASS Kafka cluster 7vQpYv_4RkSzt14LWjLjlw, brokers 1
+ Container papersearch-m0-kafka-1 Recreated 
+ Container papersearch-m0-mysql-1 Recreated 
+ Container papersearch-m0-mysql-1 Healthy 
+ Container papersearch-m0-kafka-1 Healthy 
+PASS MySQL SELECT 1 = 1, version 8.4.13, server UUID 4f9f4d45-e588-11f1-a1b2-fa0824b2cb21
+PASS Kafka cluster 7vQpYv_4RkSzt14LWjLjlw, brokers 1
+Topic: papersearch.m0.volume-check	TopicId: P1Kk6sMFTBSWwH0-_3X6RQ	PartitionCount: 3	ReplicationFactor: 1	Configs: min.insync.replicas=1,segment.bytes=16777216,retention.bytes=134217728
+	Topic: papersearch.m0.volume-check	Partition: 0	Leader: 1	Replicas: 1	Isr: 1	Elr: 	LastKnownElr: 
+	Topic: papersearch.m0.volume-check	Partition: 1	Leader: 1	Replicas: 1	Isr: 1	Elr: 	LastKnownElr: 
+	Topic: papersearch.m0.volume-check	Partition: 2	Leader: 1	Replicas: 1	Isr: 1	Elr: 	LastKnownElr: 
+/papersearch-m0-mysql-1 cpu_nano=1000000000 memory_bytes=805306368
+/papersearch-m0-kafka-1 cpu_nano=1000000000 memory_bytes=1073741824
+PASS M0 service checks: same MySQL server UUID and Kafka topic after container replacement.
+ Container papersearch-m0-kafka-1 Stopped 
+ Container papersearch-m0-mysql-1 Stopped 
+papersearch-m0_kafka-data
+papersearch-m0_mysql-data
+
+Repeat-run input hashes (SHA-256, sorted repository paths; manifest uses LF).
+f28d22adaa104bbeb054f79b990d9ddb2ed1c3a073c2fc4c67be45ba134ba45d  .dockerignore
+ee5535187c21215ea9457a24500da74cded58f778e4768133d3778dc5e039452  .env.example
+a1e99b9d9ba14b30c579ecec0380aec7564ee9052b4f11792f92f6f22d0abd77  .gitignore
+42e60e5c7f4f24033f04e7006004138eb73ab44168ef4aad2b421ddb119d8b10  Dockerfile
+ab204ff4d3787b09c6c8e5483538a9c15ea157d3bae812ab4b35a7566e0aec16  alembic.ini
+04274422a83318f2bd9f253bbe6c705e2b7e55a7d13282b1e085113ff28dd5f4  compose.yaml
+b15c7f037e5506b0899b832b1d94ebe64272b26ca84d3463b543afd7876d62a6  migrations/env.py
+c799453264cbf3d0248dc780dcfcba3636c29f5b01e8cac512b0da206e749c56  migrations/script.py.mako
+1dd5f534e55eb56de9d4c664ebfdff7abcefe9b263224e04d84b67ace259364a  pyproject.toml
+5c3903b2b1d61bf7682f8e90310f753838e7f96abf73bed571ff96ab87a42ab1  requirements-dev.lock
+bac09c76b6eed68ac770ca5b54a41e334b7b07c1fe4cc2d5be9833016f3892b2  requirements.lock
+6397df41dc70560a5f354dd545b171b7d889a164b2a2739095578ed39984eaa4  scripts/verify-core.ps1
+cd6aa91d3c4ccb0e35ee5701849bec82db719b01a232dde76c7567853558e898  src/papersearch/__init__.py
+93aa7e2d7907f0c5ec5a5f46004fd1e0f7edc3947c972c33add20e4e46f4cad1  src/papersearch/cli.py
+99e3da3351601ba0b1eb4c448ff273abc92eb0bd713702c54f0e0ef9829e7bf5  src/papersearch/config.py
+e4e8760cd461f2a3fbbc40f4d00c86dfb98ef861a314e6b60444c1b21c8ef2f4  src/papersearch/doctor.py
+4cd1911e13c25e09fe288cba85be88c312bf5f8e65efaf0baf3a55b307219b3e  tests/unit/test_phase0.py
+manifest SHA-256 0b416b972aa56a4ba68584b9e036c816cdc35fef20e5f10e51211d92810ce241

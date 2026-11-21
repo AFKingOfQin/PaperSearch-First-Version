@@ -1,0 +1,11 @@
+# AI-generated configuration (Codex): allow only the package and migration inputs into builds.
+**
+!pyproject.toml
+!requirements.lock
+!src/
+!src/papersearch/
+!src/papersearch/*.py
+!alembic.ini
+!migrations/
+!migrations/**
+**/__pycache__/

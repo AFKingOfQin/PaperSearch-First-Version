@@ -1,0 +1,86 @@
+# AI-generated configuration (Codex): single-machine Phase 0 services and profile probes.
+name: papersearch
+services:
+  mysql:
+    profiles: [core]
+    image: mysql:8.4.13@sha256:a81d043930e51745522bd5c430961cf8286f0a23f0a9a2a6e0108f7ea71b0902
+    environment:
+      MYSQL_DATABASE: papersearch
+      MYSQL_USER: papersearch
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?set MYSQL_PASSWORD in .env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?set MYSQL_ROOT_PASSWORD in .env}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    mem_limit: ${MYSQL_MEMORY:-768m}
+    cpus: ${CORE_CPUS:-1}
+    healthcheck:
+      test: ["CMD-SHELL", 'MYSQL_PWD="$$MYSQL_PASSWORD" mysql --protocol=TCP -h 127.0.0.1 -u "$$MYSQL_USER" -D "$$MYSQL_DATABASE" -Nse "SELECT 1"']
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+  kafka:
+    profiles: [core]
+    image: apache/kafka:4.1.2@sha256:5cc2a2fd93fa2687b44015eee04fb2c3edd9e526bd64bf8bec5ff1e268772e0e
+    environment:
+      CLUSTER_ID: 7vQpYv_4RkSzt14LWjLjlw
+      KAFKA_NODE_ID: "1"
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      KAFKA_NUM_PARTITIONS: "3"
+      KAFKA_DEFAULT_REPLICATION_FACTOR: "1"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: "1"
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: "1"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_QUEUED_MAX_REQUESTS: "64"
+      KAFKA_LOG_RETENTION_HOURS: "24"
+      KAFKA_LOG_RETENTION_BYTES: "134217728"
+      KAFKA_LOG_SEGMENT_BYTES: "16777216"
+      KAFKA_HEAP_OPTS: -Xms256m -Xmx384m
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+    mem_limit: ${KAFKA_MEMORY:-1g}
+    cpus: ${CORE_CPUS:-1}
+    healthcheck:
+      test: ["CMD-SHELL", "KAFKA_HEAP_OPTS='-Xms16m -Xmx96m' exec /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --list"]
+      interval: 15s
+      timeout: 12s
+      retries: 12
+      start_period: 30s
+  cli:
+    profiles: [test]
+    build: .
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?set MYSQL_PASSWORD in .env}
+      KAFKA_BOOTSTRAP: kafka:9092
+    volumes:
+      - ${ARTIFACT_DIR:-./artifacts}:/artifacts
+    mem_limit: 256m
+    cpus: ${CORE_CPUS:-1}
+    command: ["--help"]
+  spark:
+    profiles: [batch]
+    image: spark:4.1.1-scala2.13-java17-python3-ubuntu@sha256:6383b28979b5356455c51dff1153e603b182ee1b250938bf20261590dca0b1ad
+    entrypoint: ["/opt/spark/bin/spark-submit"]
+    command: ["--version"]
+    mem_limit: ${BATCH_MEMORY:-3g}
+    cpus: ${BATCH_CPUS:-2}
+  embedding:
+    profiles: [embedding]
+    image: python:3.14.4-slim-bookworm@sha256:fc74d22ffd0d5ac395a4b7bdda75a4539758862c49ebf3005647084631e63789
+    command: ["python", "--version"]
+    mem_limit: ${EMBED_MEMORY:-2g}
+    cpus: ${EMBED_CPUS:-2}
+    environment:
+      OMP_NUM_THREADS: "2"
+volumes:
+  mysql-data:
+  kafka-data:
