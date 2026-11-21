@@ -88,22 +88,26 @@ def save_decision(
 
 def read_decision(engine: Engine, project: str, paper: str) -> dict | None:
     with engine.connect() as conn:
-        row = (
-            conn.execute(
-                text("""
-            SELECT h.history_id,h.label,h.note,h.reviewed_event_id,h.saved_at,
-                   r.text_hash AS reviewed_text_hash,v.text_hash AS current_text_hash
-            FROM screening_decisions d JOIN screening_history h ON d.history_id=h.history_id
-            JOIN paper_revisions r ON r.event_id=h.reviewed_event_id
-            LEFT JOIN current_revisions c ON c.paper_id=d.paper_id
-            LEFT JOIN paper_revisions v ON v.event_id=c.event_id
-            WHERE d.project_id=:project AND d.paper_id=:paper
-        """),
-                dict(project=project, paper=paper),
-            )
-            .mappings()
-            .first()
+        return decision_on_connection(conn, project, paper)
+
+
+def decision_on_connection(conn, project: str, paper: str) -> dict | None:
+    row = (
+        conn.execute(
+            text("""
+        SELECT h.history_id,h.label,h.note,h.reviewed_event_id,h.saved_at,
+               r.text_hash AS reviewed_text_hash,v.text_hash AS current_text_hash
+        FROM screening_decisions d JOIN screening_history h ON d.history_id=h.history_id
+        JOIN paper_revisions r ON r.event_id=h.reviewed_event_id
+        LEFT JOIN current_revisions c ON c.paper_id=d.paper_id
+        LEFT JOIN paper_revisions v ON v.event_id=c.event_id
+        WHERE d.project_id=:project AND d.paper_id=:paper
+    """),
+            dict(project=project, paper=paper),
         )
+        .mappings()
+        .first()
+    )
     if row is None:
         return None
     return {

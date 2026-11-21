@@ -9,7 +9,7 @@ function Invoke-Compose {
     if ($LASTEXITCODE -ne 0) { throw "Compose $($args[0]) exited $LASTEXITCODE" }
 }
 try {
-    & .\.venv\Scripts\papersearch.exe preflight
+    & .\.venv\Scripts\python.exe -m papersearch.cli preflight
     if ($LASTEXITCODE -ne 0) { throw 'Storage preflight failed.' }
     Invoke-Compose build snapshot
     Invoke-Compose up -d --wait --wait-timeout 180 mysql kafka

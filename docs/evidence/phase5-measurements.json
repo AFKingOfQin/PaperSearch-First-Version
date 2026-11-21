@@ -1,0 +1,454 @@
+{
+  "base_commit": "0df94bb0bdcf423f003dfa6a4b903dee159204d8",
+  "input_manifest_sha256": "dff1f198f17d0fe8f059ccad6c3eaa9f6ea5c24e844c3acaa029125cff354995",
+  "run_start_utc": "2026-11-21T19:48:03.314057+00:00",
+  "package_inputs_on_host": {
+    ".dockerignore": "0e7cae10a2b16ae856ce268daa40504cca5a2c168cd6babffd69abdea9d5020f",
+    "alembic.ini": "ab204ff4d3787b09c6c8e5483538a9c15ea157d3bae812ab4b35a7566e0aec16",
+    "compose.yaml": "56fe96a92521e891fbc5b307f6af41da15f2294dbaf1670a2df38fd2f11a77df",
+    "Dockerfile": "6bf7f207be7f9d7eb1a5cd61f1b8c6a35fabd0866670f47d755860e4663c9f46",
+    "migrations/env.py": "b15c7f037e5506b0899b832b1d94ebe64272b26ca84d3463b543afd7876d62a6",
+    "migrations/versions/0001_paper_state.py": "b8f8716a625e6a761686917d83c2ed0f65b5ce5b0066eb1b89cff8270ad2b29c",
+    "migrations/versions/0002_search_snapshots.py": "928bc431a4290d21ff84270bef212b49274d5444441d314009932d6d7007af8a",
+    "pyproject.toml": "7bcdc32b6f848c13c5e4fa7c4ef400950fe3c8a594789a1c8442907993166307",
+    "requirements-dev.lock": "5c3903b2b1d61bf7682f8e90310f753838e7f96abf73bed571ff96ab87a42ab1",
+    "requirements-review.lock": "c3ed717122f2244b0984b2203eeba88e3f75f965ff039393d644da3c370627ad",
+    "requirements.lock": "d08f720952bb01cee104fed62b6db7acba114fc8d5b957b746452d3b7ec0a28e",
+    "scripts/measure-review.py": "e04efdd6d8f76ec38f32bd73093ff08dec7adcda2bc3f87100162f31cb695d11",
+    "scripts/reconcile-review.py": "6c0a9822acf305eed0b65087bf3daec53351a901fceac5de5da753ca6bc8a9d6",
+    "scripts/review_demo.py": "34a73f777fac1699c90b3aa0433739fdb27eed8b23868e249b3e5f1825a7414d",
+    "scripts/select-review-subset.py": "605f86a80d10a62b355c4423f940ee00d7d24cde9f5c29ce6a80693a7af4af59",
+    "scripts/verify-core.ps1": "e36386437845f0cfbc1d47d3d48b2de56b1090d595dcb6e2243a4854beef48f1",
+    "scripts/verify-ingestion.ps1": "4cdbdc72422c56a9965c67b5fda1d2b1f97d1ac2714a2bc012f42bc6d82ed0fd",
+    "scripts/verify-review-scale.py": "44fbf3d65134cf12b510a379ec15acf46949f577634c0942c8ad0a8f1cde0ec8",
+    "scripts/verify-snapshots.ps1": "6e441ad9ae6fd1daad8d1d7d031dc5b4b6bf51939f21d8bce6478b206b7ac98d",
+    "scripts/verify-storage.ps1": "4744415bc5a372292882660a6ff282111cc83d1b33154d3eb97b89b8def7e61a",
+    "src/papersearch/__init__.py": "cd6aa91d3c4ccb0e35ee5701849bec82db719b01a232dde76c7567853558e898",
+    "src/papersearch/adapters.py": "518ce0b54936389f92a85cff8d5fdeff59025efa772672e3ffaa572d31885ba6",
+    "src/papersearch/api.py": "02e4a21cd6adf62e3d9e8630d3822f685c26579135ac6345ebc0f6a456a46b5a",
+    "src/papersearch/archive.py": "b38795cb26c76a7dde7de39ee26a75819c218a86a2ced07fa77663da5300e80a",
+    "src/papersearch/broker.py": "db3b2406fd05aef995cd34e8c31acca4d301c201b6bc76745c536f596eba8c6c",
+    "src/papersearch/cli.py": "d15ed375989dde1767c2c352aa445f33b8acc951f878aed3f455142246a3d70b",
+    "src/papersearch/config.py": "3f185fcfebb7e25a2e764ff22698d22c44c6e2b351df12d94f27a88edf637b03",
+    "src/papersearch/contracts.py": "5087c13fa9e2d51bf5fffd41497f956edd0e91ee31871612ff55c46bc07afcde",
+    "src/papersearch/derivation.py": "63b17d757534ca7326a2f8d8f8ae761ebc5299f36b055f15016341e785e60409",
+    "src/papersearch/doctor.py": "e4e8760cd461f2a3fbbc40f4d00c86dfb98ef861a314e6b60444c1b21c8ef2f4",
+    "src/papersearch/ingestion.py": "61eb6a34aa23722aeac454041b588fb62e0418e29512d6a81d0d275e24b07a7b",
+    "src/papersearch/lexical.py": "95403518d698a7c14f897cc346dd029ce76aeb80e73364103191f3e1042034f0",
+    "src/papersearch/publication.py": "d7c443496feb06df5c114fbeac493007240c50c005e4022250f5e4109415bee9",
+    "src/papersearch/reference.py": "4fb7f99100509b5fddb921cb81c7eb2f85cf35838f542cdad519feb5b1e30d9a",
+    "src/papersearch/reviewer.py": "d0f9c029ee32ca0612b5ad934e5cbe3d909a2bb034b8d8c91bcdd8a5060b4c59",
+    "src/papersearch/snapshot_cli.py": "c34cd6362db203b7c42f7af5aeb456e1802d4b9f49261dec81c3efdcbb775787",
+    "src/papersearch/snapshot_format.py": "4a5efe047e7846257df61ac85518a631d160aa8326e78406bed7abfe533d5198",
+    "src/papersearch/snapshots.py": "75debeda224076ac036874dc02f0f5145e4652a2c23d29cd25e5d5f38fcf81da",
+    "src/papersearch/storage/__init__.py": "f56c89b70aa3997ee63068b008e9b005ed7410b8db8279be67d1f37dbdcae832",
+    "src/papersearch/storage/commands.py": "75b5d2a52ff9ffe2f04083fdca1c8c54b67b2e29088695c2cf15b07a1473db6d",
+    "src/papersearch/storage/jobs.py": "259e1e85883c3075448bd596a9778de2911560d4b24d9720f89439bb903e6b57",
+    "src/papersearch/storage/metadata.py": "7cd54ca4bf7fa21af0b69b7ddb8fa5fb565d09381cfeb327900a05bce16b16be",
+    "src/papersearch/storage/reviews.py": "098b7c3afa6defde32415e9d9269f1e3b74504076b762710e6bc944113d071db",
+    "src/papersearch/stream_cli.py": "979894da5fdd10d893dfe2d39aeb9f8a395d7b854f4383320363e38efeed5a82",
+    "tests/fixtures/phase1/arxiv-metadata.jsonl": "07608494d7b40cc4f0c4eda02937dfacc5986f41c7a449813d5e62a5328f5bc2",
+    "tests/fixtures/phase1/cases.jsonl": "629f52c3f4b4476c890d62ad4af5d1a5719187f7f60b5cda75fc2774d3d043de",
+    "tests/fixtures/phase1/expected.json": "cb6f73b98ee8f7319bcc4a66821fc6a14c9a2ddfe0977e71d87b3734ebd5f090",
+    "tests/fixtures/phase1/generate.py": "7fe684db0b490c87a001798f7ca965485b8b02472b81a362d481655a980e317a",
+    "tests/integration/kafka_recovery.py": "17904f0063fe348664646832983d9bc195d4b5e5160111b239577828f24ad0ea",
+    "tests/integration/mysql_state.py": "dc80fd2fd589e7823d2943c2910c6a2b7d61e977407810450cb1b559b82284da",
+    "tests/integration/snapshot_recovery.py": "7e55a9ff3e05fc71b46c7f6f42223c158ff99999e5617dcb304f7585e8dfc382",
+    "tests/unit/test_lexical.py": "3b865fc4d4cba9f346553963a177f3407677eb4424381184f985432eab134773",
+    "tests/unit/test_phase0.py": "4cd1911e13c25e09fe288cba85be88c312bf5f8e65efaf0baf3a55b307219b3e",
+    "tests/unit/test_reference.py": "e59c92781528ad08196df2b2a4a1497071af4951b4e292573ffaf0cfd7fe842d",
+    "tests/unit/test_snapshots.py": "d5988c0a37fb3f659e09185d6a3b43a6dd94252d2952ff91dd38459cf7a5010e",
+    "tests/unit/test_stream.py": "82da62ecdbbeaacf3073fe1e058350ab53ef4947f7b151f228d58bccc2065c2b"
+  },
+  "gates": {
+    "10000": {
+      "selected": {
+        "distinct": 10000,
+        "source_lines": 10000,
+        "skipped": {},
+        "sha256": "333caf80f1348fc974d9907638d2ce7216efe965563d5ab9da7e2b4e6371913e",
+        "bytes": 14577622
+      },
+      "import_report": {
+        "snapshot": {
+          "artifact_epoch": 0,
+          "corpus_sha256": "ca0b5fdcaeadc8792481e5835773f37e4840f0430f9fd005c364390f3d5a85d1",
+          "coverage": {
+            "fixture_eligible": 0,
+            "lexical": 10000,
+            "metadata": 10000,
+            "semantic": 0,
+            "test_vectors": 0
+          },
+          "created_at": "2026-11-21T19:53:08.340164+00:00",
+          "eligibility": "paper_id starts with fixture:",
+          "files": {
+            "corpus.parquet": {
+              "bytes": 5883312,
+              "sha256": "4d8a9a349477d16002e7f4de1ed3c003ef8f70438e7ba105b0a992bf6a4ccc02"
+            },
+            "lexical.sqlite": {
+              "bytes": 17645568,
+              "sha256": "47e2690b27fed5df340ce9181612f4b547b606cf00bfe573afd070e1c9a81892"
+            },
+            "test-vectors.parquet": {
+              "bytes": 829,
+              "sha256": "7212d1ed41728e5283d2487cb194d13f14aad3aeffdb97d6ee5f3f6acd7d210c"
+            }
+          },
+          "format_version": 1,
+          "generation": 10000,
+          "lexical_format": "SQLite FTS5 unicode61",
+          "recipe": {
+            "kind": "embedding",
+            "model_id": "BAAI/bge-small-en-v1.5",
+            "model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+            "preprocessing": "text-v1"
+          },
+          "snapshot_id": "cf881e10c6da4961b4d3159ecdb7b630",
+          "test_vector_format": "SHA-256 fixture bytes, width 32"
+        },
+        "counts": {
+          "current_revisions": 10000,
+          "processed_events": 10000,
+          "rejected_events": 0,
+          "derived_jobs": 0
+        },
+        "partitions": {
+          "0": {
+            "committed": 3300,
+            "beginning": 0,
+            "end": 3300,
+            "lag": 0
+          },
+          "1": {
+            "committed": 3389,
+            "beginning": 0,
+            "end": 3389,
+            "lag": 0
+          },
+          "2": {
+            "committed": 3311,
+            "beginning": 0,
+            "end": 3311,
+            "lag": 0
+          }
+        },
+        "mysql_allocated_bytes": 47235072,
+        "last_batch_ack_time": 1795290710.2326431,
+        "last_batch_durable_time": 1795290773.7085233,
+        "visible_time": 1795290790.6797419,
+        "elapsed_seconds": 307.36568458299996,
+        "query_ms": 29.318415999966874,
+        "first_hit": "arxiv:0706.1228",
+        "container_peak_bytes": 164868096,
+        "artifact_free_bytes": 249953546240
+      },
+      "serving_report": {
+        "gate": 10000,
+        "snapshot_id": "cf881e10c6da4961b4d3159ecdb7b630",
+        "query": "quantum",
+        "first_paper": "arxiv:0706.1228",
+        "api_load_ms": 261.7952000000514,
+        "api_query_ms": [
+          92.68210000300314,
+          77.36509999813279,
+          84.92760000081034,
+          64.28009999945061,
+          67.85040000249865
+        ],
+        "before_index": {
+          "VmHWM": 118153216,
+          "VmRSS": 118153216,
+          "cgroup_peak_bytes": 80662528
+        },
+        "loaded_index": {
+          "VmHWM": 121651200,
+          "VmRSS": 121651200,
+          "cgroup_peak_bytes": 83001344
+        },
+        "after_serving": {
+          "VmHWM": 122806272,
+          "VmRSS": 122806272,
+          "cgroup_peak_bytes": 83509248
+        },
+        "index_bytes": 17645568,
+        "mysql_dir_bytes": 393971758,
+        "kafka_dir_bytes": 1168772571,
+        "service_lifetime_peak_bytes": {
+          "mysql": 805306368,
+          "kafka": 815738880
+        },
+        "docker_host_free_bytes": 264682037248,
+        "observed_at": 1795291101.5827153,
+        "wsl_working_set_bytes": 9835393024,
+        "wsl_lifetime_peak_bytes": 10204884992
+      },
+      "acknowledged_utc": "2026-11-21T19:51:50.232643+00:00",
+      "durable_drained_utc": "2026-11-21T19:52:53.708523+00:00",
+      "verified_visible_utc": "2026-11-21T19:53:10.679742+00:00",
+      "overall_wall_seconds": 307.36568450927734
+    },
+    "50000": {
+      "selected": {
+        "distinct": 50000,
+        "source_lines": 50001,
+        "skipped": {
+          "invalid_text": 1
+        },
+        "sha256": "13a3af46e2e84ba4945b78893763737d347a6c3d82c91b29a89b1ae02f755dcd",
+        "bytes": 72523060
+      },
+      "import_report": {
+        "snapshot": {
+          "artifact_epoch": 0,
+          "corpus_sha256": "95f5bbb0d618426a1c7a7c03289c72a03d5e9a4dbdece29ac8965392aed518c9",
+          "coverage": {
+            "fixture_eligible": 0,
+            "lexical": 50000,
+            "metadata": 50000,
+            "semantic": 0,
+            "test_vectors": 0
+          },
+          "created_at": "2026-11-21T20:22:34.323400+00:00",
+          "eligibility": "paper_id starts with fixture:",
+          "files": {
+            "corpus.parquet": {
+              "bytes": 29173352,
+              "sha256": "82f84c19e1d47e73255b6b54c1c7e38e609a0183e92affd3d934063bce8bf5fe"
+            },
+            "lexical.sqlite": {
+              "bytes": 87326720,
+              "sha256": "ad245ceaca176d9dc8d632fdb9b60822771f7497b8f7dd29044bd018847559e7"
+            },
+            "test-vectors.parquet": {
+              "bytes": 829,
+              "sha256": "7212d1ed41728e5283d2487cb194d13f14aad3aeffdb97d6ee5f3f6acd7d210c"
+            }
+          },
+          "format_version": 1,
+          "generation": 50000,
+          "lexical_format": "SQLite FTS5 unicode61",
+          "recipe": {
+            "kind": "embedding",
+            "model_id": "BAAI/bge-small-en-v1.5",
+            "model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+            "preprocessing": "text-v1"
+          },
+          "snapshot_id": "6d6378b0f5d04cf19279c1588fb80220",
+          "test_vector_format": "SHA-256 fixture bytes, width 32"
+        },
+        "counts": {
+          "current_revisions": 50000,
+          "processed_events": 50000,
+          "rejected_events": 0,
+          "derived_jobs": 0
+        },
+        "partitions": {
+          "0": {
+            "committed": 16569,
+            "beginning": 0,
+            "end": 16569,
+            "lag": 0
+          },
+          "1": {
+            "committed": 16796,
+            "beginning": 0,
+            "end": 16796,
+            "lag": 0
+          },
+          "2": {
+            "committed": 16635,
+            "beginning": 0,
+            "end": 16635,
+            "lag": 0
+          }
+        },
+        "mysql_allocated_bytes": 231292928,
+        "last_batch_ack_time": 1795292480.3326237,
+        "last_batch_durable_time": 1795292483.5792153,
+        "visible_time": 1795292565.8743768,
+        "elapsed_seconds": 157.14534507200005,
+        "query_ms": 53.672928999731084,
+        "first_hit": "arxiv:0711.1473",
+        "container_peak_bytes": 96251904,
+        "artifact_free_bytes": 249757179904
+      },
+      "serving_report": {
+        "gate": 50000,
+        "snapshot_id": "6d6378b0f5d04cf19279c1588fb80220",
+        "query": "quantum",
+        "first_paper": "arxiv:0711.1473",
+        "api_load_ms": 888.3769999956712,
+        "api_query_ms": [
+          105.83860000042478,
+          79.00949999748264,
+          72.79270000435645,
+          104.91460000048392,
+          71.54090000403812
+        ],
+        "before_index": {
+          "VmHWM": 118075392,
+          "VmRSS": 118075392,
+          "cgroup_peak_bytes": 80396288
+        },
+        "loaded_index": {
+          "VmHWM": 121540608,
+          "VmRSS": 121540608,
+          "cgroup_peak_bytes": 83779584
+        },
+        "after_serving": {
+          "VmHWM": 123277312,
+          "VmRSS": 123277312,
+          "cgroup_peak_bytes": 84496384
+        },
+        "index_bytes": 87326720,
+        "mysql_dir_bytes": 636410006,
+        "kafka_dir_bytes": 1231625253,
+        "service_lifetime_peak_bytes": {
+          "mysql": 805310464,
+          "kafka": 924246016
+        },
+        "docker_host_free_bytes": 262961143808,
+        "observed_at": 1795292572.8624713,
+        "wsl_working_set_bytes": 10195775488,
+        "wsl_lifetime_peak_bytes": 11203588096
+      },
+      "acknowledged_utc": "2026-11-21T20:16:12.018419593Z",
+      "durable_drained_utc": "2026-11-21T20:17:20.374196225Z",
+      "verified_visible_utc": "2026-11-21T20:22:45.874377+00:00",
+      "overall_wall_seconds": 2082.5603194236755
+    },
+    "100000": {
+      "selected": {
+        "distinct": 100000,
+        "source_lines": 100001,
+        "skipped": {
+          "invalid_text": 1
+        },
+        "sha256": "adaba264c42c0322a7c3168613c5f8192d369429dd4e0b0662f25e946f034ccd",
+        "bytes": 147966596
+      },
+      "import_report": {
+        "snapshot": {
+          "artifact_epoch": 0,
+          "corpus_sha256": "0d788a47831762a44ee8b5a93e2e3ba92adf172250dfc19647b712a7ae01d1eb",
+          "coverage": {
+            "fixture_eligible": 0,
+            "lexical": 100000,
+            "metadata": 100000,
+            "semantic": 0,
+            "test_vectors": 0
+          },
+          "created_at": "2026-11-21T21:01:23.315132+00:00",
+          "eligibility": "paper_id starts with fixture:",
+          "files": {
+            "corpus.parquet": {
+              "bytes": 58766033,
+              "sha256": "d1577812c38a048d40794ef2e8931ceafad9cde01aa9977fb69321f996d65b6a"
+            },
+            "lexical.sqlite": {
+              "bytes": 174428160,
+              "sha256": "c3ca40d5b650071284e93134fda28e885f8b75601280015cf5822dfc0ea33264"
+            },
+            "test-vectors.parquet": {
+              "bytes": 829,
+              "sha256": "7212d1ed41728e5283d2487cb194d13f14aad3aeffdb97d6ee5f3f6acd7d210c"
+            }
+          },
+          "format_version": 1,
+          "generation": 100000,
+          "lexical_format": "SQLite FTS5 unicode61",
+          "recipe": {
+            "kind": "embedding",
+            "model_id": "BAAI/bge-small-en-v1.5",
+            "model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+            "preprocessing": "text-v1"
+          },
+          "snapshot_id": "e60d864780ed4644992eb5bf776e3232",
+          "test_vector_format": "SHA-256 fixture bytes, width 32"
+        },
+        "counts": {
+          "current_revisions": 100000,
+          "processed_events": 100000,
+          "rejected_events": 0,
+          "derived_jobs": 0
+        },
+        "partitions": {
+          "0": {
+            "committed": 33333,
+            "beginning": 0,
+            "end": 33333,
+            "lag": 0
+          },
+          "1": {
+            "committed": 33468,
+            "beginning": 0,
+            "end": 33468,
+            "lag": 0
+          },
+          "2": {
+            "committed": 33199,
+            "beginning": 0,
+            "end": 33199,
+            "lag": 0
+          }
+        },
+        "mysql_allocated_bytes": 441221120,
+        "last_batch_ack_time": 1795294465.5376935,
+        "last_batch_durable_time": 1795294531.0679736,
+        "visible_time": 1795294939.5669746,
+        "elapsed_seconds": 2530.837943052,
+        "query_ms": 161.33445099967503,
+        "first_hit": "arxiv:0811.2516",
+        "container_peak_bytes": 145760256,
+        "artifact_free_bytes": 249446776832
+      },
+      "serving_report": {
+        "gate": 100000,
+        "snapshot_id": "e60d864780ed4644992eb5bf776e3232",
+        "query": "quantum",
+        "first_paper": "arxiv:0811.2516",
+        "api_load_ms": 3542.8463999996893,
+        "api_query_ms": [
+          240.77679999754764,
+          275.4242999944836,
+          236.01349999808008,
+          471.03110000171,
+          372.22689999907743
+        ],
+        "before_index": {
+          "VmHWM": 118337536,
+          "VmRSS": 118337536,
+          "cgroup_peak_bytes": 80285696
+        },
+        "loaded_index": {
+          "VmHWM": 121700352,
+          "VmRSS": 121700352,
+          "cgroup_peak_bytes": 83369984
+        },
+        "after_serving": {
+          "VmHWM": 124223488,
+          "VmRSS": 124223488,
+          "cgroup_peak_bytes": 85233664
+        },
+        "index_bytes": 174428160,
+        "mysql_dir_bytes": 1021510957,
+        "kafka_dir_bytes": 1324581302,
+        "service_lifetime_peak_bytes": {
+          "mysql": 772509696,
+          "kafka": 1073741824
+        },
+        "docker_host_free_bytes": 260199936000,
+        "observed_at": 1795295047.310417,
+        "wsl_working_set_bytes": 10661736448,
+        "wsl_lifetime_peak_bytes": 11203588096,
+        "review_project": "be6ab247-0b23-44e2-938b-e11004aee470"
+      },
+      "acknowledged_utc": "2026-11-21T20:54:25.537694+00:00",
+      "durable_drained_utc": "2026-11-21T20:55:31.067974+00:00",
+      "verified_visible_utc": "2026-11-21T21:02:19.566975+00:00",
+      "overall_wall_seconds": 4456.252917289734
+    }
+  }
+}

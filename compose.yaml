@@ -67,10 +67,48 @@ services:
     cpus: ${CORE_CPUS:-1}
     command: ["--help"]
   snapshot:
+    image: papersearch-snapshot:local
     extends:
       service: cli
     profiles: [snapshot]
     mem_limit: ${SNAPSHOT_MEMORY:-768m}
+  api:
+    profiles: [review]
+    image: papersearch-review:local
+    build:
+      context: .
+      target: review
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?set MYSQL_PASSWORD in .env}
+      KAFKA_BOOTSTRAP: kafka:9092
+      PAPERSEARCH_TOPIC: ${PAPERSEARCH_TOPIC:-papers}
+      PAPERSEARCH_GROUP: ${PAPERSEARCH_GROUP:-papersearch-ingest}
+      SNAPSHOT_ROOT: ${SNAPSHOT_ROOT:-/artifacts/derived}
+    volumes:
+      - ${ARTIFACT_DIR:-./artifacts}:/artifacts:ro
+    entrypoint: ["python", "-m", "uvicorn", "papersearch.api:app"]
+    command: ["--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "127.0.0.1:${REVIEW_API_PORT:-8000}:8000"
+    mem_limit: 512m
+    cpus: ${CORE_CPUS:-1}
+  ui:
+    profiles: [review]
+    image: papersearch-review:local
+    build:
+      context: .
+      target: review
+    environment:
+      PAPERSEARCH_API: http://api:8000
+      PAPERSEARCH_PUBLIC_API: http://127.0.0.1:${REVIEW_API_PORT:-8000}
+      STREAMLIT_BROWSER_GATHER_USAGE_STATS: "false"
+    entrypoint: ["python", "-m", "streamlit", "run", "src/papersearch/reviewer.py"]
+    command: ["--server.address=0.0.0.0", "--server.port=8501", "--server.headless=true"]
+    ports:
+      - "127.0.0.1:${REVIEW_UI_PORT:-8501}:8501"
+    mem_limit: 512m
+    cpus: ${CORE_CPUS:-1}
   spark:
     profiles: [batch]
     image: spark:4.1.1-scala2.13-java17-python3-ubuntu@sha256:6383b28979b5356455c51dff1153e603b182ee1b250938bf20261590dca0b1ad

@@ -85,3 +85,7 @@ def main() -> int:
         print(f"BLOCKED: {error}", file=sys.stderr)
         return 1
     return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

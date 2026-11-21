@@ -1,6 +1,19 @@
 # PaperSearch
 
-PaperSearch imports paper metadata into MySQL and preserves each project's screening decisions across revisions and restarts. You can screen papers from the CLI and compare the stored corpus with a deterministic offline reference. See [project status](PROGRESS.md) and the [offline demo procedure](docs/DEMO_SCRIPT.md).
+PaperSearch lets you search a published paper collection by title and abstract, inspect revisions and save project-specific screening decisions. Kafka delivers metadata updates to MySQL. The reviewer keeps the revision you labeled and flags changed text for reconsideration. [Reviewer setup, offline demo and real-data reproduction](docs/reviewer.md)
+
+## Verify the reviewer workflow
+
+With Docker Desktop and the local credentials configured, prepare the images and run the demo from the repository root.
+
+```powershell
+.\.venv\Scripts\python -m pip install -r requirements-review.lock
+docker compose --profile core pull mysql kafka
+docker compose --profile snapshot --profile review build snapshot api
+.\.venv\Scripts\python scripts/review_demo.py
+```
+
+The last command runs offline and prints `PASS offline reviewer demo` after testing a saved decision through a service restart, an abstract revision and CSV export. Add `--keep-running` to explore the fixture in a browser. [Measured reviewer results](docs/evidence/phase5-review.md)
 
 ## Verify snapshot publication
 

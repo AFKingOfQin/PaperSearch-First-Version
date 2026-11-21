@@ -12,7 +12,7 @@ function Test-Ingestion($stage) {
     Invoke-Compose run --rm --no-deps -v "${tests}:/verify:ro" --entrypoint python cli -u /verify/integration/kafka_recovery.py $stage "/artifacts/$project"
 }
 try {
-    & .\.venv\Scripts\papersearch.exe preflight
+    & .\.venv\Scripts\python.exe -m papersearch.cli preflight
     if ($LASTEXITCODE -ne 0) { throw 'Storage preflight failed.' }
     Invoke-Compose build cli
     Invoke-Compose up -d --wait --wait-timeout 180 mysql kafka

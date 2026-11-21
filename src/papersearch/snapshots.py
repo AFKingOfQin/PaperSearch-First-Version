@@ -176,6 +176,22 @@ def active_snapshot(engine, root):
     return directory, manifest
 
 
+def published_manifest(conn, root, snapshot_id):
+    if snapshot_id is None:
+        return None
+    expected = conn.scalar(
+        text("SELECT manifest_sha FROM published_snapshots WHERE snapshot_id=:id"),
+        dict(id=snapshot_id),
+    )
+    path = root / "snapshots" / snapshot_id / "manifest.json"
+    if file_sha(path) != expected:
+        raise ValueError("Active manifest checksum mismatch")
+    manifest = json.loads(path.read_bytes())
+    if manifest["snapshot_id"] != snapshot_id:
+        raise ValueError("Published snapshot identity mismatch")
+    return manifest
+
+
 def status(engine, root):
     with (
         engine.connect().execution_options(isolation_level="REPEATABLE READ") as conn,
@@ -202,18 +218,7 @@ def status(engine, root):
             .mappings()
             .all()
         )
-        active = None
-        if state["active_snapshot"]:
-            sha = conn.scalar(
-                text(
-                    "SELECT manifest_sha FROM published_snapshots WHERE snapshot_id=:id"
-                ),
-                dict(id=state["active_snapshot"]),
-            )
-            path = root / "snapshots" / state["active_snapshot"] / "manifest.json"
-            if file_sha(path) != sha:
-                raise ValueError("Active manifest checksum mismatch")
-            active = json.loads(path.read_bytes())
+        active = published_manifest(conn, root, state["active_snapshot"])
         return dict(
             corpus_generation=state["generation"],
             artifact_epoch=state["artifact_epoch"],

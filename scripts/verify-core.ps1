@@ -6,9 +6,9 @@ function Invoke-Compose {
     if ($LASTEXITCODE -ne 0) { throw "Compose failed: $($args[0]) (exit $LASTEXITCODE)" }
 }
 try {
-    & .\.venv\Scripts\papersearch.exe doctor
+    & .\.venv\Scripts\python.exe -m papersearch.cli doctor
     if ($LASTEXITCODE -ne 0) { throw 'Host or Linux engine check failed.' }
-    & .\.venv\Scripts\papersearch.exe preflight
+    & .\.venv\Scripts\python.exe -m papersearch.cli preflight
     if ($LASTEXITCODE -ne 0) { throw 'Storage preflight failed.' }
     Invoke-Compose config --quiet
     Invoke-Compose build cli

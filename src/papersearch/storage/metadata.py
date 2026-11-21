@@ -178,8 +178,11 @@ def current_page(conn, after, page_size, recipe=None):
         join = """LEFT JOIN derived_artifacts a ON a.text_hash=r.text_hash AND a.kind=:kind
                   AND a.model_id=:model_id AND a.model_revision=:model_revision
                   AND a.preprocessing=:preprocessing AND c.paper_id LIKE 'fixture:%'"""
+    # Limit IDs before joining large JSON revisions. A hash join can otherwise sort the remaining corpus per page.
     return conn.execute(text(f"""
-        SELECT c.paper_id,r.record_json {columns} FROM current_revisions c
+        SELECT c.paper_id,r.record_json {columns}
+        FROM (SELECT paper_id,event_id FROM current_revisions
+              WHERE paper_id>:after ORDER BY paper_id LIMIT :limit) c
         JOIN paper_revisions r ON r.event_id=c.event_id {join}
-        WHERE c.paper_id>:after ORDER BY c.paper_id LIMIT :limit
+        ORDER BY c.paper_id
     """), args).all()

@@ -11,3 +11,4 @@
 !migrations/
 !migrations/**
 **/__pycache__/
+!requirements-review.lock
