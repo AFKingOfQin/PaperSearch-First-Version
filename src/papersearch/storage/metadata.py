@@ -117,6 +117,14 @@ def apply_event(engine: Engine, event: Event) -> str:
     return outcome
 
 
+def reject_record(engine: Engine, checksum: str, fmt: str, reason: str, location: str):
+    with engine.begin() as conn:
+        conn.execute(text("""
+            INSERT INTO rejected_events (raw_sha256,input_format,reason,raw_location)
+            VALUES (:raw,:fmt,:reason,:location) ON DUPLICATE KEY UPDATE raw_sha256=:raw
+        """), dict(raw=checksum, fmt=fmt, reason=reason, location=location))
+
+
 def apply_file(
     engine: Engine, path: Path, fmt: str, batch_id=None, collected_at=None
 ) -> dict:
@@ -135,14 +143,7 @@ def apply_file(
                 checksum=checksum,
             )
         except RecordError as exc:
-            with engine.begin() as conn:
-                conn.execute(
-                    text("""
-                    INSERT INTO rejected_events (raw_sha256,input_format,reason,raw_location)
-                    VALUES (:raw,:fmt,:reason,:location) ON DUPLICATE KEY UPDATE raw_sha256=:raw
-                """),
-                    dict(raw=checksum, fmt=fmt, reason=str(exc), location=location),
-                )
+            reject_record(engine, checksum, fmt, str(exc), location)
             counts["rejected"] += 1
         else:
             counts[apply_event(engine, event)] += 1

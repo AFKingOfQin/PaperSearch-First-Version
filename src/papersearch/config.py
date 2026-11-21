@@ -49,4 +49,4 @@ def mysql_url(config: dict[str, str]) -> URL:
     if not password:
         raise ValueError("Set MYSQL_PASSWORD in the local environment or .env")
     return URL.create("mysql+mysqlconnector", username="papersearch", password=password,
-                      host=config.get("MYSQL_HOST", "mysql"), database="papersearch")
+                      host=config.get("MYSQL_HOST", "mysql"), database=config.get("MYSQL_DATABASE", "papersearch"))

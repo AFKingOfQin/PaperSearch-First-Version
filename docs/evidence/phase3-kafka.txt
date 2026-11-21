@@ -1,0 +1,277 @@
+PaperSearch Kafka ingestion verification | 2026-11-21 | M3 DONE
+Base commit bf98e466e33955196c04a8b5fce442a3c4197353 plus the unstaged source identified below.
+Single Windows laptop, Docker Desktop Linux/WSL 2, one Apache Kafka 4.1.2 broker, MySQL 8.4.13.
+See docs/ingestion.md for architecture, retention limits and how to repeat the experiment.
+
+Predecessor and regression checks
+31/31 M2 source/config/fixture SHA-256 entries matched before editing.
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-storage.ps1 (before edits and after implementation)
+PASS M2 MySQL persistence and recovery (papersearch-m2-5cc06e375d56)
+PASS M2 MySQL persistence and recovery (papersearch-m2-9a4a2aefd2c2)
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-core.ps1
+OK Compose plugin: Docker Compose version v5.7.0
+OK Docker engine (OS, version, CPUs, RAM bytes, root directory): linux 29.9.3 20 16626069504 /var/lib/docker
+PASS MySQL SELECT 1 = 1, version 8.4.13, server UUID 4f9f4d45-e588-11f1-a1b2-fa0824b2cb21
+PASS Kafka cluster 7vQpYv_4RkSzt14LWjLjlw, brokers 1
+PASS MySQL SELECT 1 = 1, version 8.4.13, server UUID 4f9f4d45-e588-11f1-a1b2-fa0824b2cb21
+PASS Kafka cluster 7vQpYv_4RkSzt14LWjLjlw, brokers 1
+Topic: papersearch.m0.volume-check	TopicId: P1Kk6sMFTBSWwH0-_3X6RQ	PartitionCount: 3	ReplicationFactor: 1	Configs: min.insync.replicas=1,segment.bytes=16777216,retention.bytes=134217728
+PASS M0 service checks: same MySQL server UUID and Kafka topic after container replacement.
+docker compose -p papersearch-m0 --profile core stop -> both verification services stopped.
+.venv/Scripts/python -m pytest -q -> 26 passed, 4 subtests passed in 1.48s
+.venv/Scripts/ruff check src migrations tests -> All checks passed!
+.venv/Scripts/python -m pip check -> No broken requirements found.
+
+Canonical state oracle: tests/fixtures/phase1/expected.json, development and rejections sections.
+The tests add a seed, three updates and one malformed Kafka value to the 1,000-line development fixture.
+Each of the three independent schemas starts from the same screened seed. Topic deliveries total 1,005 ahead of the deliberate republication.
+
+Reproduction and actual output
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-ingestion.ps1
+Initial real-service run passed. Final run below also exercises bounded publisher lag and partial checkpoint resume.
+Full local log: artifacts/m3-verification-final.log. Command-specific logs: artifacts/papersearch-m3-3bc6ee28893e/
+Rows below are selected from process output. Docker build progress and transient container IDs omitted.
+
+Artifacts E:\PaperSearch\artifacts: 23.79 GiB free, require 5 GiB: PASS
+Docker data disk C:\Users\tonyw\AppData\Local\Docker\wsl\disk: 251.36 GiB free, require 5 GiB: PASS
+docker compose -p papersearch-m3-3bc6ee28893e --profile core --profile test build cli
+docker compose -p papersearch-m3-3bc6ee28893e --profile core --profile test up -d --wait --wait-timeout 180 mysql kafka
+docker compose -p papersearch-m3-3bc6ee28893e --profile core --profile test run --rm --no-deps -v E:\PaperSearch\tests:/verify:ro --entrypoint python cli -u /verify/integration/kafka_recovery.py setup /artifacts/papersearch-m3-3bc6ee28893e
+init [baseline] papersearch stream init papersearch.updates
+archive-seed [baseline] papersearch stream archive /artifacts/papersearch-m3-3bc6ee28893e/seed.jsonl --archive-root /artifacts/papersearch-m3-3bc6ee28893e/archives --batch-id seed --collected-at 2020-02-01T00:00:00Z --format fixture
+INPUT /artifacts/papersearch-m3-3bc6ee28893e/archives/38a61c40229ce7649b43f747a4bc385bd8090cf5746ad11761e063006ae34467 {"batch_id": "seed", "bytes": 174, "collected_at": "2020-02-01T00:00:00.000000Z", "format": "fixture", "records": 1, "sha256": "9ae1cac771135610b4c9197096876f5c8564ab3c314daad50588419be2023057", "version": 1}
+publish-seed [baseline] papersearch stream publish papersearch.updates /artifacts/papersearch-m3-3bc6ee28893e/archives/38a61c40229ce7649b43f747a4bc385bd8090cf5746ad11761e063006ae34467
+migrate-baseline [baseline] alembic upgrade head
+seed-baseline [baseline] papersearch stream consume papersearch.updates --group baseline --drain --quarantine /artifacts/papersearch-m3-3bc6ee28893e/quarantine
+{"group": "baseline", "kind": "drained", "outcomes": {"applied": 1}, "partitions": {"0": {"beginning": 0, "committed": null, "end": 0, "lag": 0}, "1": {"beginning": 0, "committed": 1, "end": 1, "lag": 0}, "2": {"beginning": 0, "committed": null, "end": 0, "lag": 0}}}
+migrate-before [before] alembic upgrade head
+seed-before [before] papersearch stream consume papersearch.updates --group before --drain --quarantine /artifacts/papersearch-m3-3bc6ee28893e/quarantine
+{"group": "before", "kind": "drained", "outcomes": {"applied": 1}, "partitions": {"0": {"beginning": 0, "committed": null, "end": 0, "lag": 0}, "1": {"beginning": 0, "committed": 1, "end": 1, "lag": 0}, "2": {"beginning": 0, "committed": null, "end": 0, "lag": 0}}}
+migrate-after [after] alembic upgrade head
+seed-after [after] papersearch stream consume papersearch.updates --group after --drain --quarantine /artifacts/papersearch-m3-3bc6ee28893e/quarantine
+{"group": "after", "kind": "drained", "outcomes": {"applied": 1}, "partitions": {"0": {"beginning": 0, "committed": null, "end": 0, "lag": 0}, "1": {"beginning": 0, "committed": 1, "end": 1, "lag": 0}, "2": {"beginning": 0, "committed": null, "end": 0, "lag": 0}}}
+PASS malformed record follows seed on river partition: 1
+archive-updates [baseline] papersearch stream archive /artifacts/papersearch-m3-3bc6ee28893e/updates.jsonl --archive-root /artifacts/papersearch-m3-3bc6ee28893e/archives --batch-id updates --collected-at 2020-02-01T00:00:00Z --format fixture
+INPUT /artifacts/papersearch-m3-3bc6ee28893e/archives/38ee6e0c83b826582c08dceb388f9ffb1a2bb516536b3a18c0b407de5338a3bc {"batch_id": "updates", "bytes": 489, "collected_at": "2020-02-01T00:00:00.000000Z", "format": "fixture", "records": 3, "sha256": "fcc722eec9434b562baf6e57dd5ce1afd6d98cb88b0836fccbe02bc3f09a56ed", "version": 1}
+publish-updates [baseline] papersearch stream publish papersearch.updates /artifacts/papersearch-m3-3bc6ee28893e/archives/38ee6e0c83b826582c08dceb388f9ffb1a2bb516536b3a18c0b407de5338a3bc
+resume-acked [baseline] papersearch stream publish papersearch.updates /artifacts/papersearch-m3-3bc6ee28893e/archives/38ee6e0c83b826582c08dceb388f9ffb1a2bb516536b3a18c0b407de5338a3bc
+PASS acknowledged archive resume sends zero: 0
+crash-before [before] papersearch stream consume papersearch.updates --group before --drain --quarantine /artifacts/papersearch-m3-3bc6ee28893e/quarantine --test-fault before-commit --test-at 1:3
+{"boundary": "before-commit", "group": "before", "kind": "test_crash", "offset": 3, "partition": 1, "topic": "papersearch.updates"}
+PASS process died at selected SQL boundary: 'before-commit'
+stopped-before [baseline] papersearch stream status papersearch.updates --group before
+{"group": "before", "kind": "offsets", "partitions": {"0": {"beginning": 0, "committed": null, "end": 0, "lag": 0}, "1": {"beginning": 0, "committed": 3, "end": 5, "lag": 2}, "2": {"beginning": 0, "committed": null, "end": 0, "lag": 0}}}
+PASS before next offset and broker end: [3, 5]
+PASS before markers, revisions, jobs, quarantined, maximum version: [2, 2, 1, 1, 2]
+crash-after [after] papersearch stream consume papersearch.updates --group after --drain --quarantine /artifacts/papersearch-m3-3bc6ee28893e/quarantine --test-fault after-commit --test-at 1:3
+{"boundary": "after-commit", "group": "after", "kind": "test_crash", "offset": 3, "partition": 1, "topic": "papersearch.updates"}
+PASS process died at selected SQL boundary: 'after-commit'
+stopped-after [baseline] papersearch stream status papersearch.updates --group after
+{"group": "after", "kind": "offsets", "partitions": {"0": {"beginning": 0, "committed": null, "end": 0, "lag": 0}, "1": {"beginning": 0, "committed": 3, "end": 5, "lag": 2}, "2": {"beginning": 0, "committed": null, "end": 0, "lag": 0}}}
+PASS after next offset and broker end: [3, 5]
+PASS after markers, revisions, jobs, quarantined, maximum version: [3, 3, 2, 1, 3]
+docker compose -p papersearch-m3-3bc6ee28893e --profile core --profile test stop mysql
+docker compose -p papersearch-m3-3bc6ee28893e --profile core --profile test run --rm --no-deps -v E:\PaperSearch\tests:/verify:ro --entrypoint python cli -u /verify/integration/kafka_recovery.py outage /artifacts/papersearch-m3-3bc6ee28893e
+outage-start [baseline] papersearch stream status papersearch.updates --group before
+{"group": "before", "kind": "offsets", "partitions": {"0": {"beginning": 0, "committed": null, "end": 0, "lag": 0}, "1": {"beginning": 0, "committed": 3, "end": 5, "lag": 2}, "2": {"beginning": 0, "committed": null, "end": 0, "lag": 0}}}
+database-offline [before] papersearch stream consume papersearch.updates --group before --drain --quarantine /artifacts/papersearch-m3-3bc6ee28893e/quarantine
+{"attempt": 4, "errno": 2005, "error": "DatabaseError", "group": "before", "kind": "sql_error", "offset": 3, "partition": 1, "topic": "papersearch.updates"}
+PASS bounded retries of the same unfinished offset: [(1, 3), (2, 3), (3, 3), (4, 3)]
+outage-end [baseline] papersearch stream status papersearch.updates --group before
+{"group": "before", "kind": "offsets", "partitions": {"0": {"beginning": 0, "committed": null, "end": 0, "lag": 0}, "1": {"beginning": 0, "committed": 3, "end": 5, "lag": 2}, "2": {"beginning": 0, "committed": null, "end": 0, "lag": 0}}}
+PASS all broker offsets unchanged throughout stopped MySQL: {'0': {'beginning': 0, 'committed': None, 'end': 0, 'lag': 0}, '1': {'beginning': 0, 'committed': 3, 'end': 5, 'lag': 2}, '2': {'beginning': 0, 'committed': None, 'end': 0, 'lag': 0}}
+docker compose -p papersearch-m3-3bc6ee28893e --profile core --profile test up -d --wait --wait-timeout 180 mysql
+docker compose -p papersearch-m3-3bc6ee28893e --profile core --profile test run --rm --no-deps -v E:\PaperSearch\tests:/verify:ro --entrypoint python cli -u /verify/integration/kafka_recovery.py recover /artifacts/papersearch-m3-3bc6ee28893e
+generate [baseline] /usr/local/bin/python /verify/fixtures/phase1/generate.py /artifacts/papersearch-m3-3bc6ee28893e/development.jsonl
+archive-development [baseline] papersearch stream archive /artifacts/papersearch-m3-3bc6ee28893e/development.jsonl --archive-root /artifacts/papersearch-m3-3bc6ee28893e/archives --batch-id development --collected-at 2020-02-01T00:00:00Z --format fixture
+INPUT /artifacts/papersearch-m3-3bc6ee28893e/archives/c7d1425dca48b17c6707ba2f7382877a6ee933b6b93c2795430b2bd3204cf85c {"batch_id": "development", "bytes": 172095, "collected_at": "2020-02-01T00:00:00.000000Z", "format": "fixture", "records": 1000, "sha256": "d047b14761f5387a7e6d231ceacd1a228a7786c1abd48fb46d85197f6586eb29", "version": 1}
+backpressure [baseline] papersearch stream publish papersearch.updates /artifacts/papersearch-m3-3bc6ee28893e/archives/c7d1425dca48b17c6707ba2f7382877a6ee933b6b93c2795430b2bd3204cf85c --max-lag 37
+PASS publisher stopped at its last acknowledged line: 32
+publish-development [baseline] papersearch stream publish papersearch.updates /artifacts/papersearch-m3-3bc6ee28893e/archives/c7d1425dca48b17c6707ba2f7382877a6ee933b6b93c2795430b2bd3204cf85c
+PASS publisher resumes remaining lines after checkpoint: 968
+PASS development archive SHA-256: 'd047b14761f5387a7e6d231ceacd1a228a7786c1abd48fb46d85197f6586eb29'
+recover-baseline [baseline] papersearch stream consume papersearch.updates --group baseline --drain --quarantine /artifacts/papersearch-m3-3bc6ee28893e/quarantine
+{"group": "baseline", "kind": "drained", "outcomes": {"applied": 988, "conflict": 2, "duplicate": 6, "rejected": 6, "stale": 2}, "partitions": {"0": {"beginning": 0, "committed": 325, "end": 325, "lag": 0}, "1": {"beginning": 0, "committed": 336, "end": 336, "lag": 0}, "2": {"beginning": 0, "committed": 344, "end": 344, "lag": 0}}}
+PASS baseline result for interrupted record: ['applied']
+PASS caught up on every partition: [0, 0, 0]
+PASS baseline canonical records, revisions, markers: [986, 993, 993]
+PASS baseline offline oracle digest: 'a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6'
+PASS baseline quarantine equality: True
+PASS wire bytes archived: b'{"damaged wire'
+PASS preserved label and history: ['relevant', 'two streams reported', True, 1]
+Uninterrupted durable state {"corpus": "a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6", "decision": ["relevant", "two streams reported", "1333edd9f4d19cd8fca86968bf45e22c97430cb2cb2b7603da4798face634592", "23e46df775b5112f85868f1fef6f3eeffa38c6c261489d1db5274a05b8718b8d", "5eb7a41c564acd9824a7671726967ffeb3b36a90302071cfa10b7efa4e38ca78", true], "generation": 991, "job_count": 989, "jobs": "3ec47c0037a18f79357b81fdf3550ba95dfd623876e175db34c96b4ec2ebdc1b", "markers": "4c5a78740501c4bdd14bf8ecc87aa504bec250904a7965f7070e086b8d254f49", "rejected": "7af39143d59a4beff2814a79ffdef611d878ed0c1bc6ee19112d8bacca19afe1"}
+PASS baseline matches uninterrupted corpus, label, ledger, jobs and generation: True
+recover-before [before] papersearch stream consume papersearch.updates --group before --drain --quarantine /artifacts/papersearch-m3-3bc6ee28893e/quarantine
+{"group": "before", "kind": "drained", "outcomes": {"applied": 987, "conflict": 2, "duplicate": 6, "rejected": 5, "stale": 2}, "partitions": {"0": {"beginning": 0, "committed": 325, "end": 325, "lag": 0}, "1": {"beginning": 0, "committed": 336, "end": 336, "lag": 0}, "2": {"beginning": 0, "committed": 344, "end": 344, "lag": 0}}}
+PASS before result for interrupted record: ['applied']
+PASS caught up on every partition: [0, 0, 0]
+PASS before canonical records, revisions, markers: [986, 993, 993]
+PASS before offline oracle digest: 'a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6'
+PASS before quarantine equality: True
+PASS wire bytes archived: b'{"damaged wire'
+PASS preserved label and history: ['relevant', 'two streams reported', True, 1]
+PASS before matches uninterrupted corpus, label, ledger, jobs and generation: True
+recover-after [after] papersearch stream consume papersearch.updates --group after --drain --quarantine /artifacts/papersearch-m3-3bc6ee28893e/quarantine
+{"group": "after", "kind": "drained", "outcomes": {"applied": 986, "conflict": 2, "duplicate": 7, "rejected": 5, "stale": 2}, "partitions": {"0": {"beginning": 0, "committed": 325, "end": 325, "lag": 0}, "1": {"beginning": 0, "committed": 336, "end": 336, "lag": 0}, "2": {"beginning": 0, "committed": 344, "end": 344, "lag": 0}}}
+PASS after result for interrupted record: ['duplicate']
+PASS caught up on every partition: [0, 0, 0]
+PASS after canonical records, revisions, markers: [986, 993, 993]
+PASS after offline oracle digest: 'a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6'
+PASS after quarantine equality: True
+PASS wire bytes archived: b'{"damaged wire'
+PASS preserved label and history: ['relevant', 'two streams reported', True, 1]
+PASS after matches uninterrupted corpus, label, ledger, jobs and generation: True
+fresh-group [after] papersearch stream consume papersearch.updates --group fresh --drain --quarantine /artifacts/papersearch-m3-3bc6ee28893e/quarantine
+{"group": "fresh", "kind": "drained", "outcomes": {"duplicate": 999, "rejected": 6}, "partitions": {"0": {"beginning": 0, "committed": 325, "end": 325, "lag": 0}, "1": {"beginning": 0, "committed": 336, "end": 336, "lag": 0}, "2": {"beginning": 0, "committed": 344, "end": 344, "lag": 0}}}
+PASS fresh group outcomes: {'duplicate': 999, 'rejected': 6}
+PASS after canonical records, revisions, markers: [986, 993, 993]
+PASS after offline oracle digest: 'a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6'
+PASS after quarantine equality: True
+PASS wire bytes archived: b'{"damaged wire'
+PASS preserved label and history: ['relevant', 'two streams reported', True, 1]
+PASS fresh group preserves every durable effect: {'corpus': 'a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6', 'generation': 991, 'decision': ['relevant', 'two streams reported', '1333edd9f4d19cd8fca86968bf45e22c97430cb2cb2b7603da4798face634592', '23e46df775b5112f85868f1fef6f3eeffa38c6c261489d1db5274a05b8718b8d', '5eb7a41c564acd9824a7671726967ffeb3b36a90302071cfa10b7efa4e38ca78', True], 'markers': '4c5a78740501c4bdd14bf8ecc87aa504bec250904a7965f7070e086b8d254f49', 'rejected': '7af39143d59a4beff2814a79ffdef611d878ed0c1bc6ee19112d8bacca19afe1', 'jobs': '3ec47c0037a18f79357b81fdf3550ba95dfd623876e175db34c96b4ec2ebdc1b', 'job_count': 989}
+replay-publication [baseline] papersearch stream publish papersearch.updates /artifacts/papersearch-m3-3bc6ee28893e/archives/c7d1425dca48b17c6707ba2f7382877a6ee933b6b93c2795430b2bd3204cf85c --replay
+replayed-batch [after] papersearch stream consume papersearch.updates --group fresh --drain --quarantine /artifacts/papersearch-m3-3bc6ee28893e/quarantine
+{"group": "fresh", "kind": "drained", "outcomes": {"duplicate": 995, "rejected": 5}, "partitions": {"0": {"beginning": 0, "committed": 650, "end": 650, "lag": 0}, "1": {"beginning": 0, "committed": 667, "end": 667, "lag": 0}, "2": {"beginning": 0, "committed": 688, "end": 688, "lag": 0}}}
+PASS republished batch outcomes: {'duplicate': 995, 'rejected': 5}
+PASS after canonical records, revisions, markers: [986, 993, 993]
+PASS after offline oracle digest: 'a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6'
+PASS after quarantine equality: True
+PASS wire bytes archived: b'{"damaged wire'
+PASS preserved label and history: ['relevant', 'two streams reported', True, 1]
+PASS republication preserves every durable effect: {'corpus': 'a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6', 'generation': 991, 'decision': ['relevant', 'two streams reported', '1333edd9f4d19cd8fca86968bf45e22c97430cb2cb2b7603da4798face634592', '23e46df775b5112f85868f1fef6f3eeffa38c6c261489d1db5274a05b8718b8d', '5eb7a41c564acd9824a7671726967ffeb3b36a90302071cfa10b7efa4e38ca78', True], 'markers': '4c5a78740501c4bdd14bf8ecc87aa504bec250904a7965f7070e086b8d254f49', 'rejected': '7af39143d59a4beff2814a79ffdef611d878ed0c1bc6ee19112d8bacca19afe1', 'jobs': '3ec47c0037a18f79357b81fdf3550ba95dfd623876e175db34c96b4ec2ebdc1b', 'job_count': 989}
+PASS M3 Kafka recovery (papersearch-m3-3bc6ee28893e)
+docker compose -p papersearch-m3-3bc6ee28893e --profile core --profile test stop mysql kafka
+
+Selected raw worker/producer logs (one JSON object per event, followed by any command error)
+>>> init.log
+{"cluster": "7vQpYv_4RkSzt14LWjLjlw", "kind": "topic_ready", "partitions": 3, "topic": "papersearch.updates"}
+>>> backpressure.log
+{"batch": "c7d1425dca48b17c6707ba2f7382877a6ee933b6b93c2795430b2bd3204cf85c", "kind": "publication_ack", "line": 32, "offset": 8, "partition": 0, "topic": "papersearch.updates", "value_sha256": "8a6c16dedda8efda7c39eb8ae861cb4197ce8bbaa8ec918a08af181296fd5218"}
+{"acknowledged": 32, "group": "papersearch-ingest", "kind": "publication_paused", "lag": 37, "max_lag": 37, "topic": "papersearch.updates"}
+BLOCKED: Consumer lag limit reached. Drain the group and resume publication.
+>>> publish-development.log
+{"batch": "c7d1425dca48b17c6707ba2f7382877a6ee933b6b93c2795430b2bd3204cf85c", "kind": "publication_ack", "line": 64, "offset": 25, "partition": 1, "topic": "papersearch.updates", "value_sha256": "a24e52dd30591532562ba07f82369617e0ca4e38cd6d997c58765a7ddc1644cf"}
+{"batch": "c7d1425dca48b17c6707ba2f7382877a6ee933b6b93c2795430b2bd3204cf85c", "kind": "publication_ack", "line": 1000, "offset": 343, "partition": 2, "topic": "papersearch.updates", "value_sha256": "8f62242a21c27c88720ce5382df179dcb07f26b1363475cfb18fc70893f0a2c3"}
+{"archive": "c7d1425dca48b17c6707ba2f7382877a6ee933b6b93c2795430b2bd3204cf85c", "kind": "publication_complete", "published": 968, "records": 1000, "resumed_after": 32, "topic": "papersearch.updates"}
+>>> crash-before.log
+{"group": "before", "kind": "group_start", "partitions": {"0": {"beginning": 0, "committed": null, "end": 0, "lag": 0}, "1": {"beginning": 0, "committed": 1, "end": 5, "lag": 4}, "2": {"beginning": 0, "committed": null, "end": 0, "lag": 0}}, "topic": "papersearch.updates"}
+{"group": "before", "identity": "34883591346584e8823d66c649f1a6f1cd17b1884c273186710fb103f81a0a8c", "kind": "offset_commit", "next_offset": 2, "offset": 1, "outcome": "rejected", "partition": 1, "topic": "papersearch.updates"}
+{"group": "before", "identity": "a6e30d728cb91ff97ab76d7b3f72e102420bf36ff1fd452c3d8d17686a303eea", "kind": "offset_commit", "next_offset": 3, "offset": 2, "outcome": "applied", "partition": 1, "topic": "papersearch.updates"}
+{"boundary": "before-commit", "group": "before", "kind": "test_crash", "offset": 3, "partition": 1, "topic": "papersearch.updates"}
+>>> crash-after.log
+{"group": "after", "kind": "group_start", "partitions": {"0": {"beginning": 0, "committed": null, "end": 0, "lag": 0}, "1": {"beginning": 0, "committed": 1, "end": 5, "lag": 4}, "2": {"beginning": 0, "committed": null, "end": 0, "lag": 0}}, "topic": "papersearch.updates"}
+{"group": "after", "identity": "34883591346584e8823d66c649f1a6f1cd17b1884c273186710fb103f81a0a8c", "kind": "offset_commit", "next_offset": 2, "offset": 1, "outcome": "rejected", "partition": 1, "topic": "papersearch.updates"}
+{"group": "after", "identity": "a6e30d728cb91ff97ab76d7b3f72e102420bf36ff1fd452c3d8d17686a303eea", "kind": "offset_commit", "next_offset": 3, "offset": 2, "outcome": "applied", "partition": 1, "topic": "papersearch.updates"}
+{"boundary": "after-commit", "group": "after", "kind": "test_crash", "offset": 3, "partition": 1, "topic": "papersearch.updates"}
+>>> database-offline.log
+{"group": "before", "kind": "group_start", "partitions": {"0": {"beginning": 0, "committed": null, "end": 0, "lag": 0}, "1": {"beginning": 0, "committed": 3, "end": 5, "lag": 2}, "2": {"beginning": 0, "committed": null, "end": 0, "lag": 0}}, "topic": "papersearch.updates"}
+{"attempt": 1, "errno": 2005, "error": "DatabaseError", "group": "before", "kind": "sql_error", "offset": 3, "partition": 1, "topic": "papersearch.updates"}
+{"attempt": 2, "errno": 2005, "error": "DatabaseError", "group": "before", "kind": "sql_error", "offset": 3, "partition": 1, "topic": "papersearch.updates"}
+{"attempt": 3, "errno": 2005, "error": "DatabaseError", "group": "before", "kind": "sql_error", "offset": 3, "partition": 1, "topic": "papersearch.updates"}
+{"attempt": 4, "errno": 2005, "error": "DatabaseError", "group": "before", "kind": "sql_error", "offset": 3, "partition": 1, "topic": "papersearch.updates"}
+BLOCKED: (mysql.connector.errors.DatabaseError) 2005 (HY000): Unknown MySQL server host 'mysql' (-2)
+>>> recover-baseline.log
+{"group": "baseline", "kind": "group_start", "partitions": {"0": {"beginning": 0, "committed": null, "end": 325, "lag": 325}, "1": {"beginning": 0, "committed": 1, "end": 336, "lag": 335}, "2": {"beginning": 0, "committed": null, "end": 344, "lag": 344}}, "topic": "papersearch.updates"}
+{"group": "baseline", "identity": "34883591346584e8823d66c649f1a6f1cd17b1884c273186710fb103f81a0a8c", "kind": "offset_commit", "next_offset": 2, "offset": 1, "outcome": "rejected", "partition": 1, "topic": "papersearch.updates"}
+{"group": "baseline", "identity": "a6e30d728cb91ff97ab76d7b3f72e102420bf36ff1fd452c3d8d17686a303eea", "kind": "offset_commit", "next_offset": 3, "offset": 2, "outcome": "applied", "partition": 1, "topic": "papersearch.updates"}
+{"group": "baseline", "identity": "09afa521f4c436509b74445d1a32f94a544d5520679487f1f3a6ce4468489955", "kind": "offset_commit", "next_offset": 4, "offset": 3, "outcome": "applied", "partition": 1, "topic": "papersearch.updates"}
+{"group": "baseline", "identity": "14f69ab249c479f0678d25657686e568c5f6c9d2bd59e09180b8c1e24f0980d2", "kind": "offset_commit", "next_offset": 5, "offset": 4, "outcome": "stale", "partition": 1, "topic": "papersearch.updates"}
+{"group": "baseline", "kind": "drained", "outcomes": {"applied": 988, "conflict": 2, "duplicate": 6, "rejected": 6, "stale": 2}, "partitions": {"0": {"beginning": 0, "committed": 325, "end": 325, "lag": 0}, "1": {"beginning": 0, "committed": 336, "end": 336, "lag": 0}, "2": {"beginning": 0, "committed": 344, "end": 344, "lag": 0}}}
+>>> recover-before.log
+{"group": "before", "kind": "group_start", "partitions": {"0": {"beginning": 0, "committed": null, "end": 325, "lag": 325}, "1": {"beginning": 0, "committed": 3, "end": 336, "lag": 333}, "2": {"beginning": 0, "committed": null, "end": 344, "lag": 344}}, "topic": "papersearch.updates"}
+{"group": "before", "identity": "09afa521f4c436509b74445d1a32f94a544d5520679487f1f3a6ce4468489955", "kind": "offset_commit", "next_offset": 4, "offset": 3, "outcome": "applied", "partition": 1, "topic": "papersearch.updates"}
+{"group": "before", "identity": "14f69ab249c479f0678d25657686e568c5f6c9d2bd59e09180b8c1e24f0980d2", "kind": "offset_commit", "next_offset": 5, "offset": 4, "outcome": "stale", "partition": 1, "topic": "papersearch.updates"}
+{"group": "before", "kind": "drained", "outcomes": {"applied": 987, "conflict": 2, "duplicate": 6, "rejected": 5, "stale": 2}, "partitions": {"0": {"beginning": 0, "committed": 325, "end": 325, "lag": 0}, "1": {"beginning": 0, "committed": 336, "end": 336, "lag": 0}, "2": {"beginning": 0, "committed": 344, "end": 344, "lag": 0}}}
+>>> recover-after.log
+{"group": "after", "kind": "group_start", "partitions": {"0": {"beginning": 0, "committed": null, "end": 325, "lag": 325}, "1": {"beginning": 0, "committed": 3, "end": 336, "lag": 333}, "2": {"beginning": 0, "committed": null, "end": 344, "lag": 344}}, "topic": "papersearch.updates"}
+{"group": "after", "identity": "09afa521f4c436509b74445d1a32f94a544d5520679487f1f3a6ce4468489955", "kind": "offset_commit", "next_offset": 4, "offset": 3, "outcome": "duplicate", "partition": 1, "topic": "papersearch.updates"}
+{"group": "after", "identity": "14f69ab249c479f0678d25657686e568c5f6c9d2bd59e09180b8c1e24f0980d2", "kind": "offset_commit", "next_offset": 5, "offset": 4, "outcome": "stale", "partition": 1, "topic": "papersearch.updates"}
+{"group": "after", "kind": "drained", "outcomes": {"applied": 986, "conflict": 2, "duplicate": 7, "rejected": 5, "stale": 2}, "partitions": {"0": {"beginning": 0, "committed": 325, "end": 325, "lag": 0}, "1": {"beginning": 0, "committed": 336, "end": 336, "lag": 0}, "2": {"beginning": 0, "committed": 344, "end": 344, "lag": 0}}}
+>>> fresh-group.log
+{"group": "fresh", "kind": "group_start", "partitions": {"0": {"beginning": 0, "committed": null, "end": 325, "lag": 325}, "1": {"beginning": 0, "committed": null, "end": 336, "lag": 336}, "2": {"beginning": 0, "committed": null, "end": 344, "lag": 344}}, "topic": "papersearch.updates"}
+{"group": "fresh", "identity": "34883591346584e8823d66c649f1a6f1cd17b1884c273186710fb103f81a0a8c", "kind": "offset_commit", "next_offset": 2, "offset": 1, "outcome": "rejected", "partition": 1, "topic": "papersearch.updates"}
+{"group": "fresh", "identity": "a6e30d728cb91ff97ab76d7b3f72e102420bf36ff1fd452c3d8d17686a303eea", "kind": "offset_commit", "next_offset": 3, "offset": 2, "outcome": "duplicate", "partition": 1, "topic": "papersearch.updates"}
+{"group": "fresh", "identity": "09afa521f4c436509b74445d1a32f94a544d5520679487f1f3a6ce4468489955", "kind": "offset_commit", "next_offset": 4, "offset": 3, "outcome": "duplicate", "partition": 1, "topic": "papersearch.updates"}
+{"group": "fresh", "identity": "14f69ab249c479f0678d25657686e568c5f6c9d2bd59e09180b8c1e24f0980d2", "kind": "offset_commit", "next_offset": 5, "offset": 4, "outcome": "duplicate", "partition": 1, "topic": "papersearch.updates"}
+{"group": "fresh", "kind": "drained", "outcomes": {"duplicate": 999, "rejected": 6}, "partitions": {"0": {"beginning": 0, "committed": 325, "end": 325, "lag": 0}, "1": {"beginning": 0, "committed": 336, "end": 336, "lag": 0}, "2": {"beginning": 0, "committed": 344, "end": 344, "lag": 0}}}
+>>> replayed-batch.log
+{"group": "fresh", "kind": "group_start", "partitions": {"0": {"beginning": 0, "committed": 325, "end": 650, "lag": 325}, "1": {"beginning": 0, "committed": 336, "end": 667, "lag": 331}, "2": {"beginning": 0, "committed": 344, "end": 688, "lag": 344}}, "topic": "papersearch.updates"}
+{"group": "fresh", "kind": "drained", "outcomes": {"duplicate": 995, "rejected": 5}, "partitions": {"0": {"beginning": 0, "committed": 650, "end": 650, "lag": 0}, "1": {"beginning": 0, "committed": 667, "end": 667, "lag": 0}, "2": {"beginning": 0, "committed": 688, "end": 688, "lag": 0}}}
+
+Complete local logs and archive manifests (SHA-256)
+log-sha256 03a5ec0cba994706ff66a9956e8d3a10ad0c260a8a85eaa27750212df59abcd8  artifacts/m3-verification-final.log
+log-sha256 6aa0fe2b1fbd3e7ad57e57113af5e6cd6111467370b4b5087e02b9e0b070ab66  artifacts/papersearch-m3-3bc6ee28893e/archive-development.log
+log-sha256 24252420fb7f4fb4f4a587a878764b15aadfec5c5568310ac90748fe6f9f37db  artifacts/papersearch-m3-3bc6ee28893e/archive-seed.log
+log-sha256 03b29699e8e24cb90f5109ede5e2671f19171594cbc6827bf13afdb39b6e88a1  artifacts/papersearch-m3-3bc6ee28893e/archive-updates.log
+log-sha256 c93c9c43a63634781667b9bb5891f85e060a8b47dab31c84854b31ed7dd05d63  artifacts/papersearch-m3-3bc6ee28893e/archives/38a61c40229ce7649b43f747a4bc385bd8090cf5746ad11761e063006ae34467/manifest.json
+log-sha256 0c1cdbc6e785607388b01f9f6b6a1638c49dd34cef2c3e7bf76fe28b2f320783  artifacts/papersearch-m3-3bc6ee28893e/archives/38ee6e0c83b826582c08dceb388f9ffb1a2bb516536b3a18c0b407de5338a3bc/manifest.json
+log-sha256 ad3f090b09709f3d2ca0bda5c61d50735ad9dd26f15106c78bf4819c1a7a727b  artifacts/papersearch-m3-3bc6ee28893e/archives/c7d1425dca48b17c6707ba2f7382877a6ee933b6b93c2795430b2bd3204cf85c/manifest.json
+log-sha256 74bb226de98d64d45af66b0c4984d01c0e8f176dc964187b38bd940681c308c5  artifacts/papersearch-m3-3bc6ee28893e/backpressure.log
+log-sha256 9a842e21c8ad0ff4953995f0ee2ee2921858898d5db235749cd73f4328066cb2  artifacts/papersearch-m3-3bc6ee28893e/crash-after.log
+log-sha256 e130e9b622a1a8d251a37b03c6a25f2422810252582fe2cd3c984e76e2f99a9c  artifacts/papersearch-m3-3bc6ee28893e/crash-before.log
+log-sha256 cb3ccaf591f787ddf13b45905f44229743f514c01f085d2ce359d8503ab90ee8  artifacts/papersearch-m3-3bc6ee28893e/database-offline.log
+log-sha256 c84a261153157f6878d33057097630e1e266cb7d3fa39be93ddfef9ab9134411  artifacts/papersearch-m3-3bc6ee28893e/fresh-group.log
+log-sha256 f420e030aab87cbe66cb2a124a85f6ab78aca5253e1c330dcaa92c28dbbc65d6  artifacts/papersearch-m3-3bc6ee28893e/generate.log
+log-sha256 87ee0b7203a9e745b9731da840a68c3203d3dd9feef6746f057964e2deccd567  artifacts/papersearch-m3-3bc6ee28893e/init.log
+log-sha256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  artifacts/papersearch-m3-3bc6ee28893e/migrate-after.log
+log-sha256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  artifacts/papersearch-m3-3bc6ee28893e/migrate-baseline.log
+log-sha256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  artifacts/papersearch-m3-3bc6ee28893e/migrate-before.log
+log-sha256 d09a1982ed94c4b13de234950fc9a19280bb11dfd8b903359ccd09f8149c1eae  artifacts/papersearch-m3-3bc6ee28893e/outage-end.log
+log-sha256 d09a1982ed94c4b13de234950fc9a19280bb11dfd8b903359ccd09f8149c1eae  artifacts/papersearch-m3-3bc6ee28893e/outage-start.log
+log-sha256 50bfb91f62de1a68abd2f0b7460331b0e04aa72e6a2d612ff9eed134309e8aee  artifacts/papersearch-m3-3bc6ee28893e/publish-development.log
+log-sha256 666aa47bdfb7b9e4eb05bcfe6b247a9cc352520f0e5beb3c3e8f26e3d4b11eca  artifacts/papersearch-m3-3bc6ee28893e/publish-seed.log
+log-sha256 9374ab22dbe4dc9b3a2b9d2d8f4adf9e81bbda03aef30185a6269b2241691097  artifacts/papersearch-m3-3bc6ee28893e/publish-updates.log
+log-sha256 40df29d60fc19f83946f5d3764b3e687cc4dc080c98ae6ca06ea18a0e1a2d37b  artifacts/papersearch-m3-3bc6ee28893e/recover-after.log
+log-sha256 0b1b04b338cc624f7e601f53d89f7f56ef9b57769dcfbaea2364bfaa7faa3af4  artifacts/papersearch-m3-3bc6ee28893e/recover-baseline.log
+log-sha256 3d497dde6a6849981b5bf35e4123b0065290d22b747dd2fe4ce456dd1bd34ee3  artifacts/papersearch-m3-3bc6ee28893e/recover-before.log
+log-sha256 94d3d7223eefcc450867862f0d000fc62abd0593cd8576041097ddd723cdf8b9  artifacts/papersearch-m3-3bc6ee28893e/replay-publication.log
+log-sha256 b5640f6472a4263a73aff333b4ee7a884a327ee7482205f1c791ef8a6b8b73cd  artifacts/papersearch-m3-3bc6ee28893e/replayed-batch.log
+log-sha256 58198431882f68df18657a1edf5871a08d529fd96e3a531d4740b67e2e27056e  artifacts/papersearch-m3-3bc6ee28893e/resume-acked.log
+log-sha256 08b3c3b841a35b54424bcc2f7f53ba6647b11897c4de79d4f16b310d3f5b0a48  artifacts/papersearch-m3-3bc6ee28893e/seed-after.log
+log-sha256 4f8be22a0cf1d349b4e072587ddae7859e3441ce3af45225fef82cc2cf12b9e9  artifacts/papersearch-m3-3bc6ee28893e/seed-baseline.log
+log-sha256 a1ab910bfedca23e6903064a53ff1b56b6b44fb5696cc879f32a69632ff4b237  artifacts/papersearch-m3-3bc6ee28893e/seed-before.log
+log-sha256 73f352ee838fede6716d6b7d78ec525da6e88b9a71673280faf28347cff7b8c9  artifacts/papersearch-m3-3bc6ee28893e/stopped-after.log
+log-sha256 d09a1982ed94c4b13de234950fc9a19280bb11dfd8b903359ccd09f8149c1eae  artifacts/papersearch-m3-3bc6ee28893e/stopped-before.log
+
+Verified source/configuration/fixture SHA-256 (sorted relative paths, LF manifest)
+60185239ec8cca0f44990dd01796fd4095eeb6e76757cc23c2c3e17088dea3a5  .dockerignore
+42e60e5c7f4f24033f04e7006004138eb73ab44168ef4aad2b421ddb119d8b10  Dockerfile
+ab204ff4d3787b09c6c8e5483538a9c15ea157d3bae812ab4b35a7566e0aec16  alembic.ini
+04274422a83318f2bd9f253bbe6c705e2b7e55a7d13282b1e085113ff28dd5f4  compose.yaml
+b15c7f037e5506b0899b832b1d94ebe64272b26ca84d3463b543afd7876d62a6  migrations/env.py
+b8f8716a625e6a761686917d83c2ed0f65b5ce5b0066eb1b89cff8270ad2b29c  migrations/versions/0001_paper_state.py
+1dd5f534e55eb56de9d4c664ebfdff7abcefe9b263224e04d84b67ace259364a  pyproject.toml
+5c3903b2b1d61bf7682f8e90310f753838e7f96abf73bed571ff96ab87a42ab1  requirements-dev.lock
+bac09c76b6eed68ac770ca5b54a41e334b7b07c1fe4cc2d5be9833016f3892b2  requirements.lock
+6397df41dc70560a5f354dd545b171b7d889a164b2a2739095578ed39984eaa4  scripts/verify-core.ps1
+9a7416fd756b9b1bc85decbf81a22631c2584c8cdc06e67d0020ab9e74168324  scripts/verify-ingestion.ps1
+38b9808fe3d558b32dd5237974711e951c662306ca9834c2b9b323765be15f7b  scripts/verify-storage.ps1
+cd6aa91d3c4ccb0e35ee5701849bec82db719b01a232dde76c7567853558e898  src/papersearch/__init__.py
+518ce0b54936389f92a85cff8d5fdeff59025efa772672e3ffaa572d31885ba6  src/papersearch/adapters.py
+b38795cb26c76a7dde7de39ee26a75819c218a86a2ced07fa77663da5300e80a  src/papersearch/archive.py
+db3b2406fd05aef995cd34e8c31acca4d301c201b6bc76745c536f596eba8c6c  src/papersearch/broker.py
+25d2eb82854e2564a50a474d2dcf77da014135a314d34e5107f47db87318c29c  src/papersearch/cli.py
+3f185fcfebb7e25a2e764ff22698d22c44c6e2b351df12d94f27a88edf637b03  src/papersearch/config.py
+5087c13fa9e2d51bf5fffd41497f956edd0e91ee31871612ff55c46bc07afcde  src/papersearch/contracts.py
+e4e8760cd461f2a3fbbc40f4d00c86dfb98ef861a314e6b60444c1b21c8ef2f4  src/papersearch/doctor.py
+61eb6a34aa23722aeac454041b588fb62e0418e29512d6a81d0d275e24b07a7b  src/papersearch/ingestion.py
+d7c443496feb06df5c114fbeac493007240c50c005e4022250f5e4109415bee9  src/papersearch/publication.py
+4fb7f99100509b5fddb921cb81c7eb2f85cf35838f542cdad519feb5b1e30d9a  src/papersearch/reference.py
+f56c89b70aa3997ee63068b008e9b005ed7410b8db8279be67d1f37dbdcae832  src/papersearch/storage/__init__.py
+75b5d2a52ff9ffe2f04083fdca1c8c54b67b2e29088695c2cf15b07a1473db6d  src/papersearch/storage/commands.py
+e09883ed7b735746eb451f7e5feeadce0ecc871ebe38fdaef5e147ede9af220e  src/papersearch/storage/jobs.py
+c2c83076fea283e595561fadc1a92b7e2b923b87eed7d3c63c8705eb001010bb  src/papersearch/storage/metadata.py
+15283390ca071e20866468a660ff2d8cac11b24874bbc357b3061d4a23967886  src/papersearch/storage/reviews.py
+979894da5fdd10d893dfe2d39aeb9f8a395d7b854f4383320363e38efeed5a82  src/papersearch/stream_cli.py
+06b2b4e9073423d79ba29c6564cbe3678d2d06f8ad3abd7931ee5bc265d7ebb7  tests/fixtures/phase1/.gitattributes
+07608494d7b40cc4f0c4eda02937dfacc5986f41c7a449813d5e62a5328f5bc2  tests/fixtures/phase1/arxiv-metadata.jsonl
+629f52c3f4b4476c890d62ad4af5d1a5719187f7f60b5cda75fc2774d3d043de  tests/fixtures/phase1/cases.jsonl
+cb6f73b98ee8f7319bcc4a66821fc6a14c9a2ddfe0977e71d87b3734ebd5f090  tests/fixtures/phase1/expected.json
+7fe684db0b490c87a001798f7ca965485b8b02472b81a362d481655a980e317a  tests/fixtures/phase1/generate.py
+17904f0063fe348664646832983d9bc195d4b5e5160111b239577828f24ad0ea  tests/integration/kafka_recovery.py
+dc80fd2fd589e7823d2943c2910c6a2b7d61e977407810450cb1b559b82284da  tests/integration/mysql_state.py
+4cd1911e13c25e09fe288cba85be88c312bf5f8e65efaf0baf3a55b307219b3e  tests/unit/test_phase0.py
+e59c92781528ad08196df2b2a4a1497071af4951b4e292573ffaf0cfd7fe842d  tests/unit/test_reference.py
+82da62ecdbbeaacf3073fe1e058350ab53ef4947f7b151f228d58bccc2065c2b  tests/unit/test_stream.py
+manifest SHA-256 a212b2c98ce39afe17477290290f9e471636f22f360f2b1b26fd116e671b7919

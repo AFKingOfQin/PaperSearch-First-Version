@@ -2,6 +2,16 @@
 
 PaperSearch imports paper metadata into MySQL and preserves each project's screening decisions across revisions and restarts. You can screen papers from the CLI and compare the stored corpus with a deterministic offline reference. See [project status](PROGRESS.md) and the [offline demo procedure](docs/DEMO_SCRIPT.md).
 
+## Verify Kafka ingestion recovery
+
+With Docker Desktop running and the Windows environment below configured, run:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\verify-ingestion.ps1
+```
+
+The verifier compares three fresh MySQL databases fed by the same local Kafka topic. It kills two workers on opposite sides of the SQL commit, stops the test database during a retry, then checks recovered papers, labels, jobs and partition offsets against the uninterrupted run. Look for `PASS M3 Kafka recovery`. The verifier stops its services and retains its dedicated volumes, archived fixtures and per-command logs. [Manual import and recovery commands](docs/ingestion.md) · [Recorded verification](docs/evidence/phase3-kafka.txt)
+
 ## Verify database recovery
 
 With Docker Desktop running and the Windows environment below configured, run this command from the repository root.
