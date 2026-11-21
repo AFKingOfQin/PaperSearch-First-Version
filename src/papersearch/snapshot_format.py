@@ -2,12 +2,14 @@
 import hashlib
 import json
 import sqlite3
+import struct
 from itertools import zip_longest
 
 import pyarrow as pa
 import pyarrow.parquet as pq
 
 from .contracts import digest
+from .encoder import DIM, ELIGIBILITY, MAX_TOKENS, RECIPE, eligible, unpack_vector
 from .derivation import TEST_KIND, WIDTH, cache_key, fixture_vector
 
 STR = pa.string()
@@ -49,6 +51,14 @@ VECTORS = pa.schema(
         ("text_hash", STR),
         ("cache_key", STR),
         ("value", pa.binary(WIDTH)),
+    ]
+)
+SEMANTIC = pa.schema(
+    [
+        *list(VECTORS)[:-1],
+        ("tokens", pa.uint32()),
+        ("vector_sha", STR),
+        ("value", pa.binary(DIM * 4)),
     ]
 )
 FILES = ("corpus.parquet", "lexical.sqlite", "test-vectors.parquet")
@@ -104,9 +114,12 @@ def validate(directory, expected_sha):
     if file_sha(path) != expected_sha:
         raise ValueError("Snapshot manifest checksum mismatch")
     manifest = json.loads(path.read_bytes())
-    if manifest["format_version"] != 1 or set(manifest["files"]) != set(FILES):
+    version = manifest["format_version"]
+    semantic = version == 2
+    files = FILES + (("semantic.parquet",) if semantic else ())
+    if version not in (1, 2) or set(manifest["files"]) != set(files):
         raise ValueError("Unexpected snapshot package format")
-    for name in FILES:
+    for name in files:
         f = directory / name
         if manifest["files"][name] != dict(bytes=f.stat().st_size, sha256=file_sha(f)):
             raise ValueError(f"Snapshot checksum mismatch: {name}")
@@ -114,7 +127,13 @@ def validate(directory, expected_sha):
     recipe = manifest["recipe"]
     vectors = parquet_rows(directory / "test-vectors.parquet", VECTORS)
     vector = next(vectors, None)
-    indexed = eligible = 0
+    indexed = fixtures = semantic_count = candidate_count = truncated = title_only = 0
+    semantic_rows = (
+        parquet_rows(directory / "semantic.parquet", SEMANTIC) if semantic else iter(())
+    )
+    entry = next(semantic_rows, None)
+    if semantic and (recipe != RECIPE or manifest["eligibility"] != ELIGIBILITY):
+        raise ValueError("Unsupported semantic package recipe or scope")
     previous_id = ""
     db = sqlite3.connect(
         (directory / "lexical.sqlite").resolve().as_uri() + "?mode=ro&immutable=1",
@@ -170,7 +189,25 @@ def validate(directory, expected_sha):
                 raise ValueError("Invalid canonical record identity")
             previous_id = paper
             corpus.add(row)
-            eligible += paper.startswith("fixture:")
+            fixtures += paper.startswith("fixture:")
+            if semantic and eligible(paper):
+                candidate_count += 1
+            if entry is not None and entry["row_id"] == number:
+                raw = struct.pack("<I", entry["tokens"]) + entry["value"]
+                length = unpack_vector(raw)
+                if (
+                    not eligible(paper)
+                    or entry["vector_row"] != semantic_count
+                    or (entry["paper_id"], entry["event_id"], entry["text_hash"])
+                    != (paper, event, text_hash)
+                    or entry["cache_key"] != cache_key(text_hash, recipe)
+                    or hashlib.sha256(raw).hexdigest() != entry["vector_sha"]
+                ):
+                    raise ValueError("Invalid semantic vector identity or row mapping")
+                semantic_count += 1
+                truncated += length > MAX_TOKENS
+                title_only += not payload["abstract"]
+                entry = next(semantic_rows, None)
             if vector is not None and vector["row_id"] == number:
                 key = cache_key(text_hash, recipe)
                 if (
@@ -193,15 +230,24 @@ def validate(directory, expected_sha):
     finally:
         db.close()
         vectors.close()
+        if semantic:
+            semantic_rows.close()
     counts = dict(
         metadata=corpus.count,
         lexical=corpus.count,
-        semantic=0,
-        fixture_eligible=eligible,
+        semantic=semantic_count,
+        fixture_eligible=fixtures,
         test_vectors=indexed,
     )
+    if semantic:
+        counts.update(
+            semantic_eligible=candidate_count,
+            semantic_truncated=truncated,
+            semantic_title_only=title_only,
+        )
     if (
-        vector is not None
+        entry is not None
+        or vector is not None
         or counts != manifest["coverage"]
         or corpus.result() != manifest["corpus_sha256"]
     ):

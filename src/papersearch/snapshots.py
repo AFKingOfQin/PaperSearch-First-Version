@@ -3,7 +3,7 @@ import json
 import os
 import sqlite3
 import tempfile
-from contextlib import closing
+from contextlib import ExitStack, closing
 from datetime import datetime, timezone
 from pathlib import Path
 from uuid import uuid4
@@ -14,7 +14,9 @@ from sqlalchemy import text
 
 from .archive import sync_dir, write_atomic
 from .derivation import FIELDS, TEST_KIND, bind_store, crash_at, verified_vector
+from .encoder import ELIGIBILITY, KIND, MAX_TOKENS, eligible as semantic_eligible
 from .snapshot_format import (
+    SEMANTIC,
     CORPUS,
     FILES,
     VECTORS,
@@ -31,10 +33,11 @@ STATE = """SELECT d.*,s.generation FROM derivation_state d JOIN system_state s
 
 def write_package(engine, root, directory, snapshot_id, page_size):
     corpus = CorpusDigest()
-    indexed = eligible = 0
+    indexed = eligible = semantic_count = candidates = truncated = title_only = 0
     with (
         engine.connect().execution_options(isolation_level="REPEATABLE READ") as conn,
         conn.begin(),
+        ExitStack() as writers,
         closing(sqlite3.connect(directory / "lexical.sqlite")) as db,
         pq.ParquetWriter(
             directory / "corpus.parquet", CORPUS, compression="zstd"
@@ -45,19 +48,49 @@ def write_package(engine, root, directory, snapshot_id, page_size):
     ):
         state = conn.execute(text(STATE)).mappings().one()
         recipe = {field: state[field] for field in FIELDS}
+        semantic = recipe["kind"] == KIND
+        if semantic:
+            semantic_out = writers.enter_context(
+                pq.ParquetWriter(
+                    directory / "semantic.parquet", SEMANTIC, compression="zstd"
+                )
+            )
         db.execute(
             "CREATE VIRTUAL TABLE documents USING fts5(title,abstract,paper_id UNINDEXED,"
             "event_id UNINDEXED,text_hash UNINDEXED,tokenize='unicode61')"
         )
         after = ""
         while rows := current_page(conn, after, page_size, recipe):
-            metadata, mapping, buffers = [], [], {}
+            metadata, mapping, semantic_mapping, buffers = [], [], [], {}
             for item in rows:
                 record = json.loads(item.record_json)
                 corpus.add(record)
                 metadata.append(flat_row(corpus.count, record))
                 after = item.paper_id
                 eligible += after.startswith("fixture:")
+                if semantic and semantic_eligible(after):
+                    candidates += 1
+                    if item.cache_key:
+                        raw = verified_vector(
+                            root, item._mapping, buffers, semantic=True
+                        )
+                        length = int.from_bytes(raw[:4], "little")
+                        semantic_mapping.append(
+                            dict(
+                                vector_row=semantic_count,
+                                row_id=corpus.count,
+                                paper_id=after,
+                                event_id=record["event_id"],
+                                text_hash=record["embedding_text_hash"],
+                                cache_key=item.cache_key,
+                                tokens=length,
+                                vector_sha=item.vector_sha,
+                                value=raw[4:],
+                            )
+                        )
+                        semantic_count += 1
+                        truncated += length > MAX_TOKENS
+                        title_only += not record["payload"]["abstract"]
                 if item.cache_key and recipe["kind"] == TEST_KIND:
                     mapping.append(
                         dict(
@@ -77,37 +110,47 @@ def write_package(engine, root, directory, snapshot_id, page_size):
                 "VALUES(:row_id,:title,:abstract,:paper_id,:event_id,:embedding_text_hash)",
                 metadata,
             )
+            if semantic_mapping:
+                semantic_out.write_table(
+                    pa.Table.from_pylist(semantic_mapping, schema=SEMANTIC)
+                )
             if mapping:
                 vectors.write_table(pa.Table.from_pylist(mapping, schema=VECTORS))
             crash_at("snapshot-write")
         db.execute("INSERT INTO documents(documents) VALUES('integrity-check')")
         db.commit()
     files = {}
-    for name in FILES:
+    for name in FILES + (("semantic.parquet",) if semantic else ()):
         path = directory / name
         with path.open("rb+") as f:
             os.fsync(f.fileno())
         files[name] = dict(bytes=path.stat().st_size, sha256=file_sha(path))
     manifest = dict(
-        format_version=1,
+        format_version=2 if semantic else 1,
         snapshot_id=snapshot_id,
         created_at=datetime.now(timezone.utc).isoformat(),
         generation=state["generation"],
         artifact_epoch=state["artifact_epoch"],
         recipe=recipe,
         corpus_sha256=corpus.result(),
-        eligibility="paper_id starts with fixture:",
+        eligibility=ELIGIBILITY if semantic else "paper_id starts with fixture:",
         lexical_format="SQLite FTS5 unicode61",
         test_vector_format="SHA-256 fixture bytes, width 32",
         coverage=dict(
             metadata=corpus.count,
             lexical=corpus.count,
-            semantic=0,
+            semantic=semantic_count,
             fixture_eligible=eligible,
             test_vectors=indexed,
         ),
         files=files,
     )
+    if semantic:
+        manifest["coverage"].update(
+            semantic_eligible=candidates,
+            semantic_truncated=truncated,
+            semantic_title_only=title_only,
+        )
     write_atomic(
         directory / "manifest.json",
         json.dumps(manifest, sort_keys=True, indent=2).encode() + b"\n",

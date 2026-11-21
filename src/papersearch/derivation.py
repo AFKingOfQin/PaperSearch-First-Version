@@ -2,6 +2,8 @@
 import hashlib
 import os
 import re
+import json
+import struct
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -11,6 +13,14 @@ from sqlalchemy import text
 
 from .archive import sync_dir, write_atomic
 from .contracts import digest
+from .encoder import (
+    KIND,
+    PAYLOAD_BYTES,
+    RECIPE,
+    eligibility_sql,
+    passage,
+    unpack_vector,
+)
 from .storage.jobs import claim_job, finish_locked
 
 TEST_KIND = "test-digest-v1"
@@ -63,6 +73,10 @@ def configure(
     for value, limit in ((model_id, 160), (model_revision, 64), (preprocessing, 32)):
         if not re.fullmatch(r"[A-Za-z0-9._/-]{1,%d}" % limit, value):
             raise ValueError("Invalid fixture recipe identity")
+    return configure_recipe(engine, recipe)
+
+
+def configure_recipe(engine, recipe):
     with engine.begin() as conn:
         conn.execute(
             text("""UPDATE derivation_state SET recipe_epoch=recipe_epoch+1, kind=:kind,
@@ -90,10 +104,10 @@ def configure(
                     "Another process selected a different recipe during backfill"
                 )
             page = conn.execute(
-                text("""SELECT c.paper_id,r.text_hash FROM current_revisions c
-                JOIN paper_revisions r ON r.event_id=c.event_id WHERE c.paper_id LIKE 'fixture:%'
+                text(f"""SELECT c.paper_id,r.text_hash FROM current_revisions c
+                JOIN paper_revisions r ON r.event_id=c.event_id WHERE {eligibility_sql("c.paper_id", ":kind")}
                 AND c.paper_id>:after ORDER BY c.paper_id LIMIT 128"""),
-                dict(after=after),
+                dict(after=after, **recipe),
             ).all()
             if not page:
                 return recipe
@@ -121,30 +135,33 @@ def shard_path(root, checksum):
     return root / "shards" / checksum[:2] / checksum
 
 
-def verified_vector(root, artifact, buffers):
+def verified_vector(root, artifact, buffers, *, semantic=False):
+    width = PAYLOAD_BYTES if semantic else WIDTH
     checksum = artifact["shard_sha"]
     if checksum not in buffers:
         with shard_path(root, checksum).open("rb") as source:
-            data = source.read(64 * WIDTH + 1)
+            data = source.read(64 * width + 1)
         if (
-            len(data) > 64 * WIDTH
-            or len(data) % WIDTH
+            len(data) > 64 * width
+            or len(data) % width
             or hashlib.sha256(data).hexdigest() != checksum
         ):
             raise ValueError(f"Invalid artifact shard {checksum}")
         buffers[checksum] = data
-    start = WIDTH * artifact["slot"]
-    vector = buffers[checksum][start : start + WIDTH]
+    start = width * artifact["slot"]
+    vector = buffers[checksum][start : start + width]
     if (
-        len(vector) != WIDTH
+        len(vector) != width
         or hashlib.sha256(vector).hexdigest() != artifact["vector_sha"]
-        or vector != fixture_vector(artifact["cache_key"])
+        or (not semantic and vector != fixture_vector(artifact["cache_key"]))
     ):
         raise ValueError("Cached test vector does not match its identity")
+    if semantic:
+        unpack_vector(vector)
     return vector
 
 
-def store_shard(root, generated):
+def store_shard(root, generated, *, semantic=False):
     data = b"".join(generated.values())
     sha = hashlib.sha256(data).hexdigest()
     path = shard_path(root, sha)
@@ -164,16 +181,16 @@ def store_shard(root, generated):
             slot=slot,
             vector_sha=hashlib.sha256(vector).hexdigest(),
         )
-        verified_vector(root, location, buffers)
+        verified_vector(root, location, buffers, semantic=semantic)
         locations[key] = location
     crash_at("artifact-renamed")
     return locations, reused
 
 
-def process_batch(engine, root, limit, lease_seconds):
+def process_batch(engine, root, limit, lease_seconds, encoder=None):
     jobs = []
     for _ in range(limit):
-        job = claim_job(engine, lease_seconds, kind=TEST_KIND)
+        job = claim_job(engine, lease_seconds, kind=KIND if encoder else TEST_KIND)
         if job is None:
             break
         job["cache_key"] = cache_key(job["text_hash"], job)
@@ -181,9 +198,12 @@ def process_batch(engine, root, limit, lease_seconds):
     counts = Counter(claimed=len(jobs))
     if not jobs:
         return counts
+    if encoder is not None:
+        crash_at("semantic-batch-claimed")
     generated, locations, errors, buffers = {}, {}, {}, {}
     with engine.connect() as conn:
-        for key in dict.fromkeys(job["cache_key"] for job in jobs):
+        missing = {}
+        for key, job in {job["cache_key"]: job for job in jobs}.items():
             artifact = (
                 conn.execute(
                     text("SELECT * FROM derived_artifacts WHERE cache_key=:key"),
@@ -193,15 +213,37 @@ def process_batch(engine, root, limit, lease_seconds):
                 .first()
             )
             if artifact is None:
-                generated[key] = fixture_vector(key)
+                if encoder is None:
+                    generated[key] = fixture_vector(key)
+                else:
+                    if any(job[field] != RECIPE[field] for field in FIELDS):
+                        raise ValueError("Unsupported semantic recipe")
+                    raw = conn.scalar(
+                        text("""SELECT record_json FROM paper_revisions
+                        WHERE paper_id=:paper_id AND text_hash=:text_hash LIMIT 1"""),
+                        job,
+                    )
+                    payload = json.loads(raw)["payload"]
+                    if (
+                        digest(["text-v1", payload["title"], payload["abstract"]])
+                        != job["text_hash"]
+                    ):
+                        raise ValueError("Leased job text hash mismatch")
+                    missing[key] = passage(payload["title"], payload["abstract"])
                 continue
             try:
-                verified_vector(root, artifact, buffers)
+                verified_vector(root, artifact, buffers, semantic=encoder is not None)
             except (OSError, ValueError) as exc:
                 errors[key] = str(exc)[:2048]
+    if missing:
+        vectors, lengths = encoder.encode(list(missing.values()))
+        for key, vector, length in zip(missing, vectors, lengths, strict=True):
+            generated[key] = struct.pack("<I", length) + vector.tobytes()
     if generated:
         try:
-            locations, reused = store_shard(root, generated)
+            locations, reused = store_shard(
+                root, generated, semantic=encoder is not None
+            )
             counts["shards_reused"] += int(reused)
         except (OSError, ValueError) as exc:
             errors.update(dict.fromkeys(generated, str(exc)[:2048]))
@@ -284,12 +326,39 @@ def run_workers(
     return dict(total)
 
 
-def retry_job(engine, job_id):
+def retry_job(engine, job_id, kind=TEST_KIND):
     with engine.begin() as conn:
         result = conn.execute(
             text("""UPDATE derived_jobs SET status='pending',attempts=0 WHERE job_id=:job
             AND kind=:kind AND status='failed'"""),
-            dict(job=job_id, kind=TEST_KIND),
+            dict(job=job_id, kind=kind),
         )
         if result.rowcount != 1:
-            raise ValueError("Expected a failed test-artifact job")
+            raise ValueError("Expected a failed job of the selected kind")
+
+
+def run_semantic(engine, root, batch_size, max_jobs, lease_seconds):
+    from .encoder import Encoder
+
+    if (
+        not 1 <= batch_size <= 64
+        or not 1 <= max_jobs <= 100000
+        or not 1 <= lease_seconds <= 86400
+    ):
+        raise ValueError("Invalid semantic worker batch, attempt or lease limit")
+    bind_store(engine, root)
+    encoder = Encoder()  # Validate dependencies before taking a lease.
+    total = Counter()
+    while total["claimed"] < max_jobs:
+        counts = process_batch(
+            engine,
+            root,
+            min(batch_size, max_jobs - total["claimed"]),
+            lease_seconds,
+            encoder,
+        )
+        total.update(counts)
+        if not counts["claimed"] or counts["errors"] or counts["lost_leases"]:
+            break
+        crash_at("semantic-batch-committed")
+    return dict(total)

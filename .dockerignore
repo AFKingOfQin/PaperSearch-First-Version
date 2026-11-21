@@ -12,3 +12,4 @@
 !migrations/**
 **/__pycache__/
 !requirements-review.lock
+!requirements-embedding.lock

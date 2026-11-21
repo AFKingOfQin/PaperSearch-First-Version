@@ -1,0 +1,45 @@
+{
+  "artifact_epoch": 4878,
+  "corpus_sha256": "0d788a47831762a44ee8b5a93e2e3ba92adf172250dfc19647b712a7ae01d1eb",
+  "coverage": {
+    "fixture_eligible": 0,
+    "lexical": 100000,
+    "metadata": 100000,
+    "semantic": 4878,
+    "semantic_eligible": 4878,
+    "semantic_title_only": 0,
+    "semantic_truncated": 3506,
+    "test_vectors": 0
+  },
+  "created_at": "2026-11-21T22:11:53.210839+00:00",
+  "eligibility": "CRC32(UTF-8 paper_id) modulo 100 < 5",
+  "files": {
+    "corpus.parquet": {
+      "bytes": 58766033,
+      "sha256": "d1577812c38a048d40794ef2e8931ceafad9cde01aa9977fb69321f996d65b6a"
+    },
+    "lexical.sqlite": {
+      "bytes": 174428160,
+      "sha256": "c3ca40d5b650071284e93134fda28e885f8b75601280015cf5822dfc0ea33264"
+    },
+    "semantic.parquet": {
+      "bytes": 14686089,
+      "sha256": "9f9346543bcf759bcc80a92ce1e3aecd7ac512bd17cc0c6a97ec39983421afd1"
+    },
+    "test-vectors.parquet": {
+      "bytes": 829,
+      "sha256": "7212d1ed41728e5283d2487cb194d13f14aad3aeffdb97d6ee5f3f6acd7d210c"
+    }
+  },
+  "format_version": 2,
+  "generation": 100000,
+  "lexical_format": "SQLite FTS5 unicode61",
+  "recipe": {
+    "kind": "bge-onnx-cpu-v1",
+    "model_id": "BAAI/bge-small-en-v1.5",
+    "model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+    "preprocessing": "title-lf-abstract-cls128-v1"
+  },
+  "snapshot_id": "a0c968b67725440e824d1ab9f2f3920c",
+  "test_vector_format": "SHA-256 fixture bytes, width 32"
+}

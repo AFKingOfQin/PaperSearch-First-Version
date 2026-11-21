@@ -196,8 +196,8 @@ def verify_boundaries():
     )
     store = derivation.store_shard
 
-    def finish_after_reclaim(root, generated):
-        stored = store(root, generated)
+    def finish_after_reclaim(root, generated, **kwargs):
+        stored = store(root, generated, **kwargs)
         # The old worker has bytes on disk but has not entered the SQL completion transaction.
         time.sleep(1.1)
         reclaimed = snap("new-work", "work", "--max-jobs", "1")

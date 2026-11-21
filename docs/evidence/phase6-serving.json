@@ -1,0 +1,48 @@
+{
+  "snapshot": "a0c968b67725440e824d1ab9f2f3920c",
+  "coverage": {
+    "fixture_eligible": 0,
+    "lexical": 100000,
+    "metadata": 100000,
+    "semantic": 4878,
+    "semantic_eligible": 4878,
+    "semantic_title_only": 0,
+    "semantic_truncated": 3506,
+    "test_vectors": 0
+  },
+  "top_hit": {
+    "paper_id": "arxiv:0806.4861",
+    "event_id": "77f7c15407530b82b5a15e4c8ccd814c304a363fe41309b5ad9e9c0b294d3aa8",
+    "title": "Total correlations and mutual information",
+    "rank": 1,
+    "score": 0.827532172203064
+  },
+  "bm25_top": {
+    "paper_id": "arxiv:0804.1442",
+    "event_id": "dd37e62e1e2871a9540a488912d35e506ee4764b34f72130fad0fe1579bc6840",
+    "title": "Super quantum mechanics, spacetime and quantum information",
+    "score": -10.198827251127259,
+    "rank": 1
+  },
+  "cold_semantic_http_ms": 3279.263299999002,
+  "warm_semantic_http_ms": [
+    65.00090000190539,
+    46.30509999697097,
+    72.14530000055674,
+    64.02299999899697,
+    69.43989999854239
+  ],
+  "lexical_http_ms": 1453.3504999999423,
+  "fallback": "Pinned CPU model unavailable",
+  "ui_top_event": "77f7c15407530b82b5a15e4c8ccd814c304a363fe41309b5ad9e9c0b294d3aa8",
+  "independent_check": {
+    "independently_scored": 4878,
+    "matched_top_ids": [
+      "arxiv:0806.4861",
+      "arxiv:0710.1716",
+      "arxiv:0708.0478",
+      "arxiv:0803.2272"
+    ],
+    "reencoded_passage_cosine": 1.0
+  }
+}

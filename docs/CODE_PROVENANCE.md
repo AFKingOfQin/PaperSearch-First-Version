@@ -11,3 +11,7 @@ Python modules, tests and the fixture generator carry inline Codex attribution. 
 | `docs/evidence/phase5-subset.json` | Runtime output of the Codex-authored selector, including the retrieval time, original input prefix hash, nested subset counts and per-batch hashes. |
 | `docs/evidence/phase5-measurements.json` | Runtime reports from the real-data ingestion and reviewer measurement scripts, grouped by gate. |
 | `docs/evidence/phase5-decisions.csv` | Runtime CSV export of a synthetic review decision on a real source record. The note and label are automated test inputs. |
+| `docs/evidence/phase6-cpu.json` | Measured per-batch timings, token counts, input identities and process memory from the Codex-authored CPU benchmark. |
+| `docs/evidence/phase6-evaluation.json` | Runtime output from the Codex-authored evaluator using three pinned public review tables and their original final inclusion decisions. |
+| `docs/evidence/phase6-serving.json` | Measured HTTP and Streamlit results and independent cosine checks from the Codex-authored serving verifier. |
+| `docs/evidence/phase6-snapshot.json` | Unmodified manifest from the CPU semantic package published against the retained 100k collection. |

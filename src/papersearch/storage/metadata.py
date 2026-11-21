@@ -7,6 +7,7 @@ from sqlalchemy import text
 from sqlalchemy.engine import Engine
 
 from ..adapters import json_record, parse_record, raw_lines
+from ..encoder import eligibility_sql
 from ..contracts import Event, RecordError, provenance, utc
 
 def apply_event(engine: Engine, event: Event) -> str:
@@ -86,11 +87,11 @@ def apply_event(engine: Engine, event: Event) -> str:
                     args,
                 )
                 conn.execute(
-                    text("""
+                    text(f"""
                     INSERT INTO derived_jobs (paper_id,text_hash,kind,model_id,model_revision,preprocessing)
                     SELECT :paper,r.text_hash,s.kind,s.model_id,s.model_revision,s.preprocessing
                     FROM paper_revisions r JOIN derivation_state s ON s.singleton=1
-                    WHERE r.event_id=:winner AND r.paper_id LIKE 'fixture:%'
+                    WHERE r.event_id=:winner AND {eligibility_sql('r.paper_id', 's.kind')}
                     ON DUPLICATE KEY UPDATE job_id=derived_jobs.job_id
                 """),
                     args,
@@ -175,9 +176,9 @@ def current_page(conn, after, page_size, recipe=None):
     if recipe is not None:
         args.update(recipe)
         columns = ",a.cache_key,a.shard_sha,a.slot,a.vector_sha"
-        join = """LEFT JOIN derived_artifacts a ON a.text_hash=r.text_hash AND a.kind=:kind
+        join = f"""LEFT JOIN derived_artifacts a ON a.text_hash=r.text_hash AND a.kind=:kind
                   AND a.model_id=:model_id AND a.model_revision=:model_revision
-                  AND a.preprocessing=:preprocessing AND c.paper_id LIKE 'fixture:%'"""
+                  AND a.preprocessing=:preprocessing AND {eligibility_sql('c.paper_id', ':kind')}"""
     # Limit IDs before joining large JSON revisions. A hash join can otherwise sort the remaining corpus per page.
     return conn.execute(text(f"""
         SELECT c.paper_id,r.record_json {columns}

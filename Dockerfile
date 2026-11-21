@@ -9,7 +9,11 @@ COPY src src
 RUN python -m pip install --no-build-isolation --no-deps .
 ENTRYPOINT ["papersearch"]
 
-FROM core AS review
+FROM core AS embedding
+COPY requirements-embedding.lock .
+RUN python -m pip install --no-cache-dir -r requirements-embedding.lock
+
+FROM embedding AS review
 COPY requirements-review.lock .
 RUN python -m pip install --no-cache-dir -r requirements-review.lock
 

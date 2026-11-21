@@ -61,6 +61,12 @@ with st.expander("Processing status", expanded=False):
             f"Index generation {active['generation']} · Metadata generation {stats['corpus_generation']} · "
             f"{coverage['lexical']:,} lexical · {coverage['semantic']:,} semantic"
         )
+        if "semantic_eligible" in coverage:
+            st.caption(
+                f"Semantic subset: {coverage['semantic']:,} of {coverage['semantic_eligible']:,} eligible. "
+                f"{coverage['semantic_truncated']:,} indexed texts shortened to 128 tokens; "
+                f"{coverage['semantic_title_only']:,} encoded from titles alone."
+            )
     st.write("Kafka", stats["broker"])
     st.write("Durable inputs", stats["input"])
     st.write("Derived jobs", stats["jobs"])
@@ -80,16 +86,31 @@ if not projects:
 
 prefix = f"/projects/{project}"
 q = st.text_input("Search papers", placeholder="Enter title or abstract terms")
-field = st.selectbox("Search in", ["all", "title", "abstract"])
+ranker = st.selectbox("Ranking", ["bm25", "semantic"])
+field = (
+    st.selectbox("Search in", ["all", "title", "abstract"])
+    if ranker == "bm25"
+    else "all"
+)
 if not q.strip():
     st.stop()
-identity = (project, q, field)
+identity = (project, q, ranker, field)
 if st.session_state.get("search_key") != identity:
     st.session_state.search_key = identity
     st.session_state.pop("page", None)
 offset, snapshot = st.session_state.get("page", (0, None))
-params = dict(q=q, field=field, offset=offset, limit=10, snapshot=snapshot)
+params = dict(
+    q=q, ranker=ranker, field=field, offset=offset, limit=10, snapshot=snapshot
+)
 page = call("GET", prefix + "/search", params=params).json()
+if page["fallback_reason"]:
+    st.warning(f"{page['fallback_reason']}. Showing BM25 results.")
+if page["ranker"] == "semantic":
+    st.caption(
+        f"Cosine ranking across {page['coverage']['semantic']:,} indexed papers."
+    )
+if page["query_truncated"]:
+    st.caption("The query was shortened to 128 tokens.")
 hits = page["results"]
 if not hits:
     st.info("No papers matched these terms.")

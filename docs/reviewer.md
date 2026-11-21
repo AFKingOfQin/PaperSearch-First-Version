@@ -4,6 +4,8 @@ The reviewer runs locally. MySQL stores projects, decision history and the revis
 
 ## Offline reviewer demo
 
+For the retained 100k collection, the ranking selector also offers exact cosine search over its published semantic subset. The interface reports coverage, truncation and model fallback. [Open and verify semantic search](semantic-ranking.md)
+
 From the Windows checkout with Docker Desktop running and the local MySQL passwords configured in `.env`, prepare the images and host test dependencies once with network access.
 
 ```powershell

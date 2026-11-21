@@ -18,6 +18,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from .broker import group_reader, offsets
 from .config import mysql_url
 from .lexical import LexicalReader
+from .semantic_search import SemanticReader
+from .encoder import MAX_TOKENS
 from .snapshots import STATE, published_manifest, status
 from .storage.reviews import create_project, decision_on_connection, save_decision
 
@@ -25,6 +27,7 @@ app = FastAPI(title="PaperSearch")
 engine = create_engine(mysql_url(os.environ), pool_pre_ping=True)
 root = Path(os.environ.get("SNAPSHOT_ROOT", "/artifacts/derived"))
 reader = LexicalReader(root)
+semantic_reader = SemanticReader(reader)
 
 Paper = Annotated[str, Query(min_length=1, max_length=128)]
 Event = Annotated[str, Query(pattern="^[a-f0-9]{64}$")]
@@ -124,7 +127,7 @@ def projects():
 def search(
     project: UUID,
     q: Annotated[str, Query(min_length=1, max_length=512)],
-    ranker: Literal["bm25"] = "bm25",
+    ranker: Literal["bm25", "semantic"] = "bm25",
     field: Literal["all", "title", "abstract"] = "all",
     offset: Annotated[int, Query(ge=0)] = 0,
     limit: Annotated[int, Query(ge=1, le=100)] = 20,
@@ -141,8 +144,20 @@ def search(
         raise HTTPException(503, "No published snapshot")
     if snapshot is not None and snapshot != active["snapshot_id"]:
         raise HTTPException(409, "A new snapshot is active. Start the search again.")
+    served = ranker
+    reason = query_tokens = None
+    if ranker == "semantic" and field != "all":
+        raise HTTPException(422, "Semantic ranking uses both title and abstract")
     try:
-        hits, more = reader.search(active, q, field, offset, limit)
+        if ranker == "semantic":
+            try:
+                hits, more, query_tokens = semantic_reader.search(
+                    active, q, offset, limit
+                )
+            except OSError as exc:
+                served, reason = "bm25", str(exc)
+        if served == "bm25":
+            hits, more = reader.search(active, q, field, offset, limit)
     except ValueError as exc:
         raise HTTPException(422, str(exc)) from exc
     except OSError as exc:
@@ -151,7 +166,12 @@ def search(
         results=hits,
         has_more=more,
         snapshot_id=active["snapshot_id"],
-        ranker=ranker,
+        ranker=served,
+        requested_ranker=ranker,
+        fallback_reason=reason,
+        coverage=active["coverage"],
+        query_tokens=query_tokens,
+        query_truncated=bool(query_tokens and query_tokens > MAX_TOKENS),
         generation=active["generation"],
         metadata_generations_behind=state["generation"] - active["generation"],
     )

@@ -2,6 +2,8 @@
 
 PaperSearch lets you search a published paper collection by title and abstract, inspect revisions and save project-specific screening decisions. Kafka delivers metadata updates to MySQL. The reviewer keeps the revision you labeled and flags changed text for reconsideration. [Reviewer setup, offline demo and real-data reproduction](docs/reviewer.md)
 
+The reviewer offers BM25 over 100,000 real papers and exact cosine search over a published subset. It shows the number of papers each method can search and how often the encoder shortened an input. [Semantic search setup and verification](docs/semantic-ranking.md)
+
 ## Verify the reviewer workflow
 
 With Docker Desktop and the local credentials configured, prepare the images and run the demo from the repository root.
@@ -117,8 +119,8 @@ Clients on the Compose network use `mysql:3306` and `kafka:9092`. Both services 
 | test | One-shot CLI for independent client connections | 256 MiB, 1 CPU |
 | snapshot | Leased fixture workers, Parquet and lexical package verification | 768 MiB, 1 CPU |
 | batch | `docker compose --profile batch run --rm spark` prints the Spark runtime version | 3 GiB, 2 CPUs |
-| embedding | `docker compose --profile embedding run --rm embedding` prints the CPU worker's Python version | 2 GiB, 2 CPUs |
+| embedding | Generate pinned CPU embeddings for eligible, leased papers | 2 GiB, 2 CPUs |
 
-Run the heavy profiles separately. Spark and embeddings compete for the laptop's RAM and CPU. Both commands are environment probes until their implementation phases. Kafka bounds its broker request queue at 64 and configures retention at 24 hours or 128 MiB per partition, with 16 MiB segments. Segment cleanup is asynchronous. Later ingestion needs archived inputs for replay beyond this window.
+Run the heavy profiles separately. Spark and embeddings compete for the laptop's RAM and CPU. Kafka bounds its broker request queue at 64 and configures retention at 24 hours or 128 MiB per partition, with 16 MiB segments. Segment cleanup is asynchronous. Replay beyond this window uses the archived inputs.
 
 Run `papersearch preflight --scale` from the host virtual environment before a scale workload. The reserve applies to free space on both the artifact filesystem and the host filesystem containing Docker's virtual disk. On a shared filesystem, the threshold is one combined working allowance. The initial scale allowance is 100 GiB. Revise it from measured data, temporary output and retained snapshots before a larger gate. Docker's internal free space and any virtual-disk cap must also be checked on the running engine. See the [verified M0 service results](docs/evidence/phase0-services.txt) and [earlier Windows setup checks](docs/evidence/phase0-windows.txt).
