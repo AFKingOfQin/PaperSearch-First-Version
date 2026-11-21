@@ -9,10 +9,6 @@ from sqlalchemy.engine import Engine
 from ..adapters import json_record, parse_record, raw_lines
 from ..contracts import Event, RecordError, provenance, utc
 
-MODEL = "BAAI/bge-small-en-v1.5"
-MODEL_REVISION = "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a"
-
-
 def apply_event(engine: Engine, event: Event) -> str:
     record = event.canonical()
     args = dict(
@@ -81,7 +77,7 @@ def apply_event(engine: Engine, event: Event) -> str:
                     text("DELETE FROM current_revisions WHERE paper_id=:paper"), args
                 )
             else:
-                args.update(winner=winner, model=MODEL, revision=MODEL_REVISION)
+                args.update(winner=winner)
                 conn.execute(
                     text("""
                     INSERT INTO current_revisions VALUES (:paper,:winner)
@@ -92,9 +88,10 @@ def apply_event(engine: Engine, event: Event) -> str:
                 conn.execute(
                     text("""
                     INSERT INTO derived_jobs (paper_id,text_hash,kind,model_id,model_revision,preprocessing)
-                    SELECT :paper,r.text_hash,'embedding',:model,:revision,'text-v1'
-                    FROM paper_revisions r WHERE r.event_id=:winner AND r.paper_id LIKE 'fixture:%'
-                    ON DUPLICATE KEY UPDATE kind='embedding'
+                    SELECT :paper,r.text_hash,s.kind,s.model_id,s.model_revision,s.preprocessing
+                    FROM paper_revisions r JOIN derivation_state s ON s.singleton=1
+                    WHERE r.event_id=:winner AND r.paper_id LIKE 'fixture:%'
+                    ON DUPLICATE KEY UPDATE job_id=derived_jobs.job_id
                 """),
                     args,
                 )
@@ -165,15 +162,24 @@ def export_rows(engine: Engine, page_size: int = 128):
         }
         after = ""
         while True:
-            page = conn.execute(
-                text("""
-                SELECT c.paper_id,r.record_json FROM current_revisions c
-                JOIN paper_revisions r ON r.event_id=c.event_id
-                WHERE c.paper_id>:after ORDER BY c.paper_id LIMIT :limit
-            """),
-                {"after": after, "limit": page_size},
-            ).all()
+            page = current_page(conn, after, page_size)
             for after, record in page:
                 yield json.loads(record)
             if len(page) < page_size:
                 break
+
+def current_page(conn, after, page_size, recipe=None):
+    """Read from the caller's corpus snapshot, optionally including matching cached bytes."""
+    columns = join = ""
+    args = {"after": after, "limit": page_size}
+    if recipe is not None:
+        args.update(recipe)
+        columns = ",a.cache_key,a.shard_sha,a.slot,a.vector_sha"
+        join = """LEFT JOIN derived_artifacts a ON a.text_hash=r.text_hash AND a.kind=:kind
+                  AND a.model_id=:model_id AND a.model_revision=:model_revision
+                  AND a.preprocessing=:preprocessing AND c.paper_id LIKE 'fixture:%'"""
+    return conn.execute(text(f"""
+        SELECT c.paper_id,r.record_json {columns} FROM current_revisions c
+        JOIN paper_revisions r ON r.event_id=c.event_id {join}
+        WHERE c.paper_id>:after ORDER BY c.paper_id LIMIT :limit
+    """), args).all()

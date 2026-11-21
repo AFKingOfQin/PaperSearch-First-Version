@@ -1,0 +1,292 @@
+PaperSearch M4 and S1 verification | 2026-11-21 | single Windows laptop, Docker Desktop WSL 2
+Base commit b7fb59d5f3997e18254cb78c8e1c7faacda53182 plus unstaged implementation. No Git mutations.
+MySQL 8.4.13, Kafka 4.1.2 (one broker), CPython 3.14.4, PyArrow 23.0.1.
+Input oracle: tests/fixtures/phase1/expected.json, development section. Seed, revision and failure probes use cases.jsonl. No random shuffle in this run.
+Prior M3 input verification before editing: 39/39 SHA-256 entries from docs/evidence/phase3-kafka.txt matched.
+
+Host setup and checks
+.venv/Scripts/papersearch preflight
+.venv/Scripts/python -m pip install --only-binary=:all: pyarrow==23.0.1 -> Windows x64 CPython 3.14 wheel installed.
+.venv/Scripts/python -m pip install --no-index --no-build-isolation --no-deps -e . -> project metadata refreshed.
+docker compose --profile '*' config --quiet -> exit 0
+.venv/Scripts/alembic heads -> 0002_search_snapshots (head)
+.venv/Scripts/python -m pytest -q -> 29 passed, 4 subtests passed in 1.68s
+.venv/Scripts/ruff check src migrations tests -> All checks passed!
+.venv/Scripts/python -m pip check -> No broken requirements found.
+
+Existing real-service regressions
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-ingestion.ps1 (m4-m3-baseline.log)
+PASS M3 Kafka recovery (papersearch-m3-0b249df5e82a)
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-storage.ps1 (m4-storage.log)
+PASS M2 MySQL persistence and recovery (papersearch-m2-c8a5286228d5)
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-core.ps1 (m4-core.log)
+PASS M0 service checks: same MySQL server UUID and Kafka topic after container replacement.
+OK Compose plugin: Docker Compose version v5.7.0
+OK Docker engine (OS, version, CPUs, RAM bytes, root directory): linux 29.9.3 20 16626061312 /var/lib/docker
+PASS MySQL SELECT 1 = 1, version 8.4.13, server UUID 4f9f4d45-e588-11f1-a1b2-fa0824b2cb21
+PASS Kafka cluster 7vQpYv_4RkSzt14LWjLjlw, brokers 1
+PASS MySQL SELECT 1 = 1, version 8.4.13, server UUID 4f9f4d45-e588-11f1-a1b2-fa0824b2cb21
+PASS Kafka cluster 7vQpYv_4RkSzt14LWjLjlw, brokers 1
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-ingestion.ps1 (m4-m3-final.log)
+PASS M3 Kafka recovery (papersearch-m3-693ee565279f)
+docker compose -p papersearch-m0 --profile core stop -> MySQL and Kafka stopped with their named volumes retained.
+
+Upgrade of an already-populated independent M3 database
+docker compose -p papersearch-m3-0b249df5e82a --profile core --profile snapshot build snapshot
+docker compose -p papersearch-m3-0b249df5e82a --profile core --profile snapshot up -d --wait mysql
+Within that project: run --rm --no-deps -e MYSQL_DATABASE=m3_baseline --entrypoint alembic snapshot current, then upgrade head.
+Before and after: recomputed the paper mapping via export_rows and digest, and counted processed_events, screening_history, screening_decisions, derived_jobs.
+prior revision: 0001_paper_state
+before: {'generation': 991} 986 a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6 [993, 1, 1, 989]
+after: {'generation': 991} 986 a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6 [993, 1, 1, 989]
+PASS populated M3 schema upgrade
+Stopped the isolated MySQL service after reading back the migrated state.
+
+M4 reproduction
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-snapshots.ps1
+Two isolated M4 runs passed. Final run below includes wrong-store protection, late-owner fencing and a deliberately misaligned package.
+Service logs and the retained package are local under artifacts/papersearch-m4-d2711ada64f6. Compose build progress omitted below.
+Measured interval: fixture generation through Kafka archive/publication/drain, bounded workers, snapshot publication and verification, label and freshness checks.
+Resource observation covers the test client cgroup including its child commands. SQL bytes are reported data+index allocations; work bytes are retained fixture, cache, snapshot and log files. Not a full-machine benchmark.
+
+Artifacts E:\PaperSearch\artifacts: 23.69 GiB free, require 5 GiB: PASS
+Docker data disk C:\Users\tonyw\AppData\Local\Docker\wsl\disk: 249.46 GiB free, require 5 GiB: PASS
+docker compose -p papersearch-m4-d2711ada64f6 --profile core --profile snapshot build snapshot
+docker compose -p papersearch-m4-d2711ada64f6 --profile core --profile snapshot up -d --wait --wait-timeout 180 mysql kafka
+docker compose -p papersearch-m4-d2711ada64f6 --profile core --profile snapshot run --rm --no-deps --entrypoint alembic snapshot upgrade head
+docker compose -p papersearch-m4-d2711ada64f6 --profile core --profile snapshot run --rm --no-deps --entrypoint alembic snapshot current
+0002_search_snapshots (head)
+docker compose -p papersearch-m4-d2711ada64f6 --profile core --profile snapshot run --rm --no-deps -v E:\PaperSearch\tests:/verify:ro --entrypoint python snapshot -u /verify/integration/snapshot_recovery.py /artifacts/papersearch-m4-d2711ada64f6
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store configure-fixture exit=0 
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store build exit=0 
+PASS published seed is searchable: [('fixture:river',)]
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store work --workers 1 --batch-size 1 --max-jobs 1 --lease-seconds 2 exit=86 fault=artifact-renamed
+PASS abandoned durable lease: 1
+PASS shard exists before SQL records it: [1, 0]
+PASS author correction reuses work identity: 1
+PASS abstract creates a new identity: 2
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store work --workers 1 --max-jobs 1 exit=0 
+PASS old-text completion reuses the renamed shard: [1, 1]
+PASS reader retains pinned old lexical package: [('fixture:river',)]
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store status exit=0 
+PASS freshness shows unpublished metadata: 2
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store build exit=86 fault=snapshot-write
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store verify exit=0 
+PASS snapshot-write leaves previous snapshot valid: 'eeeaf77cef3a47da803dfbdc8beacd81'
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store build exit=86 fault=snapshot-renamed
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store verify exit=0 
+PASS snapshot-renamed leaves previous snapshot valid: 'eeeaf77cef3a47da803dfbdc8beacd81'
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store build exit=0 
+PASS stale vector excluded, revised paper searchable: {'fixture_eligible': 1, 'lexical': 1, 'metadata': 1, 'semantic': 0, 'test_vectors': 0}
+PASS new package lexical text: [('fixture:river',)]
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store work --max-jobs 1 exit=0 
+PASS new text cache miss: 1
+PASS late owner fenced after replacement completed: [1, 0, 1]
+PASS replayed input: {'duplicate': 1}
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store work exit=0 
+PASS no work on unchanged replay: 0
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store work exit=0 
+PASS second paper reuses the same verified artifact: [1, 0]
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store configure-fixture --model-id fixture-other exit=0 
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store work --workers 1 exit=0 
+PASS model produces one new cache entry for two papers: [1, 1, 1]
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store configure-fixture --model-id fixture-other --model-revision v2 exit=0 
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store work --workers 1 exit=0 
+PASS revision produces one new cache entry for two papers: [1, 1, 1]
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store configure-fixture --model-id fixture-other --model-revision v2 --preprocessing text-v2 exit=0 
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store work --workers 1 exit=0 
+PASS preprocessing produces one new cache entry for two papers: [1, 1, 1]
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store configure-fixture exit=0 
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store work exit=0 
+PASS previous recipe works without recomputation: 0
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/wrong-store build exit=1 
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store verify exit=0 
+PASS misconfigured publisher leaves active pointer intact: '95fe079cd7db43a59addc9481bf3f565'
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store work --max-jobs 1 exit=1 
+PASS filesystem error is recorded: 1
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store work --max-jobs 1 exit=1 
+PASS filesystem error is recorded: 1
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store work --max-jobs 1 exit=1 
+PASS filesystem error is recorded: 1
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store status exit=0 
+PASS terminal error visible and bounded: ['failed', 3, True]
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store retry 14 exit=0 
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store work exit=0 
+PASS explicit retry succeeds after storage is restored: 1
+PASS consistent export excludes mid-build commit: 3
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store status exit=0 
+PASS mid-build commit visible in freshness: 1
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store build exit=0 
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store verify exit=0 
+PASS late builder cannot replace winner: '21e6bd5ea87d49d59d1a6e8a2ec12b40'
+RUN /usr/local/bin/python /verify/fixtures/phase1/generate.py /artifacts/papersearch-m4-d2711ada64f6/development.jsonl exit=0 
+RUN papersearch stream init papersearch.m4 exit=0 
+RUN papersearch stream archive /artifacts/papersearch-m4-d2711ada64f6/development.jsonl --archive-root /artifacts/papersearch-m4-d2711ada64f6/archives --format fixture --collected-at 2020-02-01T00:00:00Z --batch-id development exit=0 
+PASS fixture SHA-256: 'd047b14761f5387a7e6d231ceacd1a228a7786c1abd48fb46d85197f6586eb29'
+RUN papersearch stream publish papersearch.m4 /artifacts/papersearch-m4-d2711ada64f6/archives/c7d1425dca48b17c6707ba2f7382877a6ee933b6b93c2795430b2bd3204cf85c exit=0 
+RUN papersearch stream consume papersearch.m4 --drain exit=0 
+PASS all Kafka partitions drained: [0, 0, 0]
+PASS all input deliveries accounted for: 1000
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store status exit=0 
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store work --workers 2 --batch-size 32 --max-jobs 2048 exit=0 
+Worker results {"claimed": 986, "completed": 986, "computed": 986, "hits": 0, "shards_reused": 0}
+PASS every claimed job completed: 986
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store build exit=0 
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store verify exit=0 
+PASS active package verified: {'artifact_epoch': 992, 'corpus_sha256': 'a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6', 'coverage': {'fixture_eligible': 986, 'lexical': 986, 'metadata': 986, 'semantic': 0, 'test_vectors': 986}, 'created_at': '2026-11-21T19:30:58.223926+00:00', 'eligibility': 'paper_id starts with fixture:', 'files': {'corpus.parquet': {'bytes': 251267, 'sha256': '5778c46aab0ac10c47486c6a13f7dcbf75161bb436bb339085b828c77ef6d3fe'}, 'lexical.sqlite': {'bytes': 278528, 'sha256': 'f1d5385724c91ab14b0d351decc3151b221bd84464875ab787ac74b2ac9dba7e'}, 'test-vectors.parquet': {'bytes': 219241, 'sha256': '095640b343b7cb52f6dc1bc9c81a0d0036b5e538992366de34715274ce6a5bdd'}}, 'format_version': 1, 'generation': 992, 'lexical_format': 'SQLite FTS5 unicode61', 'recipe': {'kind': 'test-digest-v1', 'model_id': 'fixture-digest', 'model_revision': 'v1', 'preprocessing': 'text-v1'}, 'snapshot_id': '25d63362cedd47a3917817d1f74ca4a9', 'test_vector_format': 'SHA-256 fixture bytes, width 32'}
+PASS M1 corpus digest from reopened Parquet rows: 'a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6'
+PASS full package coverage: {'fixture_eligible': 986, 'lexical': 986, 'metadata': 986, 'semantic': 0, 'test_vectors': 986}
+PASS review survives archive and snapshot: ['relevant', 'two streams reported', True]
+PASS lexical fixture lookup: [('fixture:river',)]
+Sample cache record {"cache_key": "be184f6bd402e0bdbd9e094a331261b33fdd6a2ae50da2066a331f201920fa70", "kind": "test-digest-v1", "model_id": "fixture-digest", "model_revision": "v1", "preprocessing": "text-v1", "shard_sha": "e80d449a0255dca8b22a1a88a0ed82f176f7919a5e7c9a7e27f0718e00b13a75", "slot": 21, "text_hash": "6e9829180060a73a6d693acacbd0417da4ab433c5e1dc63ec36c99831795d332", "vector_sha": "1c760d00ca1b891a827a54ad7a200935c45d2d7888e1f3349b4b7da1381027cc"}
+RUN papersearch snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store status exit=0 
+Final status {"active": {"artifact_epoch": 992, "corpus_sha256": "a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6", "coverage": {"fixture_eligible": 986, "lexical": 986, "metadata": 986, "semantic": 0, "test_vectors": 986}, "created_at": "2026-11-21T19:30:58.223926+00:00", "eligibility": "paper_id starts with fixture:", "files": {"corpus.parquet": {"bytes": 251267, "sha256": "5778c46aab0ac10c47486c6a13f7dcbf75161bb436bb339085b828c77ef6d3fe"}, "lexical.sqlite": {"bytes": 278528, "sha256": "f1d5385724c91ab14b0d351decc3151b221bd84464875ab787ac74b2ac9dba7e"}, "test-vectors.parquet": {"bytes": 219241, "sha256": "095640b343b7cb52f6dc1bc9c81a0d0036b5e538992366de34715274ce6a5bdd"}}, "format_version": 1, "generation": 992, "lexical_format": "SQLite FTS5 unicode61", "recipe": {"kind": "test-digest-v1", "model_id": "fixture-digest", "model_revision": "v1", "preprocessing": "text-v1"}, "snapshot_id": "25d63362cedd47a3917817d1f74ca4a9", "test_vector_format": "SHA-256 fixture bytes, width 32"}, "artifact_epoch": 992, "artifacts_changed_since_build": false, "corpus_generation": 992, "jobs": [{"kind": "embedding", "n": 1, "status": "pending"}, {"kind": "test-digest-v1", "n": 996, "status": "done"}], "metadata_generations_behind": 0, "recent_errors": [], "recipe": {"kind": "test-digest-v1", "model_id": "fixture-digest", "model_revision": "v1", "preprocessing": "text-v1"}, "recipe_changed_since_build": false}
+Fixture observation {"seconds": 50.07, "client_cpu_seconds": 12.781, "input_lines_per_second": 19.97, "client_cgroup_peak_bytes": 104095744, "before": {"work_bytes": 265932, "sql_bytes": 409600}, "after": {"work_bytes": 1642931, "sql_bytes": 4063232}, "pyarrow": "23.0.1", "sqlite": "3.40.1"}
+PASS mismatched vector mapping rejected despite matching file hashes: 'Invalid test-vector identity or row mapping'
+docker compose -p papersearch-m4-d2711ada64f6 --profile core --profile snapshot restart mysql
+docker compose -p papersearch-m4-d2711ada64f6 --profile core --profile snapshot up -d --wait --wait-timeout 180 mysql
+docker compose -p papersearch-m4-d2711ada64f6 --profile core --profile snapshot run --rm --no-deps snapshot snapshot --root /artifacts/papersearch-m4-d2711ada64f6/store verify
+{"artifact_epoch": 992, "corpus_sha256": "a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6", "coverage": {"fixture_eligible": 986, "lexical": 986, "metadata": 986, "semantic": 0, "test_vectors": 986}, "created_at": "2026-11-21T19:30:58.223926+00:00", "eligibility": "paper_id starts with fixture:", "files": {"corpus.parquet": {"bytes": 251267, "sha256": "5778c46aab0ac10c47486c6a13f7dcbf75161bb436bb339085b828c77ef6d3fe"}, "lexical.sqlite": {"bytes": 278528, "sha256": "f1d5385724c91ab14b0d351decc3151b221bd84464875ab787ac74b2ac9dba7e"}, "test-vectors.parquet": {"bytes": 219241, "sha256": "095640b343b7cb52f6dc1bc9c81a0d0036b5e538992366de34715274ce6a5bdd"}}, "format_version": 1, "generation": 992, "lexical_format": "SQLite FTS5 unicode61", "recipe": {"kind": "test-digest-v1", "model_id": "fixture-digest", "model_revision": "v1", "preprocessing": "text-v1"}, "snapshot_id": "25d63362cedd47a3917817d1f74ca4a9", "test_vector_format": "SHA-256 fixture bytes, width 32"}
+PASS M4 snapshot publication and recovery (papersearch-m4-d2711ada64f6)
+docker compose -p papersearch-m4-d2711ada64f6 --profile core --profile snapshot stop mysql kafka
+
+Selected raw command output from the final run
+>>> configure.log
+{"kind": "test-digest-v1", "model_id": "fixture-digest", "model_revision": "v1", "preprocessing": "text-v1"}
+>>> interrupted-artifact.log
+TEST process exit at artifact-renamed
+>>> reclaim.log
+{"claimed": 1, "completed": 1, "computed": 1, "hits": 0, "shards_reused": 1}
+>>> snapshot-write.log
+TEST process exit at snapshot-write
+>>> snapshot-renamed.log
+TEST process exit at snapshot-renamed
+>>> new-work.log
+{"claimed": 1, "completed": 1, "computed": 1, "hits": 0, "shards_reused": 1}
+>>> hit.log
+{"claimed": 1, "completed": 1, "computed": 0, "hits": 1}
+>>> work-model.log
+{"claimed": 2, "completed": 2, "computed": 1, "hits": 1, "shards_reused": 0}
+>>> work-revision.log
+{"claimed": 2, "completed": 2, "computed": 1, "hits": 1, "shards_reused": 0}
+>>> work-preprocessing.log
+{"claimed": 2, "completed": 2, "computed": 1, "hits": 1, "shards_reused": 0}
+>>> wrong-store.log
+BLOCKED: The selected directory is not the shared artifact store for this database
+>>> write-failure-2.log
+{"claimed": 1, "computed": 1, "errors": 1, "hits": 0}
+>>> visible-failure.log
+{"active": {"artifact_epoch": 1, "corpus_sha256": "1996edcd3a7af9c5d9547c2f4f02273dae62990494680cb8fb9407bd003b0e48", "coverage": {"fixture_eligible": 1, "lexical": 1, "metadata": 1, "semantic": 0, "test_vectors": 0}, "created_at": "2026-11-21T19:29:59.269751+00:00", "eligibility": "paper_id starts with fixture:", "files": {"corpus.parquet": {"bytes": 5957, "sha256": "72af8685af65222bd011f2087eadf6eb64d5e279c348d3194b11cce0bc775028"}, "lexical.sqlite": {"bytes": 24576, "sha256": "9fa9a739be715664c7a16f5c74719b7c6add47ac8b352d69f40dc69f6188f530"}, "test-vectors.parquet": {"bytes": 829, "sha256": "7212d1ed41728e5283d2487cb194d13f14aad3aeffdb97d6ee5f3f6acd7d210c"}}, "format_version": 1, "generation": 3, "lexical_format": "SQLite FTS5 unicode61", "recipe": {"kind": "test-digest-v1", "model_id": "fixture-digest", "model_revision": "v1", "preprocessing": "text-v1"}, "snapshot_id": "95fe079cd7db43a59addc9481bf3f565", "test_vector_format": "SHA-256 fixture bytes, width 32"}, "artifact_epoch": 5, "artifacts_changed_since_build": true, "corpus_generation": 5, "jobs": [{"kind": "embedding", "n": 1, "status": "pending"}, {"kind": "test-digest-v1", "n": 9, "status": "done"}, {"kind": "test-digest-v1", "n": 1, "status": "failed"}], "metadata_generations_behind": 2, "recent_errors": [{"attempts": 3, "job_id": 14, "last_error": "Existing shard failed verification: f06cb04e51cef35a3c1fd65acc69cd4314018b27d4b5edcd1a84a61078a08fa1", "status": "failed"}], "recipe": {"kind": "test-digest-v1", "model_id": "fixture-digest", "model_revision": "v1", "preprocessing": "text-v1"}, "recipe_changed_since_build": false}
+>>> retry.log
+{"requeued": 14}
+>>> retry-work.log
+{"claimed": 1, "completed": 1, "computed": 1, "hits": 0, "shards_reused": 0}
+>>> full-workers.log
+{"claimed": 986, "completed": 986, "computed": 986, "hits": 0, "shards_reused": 0}
+>>> consume.log
+{"group": "papersearch-ingest", "kind": "drained", "outcomes": {"applied": 984, "conflict": 2, "duplicate": 7, "rejected": 5, "stale": 2}, "partitions": {"0": {"beginning": 0, "committed": 325, "end": 325, "lag": 0}, "1": {"beginning": 0, "committed": 331, "end": 331, "lag": 0}, "2": {"beginning": 0, "committed": 344, "end": 344, "lag": 0}}}
+
+Windows host independently reopened all three files using papersearch.snapshot_format.validate. PyArrow 23.0.1 and SQLite 3.50.4 passed.
+Sample manifest copied byte-for-byte from store/snapshots/25d63362cedd47a3917817d1f74ca4a9/manifest.json
+sample manifest SHA-256 f0ee4f1ad2c607a7938be598c2f45c46d9d46f18a7cdb0e327141d649a13c789
+
+Full retained evidence SHA-256
+log-sha256 968d8d779e2787a6ed00959b2aece3a56b2f4fa23854c4e20f59e9101b79762f  artifacts/m4-verification-final.log
+log-sha256 40b22f1bb3295f6c7083a0d2754634378318aab4d6433878c4bc023183c42a5c  artifacts/m4-core.log
+log-sha256 7988e3d10edc91bf04494a36abf43fb52f98c2e289516a1e1ddafab7f6094cca  artifacts/m4-storage.log
+log-sha256 e074e584b8263de01f0c09e42ff385589b74b8afb7a6af55980efd6c22d142a3  artifacts/m4-m3-baseline.log
+log-sha256 29dbcd99f6935441f1d815cb33c97d01907fed6ccf05c5fb7063f3e877b8c765  artifacts/m4-m3-final.log
+log-sha256 d8816b6a5a5d53c39765050583a6fade81fd112a4e1efe403e4f408cf75d0e59  artifacts/m4-upgrade.log
+log-sha256 1fbb5bbcfb3d48811f1403db04413342a1884d9eb56e80bc18f33776af1d1436  artifacts/papersearch-m4-d2711ada64f6/archive.log
+log-sha256 8f0ef981eb13cc44633fd3fdbb33ee755743e782b7cec136db00b17e4d4d8b22  artifacts/papersearch-m4-d2711ada64f6/behind.log
+log-sha256 924350f9d246f956486b084e1b9804e719ab3c24f96fa2b9209e04945c9230e3  artifacts/papersearch-m4-d2711ada64f6/configure.log
+log-sha256 bfcfa9e60db4cd55db412c0f8fadcc92d7a80c1eb7ef108b7b121736a764860f  artifacts/papersearch-m4-d2711ada64f6/consistent-view.log
+log-sha256 eaed0e5bcf147eb7f8976a382f018af7952a1aae39fa6d4cb8fd8e6c68478c86  artifacts/papersearch-m4-d2711ada64f6/consume.log
+log-sha256 35b28ffbbcb748401f56e01518638bb8ea832a9a8404c33b9b1e3ee9c4ac142b  artifacts/papersearch-m4-d2711ada64f6/final-status.log
+log-sha256 c6713e4a3fdebf1a444e84bc202cdec201def4e3960efe450e0b2acbc5b60f91  artifacts/papersearch-m4-d2711ada64f6/full-build.log
+log-sha256 c6713e4a3fdebf1a444e84bc202cdec201def4e3960efe450e0b2acbc5b60f91  artifacts/papersearch-m4-d2711ada64f6/full-verify.log
+log-sha256 ec3fae2e23df35c8e8eec706b12232cb71adf53fd847a9bb53372b8dbded6261  artifacts/papersearch-m4-d2711ada64f6/full-workers.log
+log-sha256 f70ff963cb790774ac1951ba38a9d783744edd6cdb55369000320ba3ed1887c9  artifacts/papersearch-m4-d2711ada64f6/generate.log
+log-sha256 ff0edf024f59d7ffc0f98e869c96516cb9d3b94a07ada8e4f33775cfaa013b3f  artifacts/papersearch-m4-d2711ada64f6/hit.log
+log-sha256 c9340500282e28e23191807bb4f94466d75f3456e2636e5681b41a088827b5a5  artifacts/papersearch-m4-d2711ada64f6/ingestion-done.log
+log-sha256 bb0abc9ddaa2623afbe4da8ba219d6308c8470e87889e63d5a55d1e4e264f9c0  artifacts/papersearch-m4-d2711ada64f6/init.log
+log-sha256 2b755822248c71d004f422dde1e74c21d57c439af5a8e7dc04971e08949669f5  artifacts/papersearch-m4-d2711ada64f6/initial.log
+log-sha256 6f9a7f5fb81ae54ef12902899b6cbb104ca4799957ca4db610075af12b2e8488  artifacts/papersearch-m4-d2711ada64f6/interrupted-artifact.log
+log-sha256 489ae887bf2fe7806b746570a5bcab2fcd37acfc76a09d5024491e638e72ae90  artifacts/papersearch-m4-d2711ada64f6/new-work.log
+log-sha256 7ce907c5959d4d78460dd523c87a95d76c58a3aab877e5754933a7a5f9e6b39a  artifacts/papersearch-m4-d2711ada64f6/partial.log
+log-sha256 489ae887bf2fe7806b746570a5bcab2fcd37acfc76a09d5024491e638e72ae90  artifacts/papersearch-m4-d2711ada64f6/reclaim.log
+log-sha256 924350f9d246f956486b084e1b9804e719ab3c24f96fa2b9209e04945c9230e3  artifacts/papersearch-m4-d2711ada64f6/restore-fixture.log
+log-sha256 d73a39a39789de27b60305618b4bc28b94e78480347f6f0ca20c6172d24f4f83  artifacts/papersearch-m4-d2711ada64f6/restore-hit.log
+log-sha256 481c6edb1446769413eb06e61060d87cfa339fd94ee45fa6e925571a51dfa032  artifacts/papersearch-m4-d2711ada64f6/retry-work.log
+log-sha256 2189bc2cd706df8abdc133b3eccc1d0df63e1e0794f6ffb66c5596a262d9d104  artifacts/papersearch-m4-d2711ada64f6/retry.log
+log-sha256 a9e941a11f782047b7e8357325b0c17d8199ba2515968afa51c704596e11b641  artifacts/papersearch-m4-d2711ada64f6/send.log
+log-sha256 095d6a2268e464cca499c6c4beb41c1f0845296a9da73ee1e5ba87d14b667703  artifacts/papersearch-m4-d2711ada64f6/snapshot-renamed.log
+log-sha256 797dfad425f3b22d25b0b454ccbd5db73dad32a07a65c4f5e04156eaf78ef425  artifacts/papersearch-m4-d2711ada64f6/snapshot-write.log
+log-sha256 7ce907c5959d4d78460dd523c87a95d76c58a3aab877e5754933a7a5f9e6b39a  artifacts/papersearch-m4-d2711ada64f6/store-check.log
+log-sha256 a9c85f4b046c77ce930a577a5e7fc57dde2e64b0715605f0ffafc8c2de5ffb1e  artifacts/papersearch-m4-d2711ada64f6/switch-model.log
+log-sha256 d6c227d3a15e44be0a29497827b89027d818bb43ea9c2dae7076d1e31dd9f7cf  artifacts/papersearch-m4-d2711ada64f6/switch-preprocessing.log
+log-sha256 de7dd0330044ff730bec5f91f7aefddd40aef3b1f084057a37c5268311aa7fad  artifacts/papersearch-m4-d2711ada64f6/switch-revision.log
+log-sha256 d73a39a39789de27b60305618b4bc28b94e78480347f6f0ca20c6172d24f4f83  artifacts/papersearch-m4-d2711ada64f6/unused.log
+log-sha256 2b755822248c71d004f422dde1e74c21d57c439af5a8e7dc04971e08949669f5  artifacts/papersearch-m4-d2711ada64f6/verify-snapshot-renamed.log
+log-sha256 2b755822248c71d004f422dde1e74c21d57c439af5a8e7dc04971e08949669f5  artifacts/papersearch-m4-d2711ada64f6/verify-snapshot-write.log
+log-sha256 abc4e0fb5a73db4cb5975cd12081023365a46226b5d2b8f2891f3d8e9c5f33cd  artifacts/papersearch-m4-d2711ada64f6/verify-winner.log
+log-sha256 46b922a6a6d952118bc0091e367a997d7011f1d45d1bc0ab944a3a40b0f4c868  artifacts/papersearch-m4-d2711ada64f6/visible-failure.log
+log-sha256 abc4e0fb5a73db4cb5975cd12081023365a46226b5d2b8f2891f3d8e9c5f33cd  artifacts/papersearch-m4-d2711ada64f6/winning-builder.log
+log-sha256 0b6f21b9e0f89ef5255a0bcbce317767e47de1257aff8f1186360979366aaad6  artifacts/papersearch-m4-d2711ada64f6/work-model.log
+log-sha256 0b6f21b9e0f89ef5255a0bcbce317767e47de1257aff8f1186360979366aaad6  artifacts/papersearch-m4-d2711ada64f6/work-preprocessing.log
+log-sha256 0b6f21b9e0f89ef5255a0bcbce317767e47de1257aff8f1186360979366aaad6  artifacts/papersearch-m4-d2711ada64f6/work-revision.log
+log-sha256 54112753af9850e3ff6e02a767f0b7c1d48803c00afd8b76ec62bd502d56391d  artifacts/papersearch-m4-d2711ada64f6/write-failure-0.log
+log-sha256 54112753af9850e3ff6e02a767f0b7c1d48803c00afd8b76ec62bd502d56391d  artifacts/papersearch-m4-d2711ada64f6/write-failure-1.log
+log-sha256 54112753af9850e3ff6e02a767f0b7c1d48803c00afd8b76ec62bd502d56391d  artifacts/papersearch-m4-d2711ada64f6/write-failure-2.log
+log-sha256 45e4addafc2287e7e6345a3ee5ec33d486757e327948d25a27e33fe35785f32f  artifacts/papersearch-m4-d2711ada64f6/wrong-store.log
+
+Verified source/configuration/fixture SHA-256 (sorted relative paths, LF manifest)
+60185239ec8cca0f44990dd01796fd4095eeb6e76757cc23c2c3e17088dea3a5  .dockerignore
+f81f532b44a23938ce9554ffcab7fac8b6c960ceaebf22f952b03aac66dd9bac  .env.example
+42e60e5c7f4f24033f04e7006004138eb73ab44168ef4aad2b421ddb119d8b10  Dockerfile
+ab204ff4d3787b09c6c8e5483538a9c15ea157d3bae812ab4b35a7566e0aec16  alembic.ini
+6a17cca312d76e490cb9bc299312e4fd04fb4a4a7e0f8f620984a03e0daf9a8a  compose.yaml
+b15c7f037e5506b0899b832b1d94ebe64272b26ca84d3463b543afd7876d62a6  migrations/env.py
+b8f8716a625e6a761686917d83c2ed0f65b5ce5b0066eb1b89cff8270ad2b29c  migrations/versions/0001_paper_state.py
+928bc431a4290d21ff84270bef212b49274d5444441d314009932d6d7007af8a  migrations/versions/0002_search_snapshots.py
+7bcdc32b6f848c13c5e4fa7c4ef400950fe3c8a594789a1c8442907993166307  pyproject.toml
+5c3903b2b1d61bf7682f8e90310f753838e7f96abf73bed571ff96ab87a42ab1  requirements-dev.lock
+d08f720952bb01cee104fed62b6db7acba114fc8d5b957b746452d3b7ec0a28e  requirements.lock
+6397df41dc70560a5f354dd545b171b7d889a164b2a2739095578ed39984eaa4  scripts/verify-core.ps1
+9a7416fd756b9b1bc85decbf81a22631c2584c8cdc06e67d0020ab9e74168324  scripts/verify-ingestion.ps1
+8852b432d2d8ae8e60634b86bfa9c4298b09c19cc3a294bfaf31b3b89bd38642  scripts/verify-snapshots.ps1
+38b9808fe3d558b32dd5237974711e951c662306ca9834c2b9b323765be15f7b  scripts/verify-storage.ps1
+cd6aa91d3c4ccb0e35ee5701849bec82db719b01a232dde76c7567853558e898  src/papersearch/__init__.py
+518ce0b54936389f92a85cff8d5fdeff59025efa772672e3ffaa572d31885ba6  src/papersearch/adapters.py
+b38795cb26c76a7dde7de39ee26a75819c218a86a2ced07fa77663da5300e80a  src/papersearch/archive.py
+db3b2406fd05aef995cd34e8c31acca4d301c201b6bc76745c536f596eba8c6c  src/papersearch/broker.py
+80fc9a566da58a6ae0d693d3e2e641cb0e245c75fc5ddf694abdfb5bea29b957  src/papersearch/cli.py
+3f185fcfebb7e25a2e764ff22698d22c44c6e2b351df12d94f27a88edf637b03  src/papersearch/config.py
+5087c13fa9e2d51bf5fffd41497f956edd0e91ee31871612ff55c46bc07afcde  src/papersearch/contracts.py
+63b17d757534ca7326a2f8d8f8ae761ebc5299f36b055f15016341e785e60409  src/papersearch/derivation.py
+e4e8760cd461f2a3fbbc40f4d00c86dfb98ef861a314e6b60444c1b21c8ef2f4  src/papersearch/doctor.py
+61eb6a34aa23722aeac454041b588fb62e0418e29512d6a81d0d275e24b07a7b  src/papersearch/ingestion.py
+d7c443496feb06df5c114fbeac493007240c50c005e4022250f5e4109415bee9  src/papersearch/publication.py
+4fb7f99100509b5fddb921cb81c7eb2f85cf35838f542cdad519feb5b1e30d9a  src/papersearch/reference.py
+c34cd6362db203b7c42f7af5aeb456e1802d4b9f49261dec81c3efdcbb775787  src/papersearch/snapshot_cli.py
+4a5efe047e7846257df61ac85518a631d160aa8326e78406bed7abfe533d5198  src/papersearch/snapshot_format.py
+3ffe3c055ff40187aa3fecda0f6be6796cc0330b0617d31a840ae2c9f2b88770  src/papersearch/snapshots.py
+f56c89b70aa3997ee63068b008e9b005ed7410b8db8279be67d1f37dbdcae832  src/papersearch/storage/__init__.py
+75b5d2a52ff9ffe2f04083fdca1c8c54b67b2e29088695c2cf15b07a1473db6d  src/papersearch/storage/commands.py
+259e1e85883c3075448bd596a9778de2911560d4b24d9720f89439bb903e6b57  src/papersearch/storage/jobs.py
+d9ff1500e86531515eea2779422121fb74213e257bfab798c13850b6f0ee35e1  src/papersearch/storage/metadata.py
+15283390ca071e20866468a660ff2d8cac11b24874bbc357b3061d4a23967886  src/papersearch/storage/reviews.py
+979894da5fdd10d893dfe2d39aeb9f8a395d7b854f4383320363e38efeed5a82  src/papersearch/stream_cli.py
+06b2b4e9073423d79ba29c6564cbe3678d2d06f8ad3abd7931ee5bc265d7ebb7  tests/fixtures/phase1/.gitattributes
+07608494d7b40cc4f0c4eda02937dfacc5986f41c7a449813d5e62a5328f5bc2  tests/fixtures/phase1/arxiv-metadata.jsonl
+629f52c3f4b4476c890d62ad4af5d1a5719187f7f60b5cda75fc2774d3d043de  tests/fixtures/phase1/cases.jsonl
+cb6f73b98ee8f7319bcc4a66821fc6a14c9a2ddfe0977e71d87b3734ebd5f090  tests/fixtures/phase1/expected.json
+7fe684db0b490c87a001798f7ca965485b8b02472b81a362d481655a980e317a  tests/fixtures/phase1/generate.py
+17904f0063fe348664646832983d9bc195d4b5e5160111b239577828f24ad0ea  tests/integration/kafka_recovery.py
+dc80fd2fd589e7823d2943c2910c6a2b7d61e977407810450cb1b559b82284da  tests/integration/mysql_state.py
+7e55a9ff3e05fc71b46c7f6f42223c158ff99999e5617dcb304f7585e8dfc382  tests/integration/snapshot_recovery.py
+4cd1911e13c25e09fe288cba85be88c312bf5f8e65efaf0baf3a55b307219b3e  tests/unit/test_phase0.py
+e59c92781528ad08196df2b2a4a1497071af4951b4e292573ffaf0cfd7fe842d  tests/unit/test_reference.py
+d5988c0a37fb3f659e09185d6a3b43a6dd94252d2952ff91dd38459cf7a5010e  tests/unit/test_snapshots.py
+82da62ecdbbeaacf3073fe1e058350ab53ef4947f7b151f228d58bccc2065c2b  tests/unit/test_stream.py
+manifest SHA-256 c02fe0e557ea767b56e476fc36bb9534bd1ccf9d137c812c9af6346f6f7ae5a4

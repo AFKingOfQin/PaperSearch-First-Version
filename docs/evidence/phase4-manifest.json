@@ -1,0 +1,38 @@
+{
+  "artifact_epoch": 992,
+  "corpus_sha256": "a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6",
+  "coverage": {
+    "fixture_eligible": 986,
+    "lexical": 986,
+    "metadata": 986,
+    "semantic": 0,
+    "test_vectors": 986
+  },
+  "created_at": "2026-11-21T19:30:58.223926+00:00",
+  "eligibility": "paper_id starts with fixture:",
+  "files": {
+    "corpus.parquet": {
+      "bytes": 251267,
+      "sha256": "5778c46aab0ac10c47486c6a13f7dcbf75161bb436bb339085b828c77ef6d3fe"
+    },
+    "lexical.sqlite": {
+      "bytes": 278528,
+      "sha256": "f1d5385724c91ab14b0d351decc3151b221bd84464875ab787ac74b2ac9dba7e"
+    },
+    "test-vectors.parquet": {
+      "bytes": 219241,
+      "sha256": "095640b343b7cb52f6dc1bc9c81a0d0036b5e538992366de34715274ce6a5bdd"
+    }
+  },
+  "format_version": 1,
+  "generation": 992,
+  "lexical_format": "SQLite FTS5 unicode61",
+  "recipe": {
+    "kind": "test-digest-v1",
+    "model_id": "fixture-digest",
+    "model_revision": "v1",
+    "preprocessing": "text-v1"
+  },
+  "snapshot_id": "25d63362cedd47a3917817d1f74ca4a9",
+  "test_vector_format": "SHA-256 fixture bytes, width 32"
+}

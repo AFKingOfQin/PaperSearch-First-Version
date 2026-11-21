@@ -66,6 +66,11 @@ services:
     mem_limit: 256m
     cpus: ${CORE_CPUS:-1}
     command: ["--help"]
+  snapshot:
+    extends:
+      service: cli
+    profiles: [snapshot]
+    mem_limit: ${SNAPSHOT_MEMORY:-768m}
   spark:
     profiles: [batch]
     image: spark:4.1.1-scala2.13-java17-python3-ubuntu@sha256:6383b28979b5356455c51dff1153e603b182ee1b250938bf20261590dca0b1ad

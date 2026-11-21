@@ -2,6 +2,16 @@
 
 PaperSearch imports paper metadata into MySQL and preserves each project's screening decisions across revisions and restarts. You can screen papers from the CLI and compare the stored corpus with a deterministic offline reference. See [project status](PROGRESS.md) and the [offline demo procedure](docs/DEMO_SCRIPT.md).
 
+## Verify snapshot publication
+
+From the configured Windows checkout with Docker Desktop running, execute the local recovery demo:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\verify-snapshots.ps1
+```
+
+The demo interrupts a worker and two snapshot builds, imports the 1,000-line fixture through Kafka, then reopens the published package after restarting MySQL. Look for `PASS M4 snapshot publication and recovery`. The expected package has 986 canonical papers, 986 searchable lexical rows and 986 deterministic test vectors. Real semantic coverage is zero. The script stops its isolated services and retains the run directory and volumes. [Manual commands and package format](docs/snapshots.md) · [Recovery evidence](docs/evidence/phase4-snapshots.txt) · [Sample published manifest](docs/evidence/phase4-manifest.json)
+
 ## Verify Kafka ingestion recovery
 
 With Docker Desktop running and the Windows environment below configured, run:
@@ -92,6 +102,7 @@ Clients on the Compose network use `mysql:3306` and `kafka:9092`. Both services 
 |---|---|---|
 | core | MySQL and one KRaft Kafka broker | 768 MiB and 1 GiB respectively, 1 CPU each |
 | test | One-shot CLI for independent client connections | 256 MiB, 1 CPU |
+| snapshot | Leased fixture workers, Parquet and lexical package verification | 768 MiB, 1 CPU |
 | batch | `docker compose --profile batch run --rm spark` prints the Spark runtime version | 3 GiB, 2 CPUs |
 | embedding | `docker compose --profile embedding run --rm embedding` prints the CPU worker's Python version | 2 GiB, 2 CPUs |
 

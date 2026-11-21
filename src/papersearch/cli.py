@@ -14,7 +14,7 @@ from .config import disk_preflight, mysql_url, reserve_gib, settings
 from .doctor import doctor
 from .reference import process_files
 from .storage import commands as storage
-from . import stream_cli
+from . import snapshot_cli, stream_cli
 
 
 def smoke(service: str, config: dict[str, str]) -> None:
@@ -54,6 +54,7 @@ def main() -> int:
     reference.add_argument("--summary", action="store_true", help="Omit the full canonical paper mapping")
     storage.add_commands(commands)
     stream_cli.add_commands(commands)
+    snapshot_cli.add_commands(commands)
     args = parser.parse_args()
     try:
         if args.command == "reference":
@@ -76,6 +77,8 @@ def main() -> int:
             storage.run(args, create_engine(mysql_url(config)))
         elif args.command == "stream":
             stream_cli.run(args, config)
+        elif args.command == "snapshot":
+            return snapshot_cli.run(args, create_engine(mysql_url(config)))
         else:
             smoke(args.service, config)
     except (ValueError, OSError, KafkaError, SQLAlchemyError) as error:
