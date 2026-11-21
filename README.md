@@ -1,6 +1,16 @@
 # PaperSearch
 
-PaperSearch will ingest revisions to paper metadata and preserve a reviewer's screening decisions across updates and restarts. Phase 0 provides the CLI, migration scaffold, and local service verification. The reviewer demo is a later milestone. See [project status](PROGRESS.md) and the [offline demo procedure](docs/DEMO_SCRIPT.md).
+PaperSearch imports paper metadata into MySQL and preserves each project's screening decisions across revisions and restarts. You can screen papers from the CLI and compare the stored corpus with a deterministic offline reference. See [project status](PROGRESS.md) and the [offline demo procedure](docs/DEMO_SCRIPT.md).
+
+## Verify database recovery
+
+With Docker Desktop running and the Windows environment below configured, run this command from the repository root.
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\verify-storage.ps1
+```
+
+The verifier creates a uniquely named Compose project, applies the migration, races four deliveries of one paper, saves decisions in two projects, replays the 1,000-line fixture, then restarts MySQL and reclaims an expired job. Look for `PASS M2 MySQL persistence and recovery`. Each run stops its database and retains a dedicated volume and an artifact directory under the printed project name. The images and Python packages must be cached for offline use. For a manual import and screening session, see the [storage guide](docs/storage.md).
 
 ## Run the offline reference processor
 

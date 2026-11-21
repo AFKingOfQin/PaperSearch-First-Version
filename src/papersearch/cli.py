@@ -13,6 +13,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from .config import disk_preflight, mysql_url, reserve_gib, settings
 from .doctor import doctor
 from .reference import process_files
+from .storage import commands as storage
 
 
 def smoke(service: str, config: dict[str, str]) -> None:
@@ -50,6 +51,7 @@ def main() -> int:
     reference.add_argument("--collected-at", help="Archive collection timestamp with UTC offset (raw formats)")
     reference.add_argument("--batch-id", help="Archive batch identity (raw formats)")
     reference.add_argument("--summary", action="store_true", help="Omit the full canonical paper mapping")
+    storage.add_commands(commands)
     args = parser.parse_args()
     try:
         if args.command == "reference":
@@ -68,6 +70,8 @@ def main() -> int:
             print(f"Core reserve {reserve_gib(config, False)} GiB, scale reserve {reserve_gib(config, True)} GiB")
         elif args.command == "preflight":
             return 0 if disk_preflight(config, args.scale) else 1
+        elif args.command == "db":
+            storage.run(args, create_engine(mysql_url(config)))
         else:
             smoke(args.service, config)
     except (ValueError, OSError, KafkaError, SQLAlchemyError) as error:

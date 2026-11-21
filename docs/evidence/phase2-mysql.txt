@@ -1,0 +1,150 @@
+PaperSearch M2 verification | 2026-11-21 | Windows, Docker Desktop WSL 2, MySQL 8.4.13
+Base commit 4c68fd73437c15961c6d7c8787401ce707c47220 plus unstaged M2 work.
+The source manifest at the end identifies the tested tree. Schema guide: docs/storage.md.
+
+Prior baseline and host regressions
+21/21 SHA-256 entries in docs/evidence/phase1-reference.txt matched before editing.
+.venv\Scripts\python -m pytest -q tests/unit/test_reference.py -> 15 passed in 0.90s
+.venv\Scripts\python -m pytest -q -> 20 passed, 4 subtests passed in 1.12s
+.venv\Scripts\ruff check src migrations tests -> All checks passed!
+.venv\Scripts\python -m pip check -> No broken requirements found.
+.venv\Scripts\alembic heads -> 0001_paper_state (head)
+.venv\Scripts\papersearch db --help -> apply, export, project, decide, decision
+
+Real MySQL run
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\verify-storage.ps1
+First run reached MySQL error 1644. The test's direct cursor injection bypassed SQLAlchemy's error wrapper and aborted the harness. The corrected test substitutes a MySQL SIGNAL statement through the statement event and uses the normal execution path. A new, clean volume was used for the complete run below. Full local output: artifacts/m2-verification-2.log (exit 0).
+Command lines and application/test output from the complete run follow.
+
+Artifacts E:\PaperSearch\artifacts: 23.79 GiB free, require 5 GiB: PASS
+Docker data disk C:\Users\tonyw\AppData\Local\Docker\wsl\disk: 247.57 GiB free, require 5 GiB: PASS
+docker compose -p papersearch-m2-924965ca91dd --profile core --profile test build cli
+docker compose -p papersearch-m2-924965ca91dd --profile core --profile test up -d --wait --wait-timeout 180 mysql
+docker compose -p papersearch-m2-924965ca91dd --profile core --profile test run --rm --no-deps --entrypoint alembic cli upgrade head
+docker compose -p papersearch-m2-924965ca91dd --profile core --profile test run --rm --no-deps --entrypoint alembic cli current
+0001_paper_state (head)
+docker compose -p papersearch-m2-924965ca91dd --profile core --profile test run --rm --no-deps -v E:\PaperSearch\tests:/verify:ro --entrypoint python cli /verify/integration/mysql_state.py before /artifacts/papersearch-m2-924965ca91dd
+Wrote 1,000 records to /artifacts/papersearch-m2-924965ca91dd/development.jsonl
+PASS fixture SHA-256: expected='d047b14761f5387a7e6d231ceacd1a228a7786c1abd48fb46d85197f6586eb29' actual='d047b14761f5387a7e6d231ceacd1a228a7786c1abd48fb46d85197f6586eb29'
+Observed MySQL transaction failure: 1644 (45000): M2 injected rollback
+PASS rollback counts for papers, paper_revisions, current_revisions, processed_events, derived_jobs: expected=[0, 0, 0, 0, 0] actual=[0, 0, 0, 0, 0]
+PASS rolled-back generation: expected=0 actual=0
+PASS four concurrent deliveries: expected=['applied', 'duplicate', 'duplicate', 'duplicate'] actual=['applied', 'duplicate', 'duplicate', 'duplicate']
+PASS single committed effect: expected=[1, 1, 1, 1, 1] actual=[1, 1, 1, 1, 1]
+PASS older source version, later source time: expected='stale' actual='stale'
+PASS generation after stale event: expected=1 actual=1
+PASS owners from four claimers for one job: expected=1 actual=1
+PASS retryable failure releases lease: expected=True actual=True
+PASS released token fenced: expected=False actual=False
+PASS retry attempt: expected=2 actual=2
+PASS successful current owner: expected=True actual=True
+PASS author update: expected='applied' actual='applied'
+PASS unchanged text keeps review current: expected=False actual=False
+PASS unchanged text reuses job: expected=1 actual=1
+PASS snapshot opened at generation: expected={'generation': 2} actual={'generation': 2}
+PASS new abstract during screening save: expected='applied' actual='applied'
+PASS open export retains earlier revision: expected=['a6e30d728cb91ff97ab76d7b3f72e102420bf36ff1fd452c3d8d17686a303eea'] actual=['a6e30d728cb91ff97ab76d7b3f72e102420bf36ff1fd452c3d8d17686a303eea']
+PASS fresh export sees next generation: expected=3 actual=3
+PASS new text creates second job: expected=2 actual=2
+PASS both previous reviews flagged: expected=[True, True] actual=[True, True]
+PASS four concurrent saves append one history row: expected=1 actual=1
+PASS old request retry returns original history: expected=1 actual=1
+PASS conflicting retry rejected: expected='Decision request ID was reused with different content' actual='Decision request ID was reused with different content'
+Initial full-file delivery after targeted events: {'applied': 986, 'duplicate': 6, 'stale': 1, 'conflict': 2, 'rejected': 5}
+PASS canonical count and SHA-256: expected=[986, 'a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6'] actual=[986, 'a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6']
+PASS processed_events: expected=993 actual=993
+PASS paper_revisions: expected=993 actual=993
+PASS conflicting event identities: expected=['633506d9976b51fcfddbc5aebb7c109ddafbe2d3c1c8e166ed45741c00eef466', 'ba9afc250b407571554b344bf493420439c4833224b5ed29bb5a27cadf5ed980', 'd27304f647f42c44f4fbb45e1fc86820b268f1ca70cb8306ea5aae32971715ac', 'ed38a5cede2c1d1596bb3b7038793321540b107a0d1021e552bbf47a045bbb76'] actual=['633506d9976b51fcfddbc5aebb7c109ddafbe2d3c1c8e166ed45741c00eef466', 'ba9afc250b407571554b344bf493420439c4833224b5ed29bb5a27cadf5ed980', 'd27304f647f42c44f4fbb45e1fc86820b268f1ca70cb8306ea5aae32971715ac', 'ed38a5cede2c1d1596bb3b7038793321540b107a0d1021e552bbf47a045bbb76']
+PASS rejection identities and reasons: expected={'266e718d0044cc619afa1be56e89c8badfc86d699cbcccc40e03089161cf0db6': 'invalid_version', '29dff4ef066e708a7dcbd48f172f609e2c030cb172fd298620e66634f0c71f5d': 'invalid_json', '3c8fdccdf60b2dbf6cf5e0e4a2ef75620a4adc4aacb10b590f9df357493fafff': 'invalid_timestamp', 'c3065e128714110d2fc8aed385e7c7b134fd0c8588d834b48342966461b8e25a': 'invalid_paper_id', 'e5cc11b1a6351858e2d7a822e9c91dbf258cf3252d714fde99038c104c86d99c': 'invalid_url'} actual={'266e718d0044cc619afa1be56e89c8badfc86d699cbcccc40e03089161cf0db6': 'invalid_version', '29dff4ef066e708a7dcbd48f172f609e2c030cb172fd298620e66634f0c71f5d': 'invalid_json', '3c8fdccdf60b2dbf6cf5e0e4a2ef75620a4adc4aacb10b590f9df357493fafff': 'invalid_timestamp', 'c3065e128714110d2fc8aed385e7c7b134fd0c8588d834b48342966461b8e25a': 'invalid_paper_id', 'e5cc11b1a6351858e2d7a822e9c91dbf258cf3252d714fde99038c104c86d99c': 'invalid_url'}
+PASS full fixture replay: expected={'duplicate': 995, 'rejected': 5} actual={'duplicate': 995, 'rejected': 5}
+PASS replay preserves generation: expected=991 actual=991
+PASS project label, note and flag: expected=[['relevant', 're-read', False], ['irrelevant', 'wrong scope', True]] actual=[['relevant', 're-read', False], ['irrelevant', 'wrong scope', True]]
+PASS append-only history: expected=3 actual=3
+Before restart: generation=991 server=26857ee3-e58f-11f1-b21a-1266685e80f3 jobs=98f41a0aa3793b24dd21d361537cdc6d38efc7904831d10fd7936adfbda5152c
+docker compose -p papersearch-m2-924965ca91dd --profile core --profile test restart mysql
+docker compose -p papersearch-m2-924965ca91dd --profile core --profile test up -d --wait --wait-timeout 180 mysql
+docker compose -p papersearch-m2-924965ca91dd --profile core --profile test run --rm --no-deps -v E:\PaperSearch\tests:/verify:ro --entrypoint python cli /verify/integration/mysql_state.py after /artifacts/papersearch-m2-924965ca91dd
+PASS persistent MySQL server UUID: expected='26857ee3-e58f-11f1-b21a-1266685e80f3' actual='26857ee3-e58f-11f1-b21a-1266685e80f3'
+PASS canonical count and SHA-256: expected=[986, 'a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6'] actual=[986, 'a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6']
+PASS processed_events: expected=993 actual=993
+PASS paper_revisions: expected=993 actual=993
+PASS conflicting event identities: expected=['633506d9976b51fcfddbc5aebb7c109ddafbe2d3c1c8e166ed45741c00eef466', 'ba9afc250b407571554b344bf493420439c4833224b5ed29bb5a27cadf5ed980', 'd27304f647f42c44f4fbb45e1fc86820b268f1ca70cb8306ea5aae32971715ac', 'ed38a5cede2c1d1596bb3b7038793321540b107a0d1021e552bbf47a045bbb76'] actual=['633506d9976b51fcfddbc5aebb7c109ddafbe2d3c1c8e166ed45741c00eef466', 'ba9afc250b407571554b344bf493420439c4833224b5ed29bb5a27cadf5ed980', 'd27304f647f42c44f4fbb45e1fc86820b268f1ca70cb8306ea5aae32971715ac', 'ed38a5cede2c1d1596bb3b7038793321540b107a0d1021e552bbf47a045bbb76']
+PASS rejection identities and reasons: expected={'266e718d0044cc619afa1be56e89c8badfc86d699cbcccc40e03089161cf0db6': 'invalid_version', '29dff4ef066e708a7dcbd48f172f609e2c030cb172fd298620e66634f0c71f5d': 'invalid_json', '3c8fdccdf60b2dbf6cf5e0e4a2ef75620a4adc4aacb10b590f9df357493fafff': 'invalid_timestamp', 'c3065e128714110d2fc8aed385e7c7b134fd0c8588d834b48342966461b8e25a': 'invalid_paper_id', 'e5cc11b1a6351858e2d7a822e9c91dbf258cf3252d714fde99038c104c86d99c': 'invalid_url'} actual={'266e718d0044cc619afa1be56e89c8badfc86d699cbcccc40e03089161cf0db6': 'invalid_version', '29dff4ef066e708a7dcbd48f172f609e2c030cb172fd298620e66634f0c71f5d': 'invalid_json', '3c8fdccdf60b2dbf6cf5e0e4a2ef75620a4adc4aacb10b590f9df357493fafff': 'invalid_timestamp', 'c3065e128714110d2fc8aed385e7c7b134fd0c8588d834b48342966461b8e25a': 'invalid_paper_id', 'e5cc11b1a6351858e2d7a822e9c91dbf258cf3252d714fde99038c104c86d99c': 'invalid_url'}
+PASS generation persisted: expected=991 actual=991
+PASS every queued job and lease persisted: expected='98f41a0aa3793b24dd21d361537cdc6d38efc7904831d10fd7936adfbda5152c' actual='98f41a0aa3793b24dd21d361537cdc6d38efc7904831d10fd7936adfbda5152c'
+PASS both decision records persisted: expected=True actual=True
+PASS all history revisions persisted: expected=3 actual=3
+PASS expired owner refused before reclaim: expected=False actual=False
+PASS abandoned job reclaimed: expected=[4, 2] actual=[4, 2]
+PASS expired owner refused after reclaim: expected=False actual=False
+PASS new owner completes: expected=True actual=True
+PASS old owner cannot overwrite completion: expected=False actual=False
+PASS bounded retry attempt: expected=1 actual=1
+PASS worker records error: expected=True actual=True
+PASS bounded retry attempt: expected=2 actual=2
+PASS worker records error: expected=True actual=True
+PASS bounded retry attempt: expected=3 actual=3
+PASS worker records error: expected=True actual=True
+PASS terminal attempt and retained reason: expected=('failed', 3, 'dependency unavailable') actual=('failed', 3, 'dependency unavailable')
+PASS out-of-collection arXiv metadata imports: expected={'applied': 1} actual={'applied': 1}
+PASS out-of-collection import creates no embedding backlog: expected=989 actual=989
+PASS M2 MySQL persistence and recovery (papersearch-m2-924965ca91dd)
+docker compose -p papersearch-m2-924965ca91dd --profile core --profile test stop mysql
+
+Subsequent CLI export from the same volume
+docker compose -p papersearch-m2-924965ca91dd --profile core up -d --wait mysql
+docker compose -p papersearch-m2-924965ca91dd run --rm --no-deps cli db export
+PowerShell parsed each output line with ConvertFrom-Json and checked the header, row count and fixture:river version.
+PASS db export: generation 992, 987 records including the arXiv probe, river v3
+docker compose -p papersearch-m2-924965ca91dd --profile core stop mysql
+
+Historical labels and notes, queried through a new client after starting the retained database again
+SELECT label,note FROM screening_history ORDER BY history_id
+Expected and returned: [('uncertain', 'check methods'), ('irrelevant', 'wrong scope'), ('relevant', 're-read')]
+Python equality assertion passed. The database was stopped after the read.
+
+Existing core integration and recreation suite
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\verify-core.ps1
+PASS MySQL SELECT 1 = 1, version 8.4.13, server UUID 4f9f4d45-e588-11f1-a1b2-fa0824b2cb21
+PASS Kafka cluster 7vQpYv_4RkSzt14LWjLjlw, brokers 1
+PASS MySQL SELECT 1 = 1, version 8.4.13, server UUID 4f9f4d45-e588-11f1-a1b2-fa0824b2cb21
+PASS Kafka cluster 7vQpYv_4RkSzt14LWjLjlw, brokers 1
+Topic: papersearch.m0.volume-check	TopicId: P1Kk6sMFTBSWwH0-_3X6RQ	PartitionCount: 3	ReplicationFactor: 1	Configs: min.insync.replicas=1,segment.bytes=16777216,retention.bytes=134217728
+/papersearch-m0-mysql-1 cpu_nano=1000000000 memory_bytes=805306368
+/papersearch-m0-kafka-1 cpu_nano=1000000000 memory_bytes=1073741824
+PASS M0 service checks: same MySQL server UUID and Kafka topic after container replacement.
+docker compose -p papersearch-m0 --profile core stop -> both services stopped.
+
+Source/configuration/fixture SHA-256 (sorted relative paths, LF manifest)
+60185239ec8cca0f44990dd01796fd4095eeb6e76757cc23c2c3e17088dea3a5  .dockerignore
+42e60e5c7f4f24033f04e7006004138eb73ab44168ef4aad2b421ddb119d8b10  Dockerfile
+ab204ff4d3787b09c6c8e5483538a9c15ea157d3bae812ab4b35a7566e0aec16  alembic.ini
+04274422a83318f2bd9f253bbe6c705e2b7e55a7d13282b1e085113ff28dd5f4  compose.yaml
+b15c7f037e5506b0899b832b1d94ebe64272b26ca84d3463b543afd7876d62a6  migrations/env.py
+b8f8716a625e6a761686917d83c2ed0f65b5ce5b0066eb1b89cff8270ad2b29c  migrations/versions/0001_paper_state.py
+1dd5f534e55eb56de9d4c664ebfdff7abcefe9b263224e04d84b67ace259364a  pyproject.toml
+5c3903b2b1d61bf7682f8e90310f753838e7f96abf73bed571ff96ab87a42ab1  requirements-dev.lock
+bac09c76b6eed68ac770ca5b54a41e334b7b07c1fe4cc2d5be9833016f3892b2  requirements.lock
+6397df41dc70560a5f354dd545b171b7d889a164b2a2739095578ed39984eaa4  scripts/verify-core.ps1
+38b9808fe3d558b32dd5237974711e951c662306ca9834c2b9b323765be15f7b  scripts/verify-storage.ps1
+cd6aa91d3c4ccb0e35ee5701849bec82db719b01a232dde76c7567853558e898  src/papersearch/__init__.py
+518ce0b54936389f92a85cff8d5fdeff59025efa772672e3ffaa572d31885ba6  src/papersearch/adapters.py
+981285fc7b96a5e08765a88c74ceb76b08ee9f13603241b9a853c4434f47ddf6  src/papersearch/cli.py
+99e3da3351601ba0b1eb4c448ff273abc92eb0bd713702c54f0e0ef9829e7bf5  src/papersearch/config.py
+5087c13fa9e2d51bf5fffd41497f956edd0e91ee31871612ff55c46bc07afcde  src/papersearch/contracts.py
+e4e8760cd461f2a3fbbc40f4d00c86dfb98ef861a314e6b60444c1b21c8ef2f4  src/papersearch/doctor.py
+4fb7f99100509b5fddb921cb81c7eb2f85cf35838f542cdad519feb5b1e30d9a  src/papersearch/reference.py
+f56c89b70aa3997ee63068b008e9b005ed7410b8db8279be67d1f37dbdcae832  src/papersearch/storage/__init__.py
+75b5d2a52ff9ffe2f04083fdca1c8c54b67b2e29088695c2cf15b07a1473db6d  src/papersearch/storage/commands.py
+e09883ed7b735746eb451f7e5feeadce0ecc871ebe38fdaef5e147ede9af220e  src/papersearch/storage/jobs.py
+c0e42cfb30b0b897763bfe039b305be2331b4773d670ec2599a94a87c3c5f7ba  src/papersearch/storage/metadata.py
+15283390ca071e20866468a660ff2d8cac11b24874bbc357b3061d4a23967886  src/papersearch/storage/reviews.py
+06b2b4e9073423d79ba29c6564cbe3678d2d06f8ad3abd7931ee5bc265d7ebb7  tests/fixtures/phase1/.gitattributes
+07608494d7b40cc4f0c4eda02937dfacc5986f41c7a449813d5e62a5328f5bc2  tests/fixtures/phase1/arxiv-metadata.jsonl
+629f52c3f4b4476c890d62ad4af5d1a5719187f7f60b5cda75fc2774d3d043de  tests/fixtures/phase1/cases.jsonl
+cb6f73b98ee8f7319bcc4a66821fc6a14c9a2ddfe0977e71d87b3734ebd5f090  tests/fixtures/phase1/expected.json
+7fe684db0b490c87a001798f7ca965485b8b02472b81a362d481655a980e317a  tests/fixtures/phase1/generate.py
+dc80fd2fd589e7823d2943c2910c6a2b7d61e977407810450cb1b559b82284da  tests/integration/mysql_state.py
+4cd1911e13c25e09fe288cba85be88c312bf5f8e65efaf0baf3a55b307219b3e  tests/unit/test_phase0.py
+e59c92781528ad08196df2b2a4a1497071af4951b4e292573ffaf0cfd7fe842d  tests/unit/test_reference.py
+manifest SHA-256 c461322666704ef71f11b6ebbc86a9f9954427f460ea6547b2aa9ba580c7fa88

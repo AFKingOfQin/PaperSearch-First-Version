@@ -5,6 +5,8 @@
 !src/
 !src/papersearch/
 !src/papersearch/*.py
+!src/papersearch/storage/
+!src/papersearch/storage/*.py
 !alembic.ini
 !migrations/
 !migrations/**
