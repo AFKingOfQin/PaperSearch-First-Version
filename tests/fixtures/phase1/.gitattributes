@@ -1,0 +1,2 @@
+# AI-generated configuration (Codex): preserve raw archive checksums across checkouts.
+*.jsonl text eol=lf

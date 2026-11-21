@@ -1,0 +1,87 @@
+PaperSearch M1 / 2026-11-21 / PASS
+Base commit df19df5d0d712fdd91ab6a9750a6911ea137eefd. Unstaged working tree.
+Windows 11 build 26200, CPython 3.14.4, pytest in .venv; independent Linux CLI via Docker Desktop.
+These are correctness checks. Timings below are test runner output.
+
+Pre-change check: recomputed SHA-256 of all 17 paths recorded in phase0-services.txt.
+17 matched; the two recorded M0 passes include matching MySQL server UUIDs and Kafka topic IDs.
+.venv\Scripts\python -m pytest -q (before changes): 5 passed, 4 subtests passed in 0.14s.
+
+Offline fixture and installed CLI
+.venv\Scripts\python tests/fixtures/phase1/generate.py artifacts/phase1/development.jsonl
+.venv\Scripts\papersearch reference --format fixture --batch-id development --collected-at 2020-02-01T00:00:00Z --summary artifacts/phase1/development.jsonl
+The CLI was also invoked on each shuffle alone, and on the original, shuffle, and original together.
+Each run asserted the fixed manifest's canonical digest, counters, conflict event IDs and raw rejection map.
+Shuffles use Python random.Random(seed).shuffle on whole binary lines, retaining line endings.
+Tests also compare the four hand-specified complete edge-case records. Reproduce with test_reference.py.
+Run                lines   unique events   duplicate deliveries   malformed deliveries   current papers   canonical SHA-256
+source 1000 993 2 5 986 a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6
+shuffle-7 1000 993 2 5 986 a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6
+two-replays-7 3000 993 1992 15 986 a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6
+shuffle-31 1000 993 2 5 986 a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6
+two-replays-31 3000 993 1992 15 986 a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6
+shuffle-544 1000 993 2 5 986 a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6
+two-replays-544 3000 993 1992 15 986 a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6
+Cornell v287 original 0704.0001 collected 2026-11-21T09:08:19.968234+00:00 {'conflicts': [], 'current_count': 1, 'duplicates': 0, 'records': 1, 'rejected': 0, 'rejections': {}, 'state_sha256': '5833ea43b0d23f0d0743110869bbc5134341e32cf823e9c521665ea42e3425c5', 'unique_events': 1}
+Checked-in projection matches the original row for every included field.
+Compact fixture 629f52c3f4b4476c890d62ad4af5d1a5719187f7f60b5cda75fc2774d3d043de Generated fixture d047b14761f5387a7e6d231ceacd1a228a7786c1abd48fb46d85197f6586eb29
+
+Real source adapter
+GET https://api.kaggle.com/v1/datasets/download/Cornell-University/arxiv?datasetVersionNumber=287
+Range bytes=0-65535. Bounded prefix of ZIP member arxiv-metadata-oai-snapshot.json.
+First complete line including LF: 1,689 bytes, SHA-256 6c159128fb450c390e33b230b165e47cfe1a2a559f086e5ea7f9a882b5708cbb.
+The original line was processed with --format arxiv and the collection timestamp above.
+Only the eight-field bibliographic projection is included for offline tests. Dataset-wide coverage was not measured.
+
+Regression checks
+.venv\Scripts\python -m pytest -q tests/unit/test_reference.py -> 15 passed in 1.06s.
+The initial restricted run hit Windows temporary-directory permissions during four test setups.
+Rerunning with normal temporary-directory access passed. Final full suite:
+.venv\Scripts\python -m pytest -q -> 20 passed, 4 subtests passed in 1.14s.
+.venv\Scripts\ruff check src tests migrations -> All checks passed!
+.venv\Scripts\python -m pip check -> No broken requirements found.
+
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\verify-core.ps1
+docker compose -p papersearch-m0 run --rm --no-deps cli reference --format fixture --batch-id development --collected-at 2020-02-01T00:00:00Z --summary /artifacts/phase1/development.jsonl
+docker compose -p papersearch-m0 --profile core stop mysql kafka
+Exit 0. Selected output from the rebuilt Linux image and service regression:
+PASS MySQL SELECT 1 = 1, version 8.4.13, server UUID 4f9f4d45-e588-11f1-a1b2-fa0824b2cb21
+PASS Kafka cluster 7vQpYv_4RkSzt14LWjLjlw, brokers 1
+PASS MySQL SELECT 1 = 1, version 8.4.13, server UUID 4f9f4d45-e588-11f1-a1b2-fa0824b2cb21
+PASS Kafka cluster 7vQpYv_4RkSzt14LWjLjlw, brokers 1
+Topic: papersearch.m0.volume-check	TopicId: P1Kk6sMFTBSWwH0-_3X6RQ	PartitionCount: 3	ReplicationFactor: 1	Configs: min.insync.replicas=1,segment.bytes=16777216,retention.bytes=134217728
+/papersearch-m0-mysql-1 cpu_nano=1000000000 memory_bytes=805306368
+/papersearch-m0-kafka-1 cpu_nano=1000000000 memory_bytes=1073741824
+PASS M0 service checks: same MySQL server UUID and Kafka topic after container replacement.
+  "current_count": 986,
+  "duplicates": 2,
+  "records": 1000,
+  "rejected": 5,
+  "state_sha256": "a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6",
+  "unique_events": 993
+ Container papersearch-m0-kafka-1 Stopped 
+ Container papersearch-m0-mysql-1 Stopped 
+
+Source/configuration/fixture hashes (SHA-256, sorted relative paths, LF manifest)
+f28d22adaa104bbeb054f79b990d9ddb2ed1c3a073c2fc4c67be45ba134ba45d  .dockerignore
+42e60e5c7f4f24033f04e7006004138eb73ab44168ef4aad2b421ddb119d8b10  Dockerfile
+04274422a83318f2bd9f253bbe6c705e2b7e55a7d13282b1e085113ff28dd5f4  compose.yaml
+1dd5f534e55eb56de9d4c664ebfdff7abcefe9b263224e04d84b67ace259364a  pyproject.toml
+5c3903b2b1d61bf7682f8e90310f753838e7f96abf73bed571ff96ab87a42ab1  requirements-dev.lock
+bac09c76b6eed68ac770ca5b54a41e334b7b07c1fe4cc2d5be9833016f3892b2  requirements.lock
+6397df41dc70560a5f354dd545b171b7d889a164b2a2739095578ed39984eaa4  scripts/verify-core.ps1
+cd6aa91d3c4ccb0e35ee5701849bec82db719b01a232dde76c7567853558e898  src/papersearch/__init__.py
+518ce0b54936389f92a85cff8d5fdeff59025efa772672e3ffaa572d31885ba6  src/papersearch/adapters.py
+4a894f5599094d02fa28b0410074f6a04311c4c91a2812b35f50edef221d4e56  src/papersearch/cli.py
+99e3da3351601ba0b1eb4c448ff273abc92eb0bd713702c54f0e0ef9829e7bf5  src/papersearch/config.py
+5087c13fa9e2d51bf5fffd41497f956edd0e91ee31871612ff55c46bc07afcde  src/papersearch/contracts.py
+e4e8760cd461f2a3fbbc40f4d00c86dfb98ef861a314e6b60444c1b21c8ef2f4  src/papersearch/doctor.py
+4fb7f99100509b5fddb921cb81c7eb2f85cf35838f542cdad519feb5b1e30d9a  src/papersearch/reference.py
+06b2b4e9073423d79ba29c6564cbe3678d2d06f8ad3abd7931ee5bc265d7ebb7  tests/fixtures/phase1/.gitattributes
+07608494d7b40cc4f0c4eda02937dfacc5986f41c7a449813d5e62a5328f5bc2  tests/fixtures/phase1/arxiv-metadata.jsonl
+629f52c3f4b4476c890d62ad4af5d1a5719187f7f60b5cda75fc2774d3d043de  tests/fixtures/phase1/cases.jsonl
+cb6f73b98ee8f7319bcc4a66821fc6a14c9a2ddfe0977e71d87b3734ebd5f090  tests/fixtures/phase1/expected.json
+7fe684db0b490c87a001798f7ca965485b8b02472b81a362d481655a980e317a  tests/fixtures/phase1/generate.py
+4cd1911e13c25e09fe288cba85be88c312bf5f8e65efaf0baf3a55b307219b3e  tests/unit/test_phase0.py
+e59c92781528ad08196df2b2a4a1497071af4951b4e292573ffaf0cfd7fe842d  tests/unit/test_reference.py
+manifest SHA-256 8f32054014abefeaec691eb00bb9cc80a53e78c785ac12c5db6342501fac489b

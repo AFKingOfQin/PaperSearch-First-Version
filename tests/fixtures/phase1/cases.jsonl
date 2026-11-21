@@ -1,0 +1,18 @@
+{"id":"river","source_version":2,"source_updated_at":"2020-01-02T00:00:00Z","title":"River survey","abstract":"Two streams.","authors":["Ana"],"categories":["water","maps"]}
+{"id":"river","source_version":1,"source_updated_at":"2020-01-09T00:00:00Z","title":"Early survey","abstract":"One stream."}
+{"id":"river","source_version":2,"source_updated_at":"2020-01-02T00:00:00Z","title":"River survey","abstract":"Two streams.","authors":["Ana"],"categories":["water","maps"]}
+{"id":"river","source_version":2,"source_updated_at":"2020-01-03T00:00:00Z","title":"River survey","abstract":"Two streams.","authors":["Zoë","Ana"],"categories":["maps","water"]}
+{"id":"river","source_version":3,"source_updated_at":"2020-01-04T00:00:00Z","title":"River survey","abstract":"Three streams.","authors":["Zoë","Ana"],"categories":["water","maps"]}
+{"id":"cafe","source_version":1,"source_updated_at":"2020-01-02T00:00:00Z","title":"Caf\u0065\u0301\n maps","abstract":"  Montréal\tstreets. ","categories":["urban","maps","urban"],"published":"2020-01-01"}
+{"id":"cafe","source_version":1,"source_updated_at":"2020-01-01T19:00:00-05:00","title":"Café maps","abstract":"Montréal streets.","categories":["maps","urban"],"published":"2020-01-01"}
+{"id":"bare","source_updated_at":"2020-01-01T00:00:00Z","title":"A title alone"}
+{"id":"dispute","source_version":2,"source_updated_at":"2020-01-02T00:00:00Z","title":"North"}
+{"id":"dispute","source_version":1,"source_updated_at":"2020-01-01T00:00:00Z","title":"Known baseline"}
+{"id":"dispute","source_version":2,"source_updated_at":"2020-01-02T00:00:00Z","title":"South"}
+{"id":"withheld","source_version":1,"source_updated_at":"2020-01-02T00:00:00Z","title":"Left"}
+{"id":"withheld","source_version":1,"source_updated_at":"2020-01-02T00:00:00Z","title":"Right"}
+{"id":"broken"
+{"id":"url","title":"Unsafe link","source_updated_at":"2020-01-02T00:00:00Z","source_url":"javascript:void(0)"}
+{"id":"version","title":"Invalid version","source_version":true,"source_updated_at":"2020-01-02T00:00:00Z"}
+{"id":"date","title":"Missing timezone","source_updated_at":"2020-01-02T00:00:00"}
+{"id":"../escape","title":"Invalid identifier","source_updated_at":"2020-01-02T00:00:00Z"}

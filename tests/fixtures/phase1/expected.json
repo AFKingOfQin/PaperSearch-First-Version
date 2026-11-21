@@ -1,0 +1,136 @@
+{
+  "cases": {
+    "current_count": 4,
+    "duplicates": 2,
+    "input_sha256": "629f52c3f4b4476c890d62ad4af5d1a5719187f7f60b5cda75fc2774d3d043de",
+    "records": 18,
+    "rejected": 5,
+    "state_sha256": "b473b8c519a37e48dc76ca72639ad1fcc385647f26af218b2aa5d04b1ba58787",
+    "unique_events": 11
+  },
+  "conflicts": [
+    {
+      "event_ids": [
+        "633506d9976b51fcfddbc5aebb7c109ddafbe2d3c1c8e166ed45741c00eef466",
+        "d27304f647f42c44f4fbb45e1fc86820b268f1ca70cb8306ea5aae32971715ac"
+      ],
+      "paper_id": "fixture:dispute",
+      "reason": "revision_conflict",
+      "source_updated_at": "2020-01-02T00:00:00.000000Z",
+      "source_version": 2
+    },
+    {
+      "event_ids": [
+        "ba9afc250b407571554b344bf493420439c4833224b5ed29bb5a27cadf5ed980",
+        "ed38a5cede2c1d1596bb3b7038793321540b107a0d1021e552bbf47a045bbb76"
+      ],
+      "paper_id": "fixture:withheld",
+      "reason": "revision_conflict",
+      "source_updated_at": "2020-01-02T00:00:00.000000Z",
+      "source_version": 1
+    }
+  ],
+  "development": {
+    "current_count": 986,
+    "duplicates": 2,
+    "input_sha256": "d047b14761f5387a7e6d231ceacd1a228a7786c1abd48fb46d85197f6586eb29",
+    "records": 1000,
+    "rejected": 5,
+    "state_sha256": "a54657f831b2e2671474dca84a89edb3f40083e41f650426b94d1f8210b5bdf6",
+    "unique_events": 993
+  },
+  "edge_papers": {
+    "fixture:bare": {
+      "embedding_text_hash": "6e9829180060a73a6d693acacbd0417da4ab433c5e1dc63ec36c99831795d332",
+      "event_id": "25a20091043b69afb03ef548a5fc21fd2962346af7251c63c23dba223439643f",
+      "paper_id": "fixture:bare",
+      "payload": {
+        "abstract": "",
+        "authors": [],
+        "categories": [],
+        "doi": null,
+        "published": null,
+        "source_url": "https://example.invalid/papers/bare",
+        "title": "A title alone"
+      },
+      "payload_hash": "f9ec197f93f5fb59c070fd6c4c9cfeaa085c51623650f87b2a4a805a38613248",
+      "schema_version": 1,
+      "source": "fixture",
+      "source_updated_at": "2020-01-01T00:00:00.000000Z",
+      "source_version": null
+    },
+    "fixture:cafe": {
+      "embedding_text_hash": "955857c782f4f3396da1aa78eb9adda7f661ad4919a801a519ecd553c203e55a",
+      "event_id": "c5839e1bbfb0111c4376bd3f6d5ae797d0e79ac5f307e174a132f15b487edd1c",
+      "paper_id": "fixture:cafe",
+      "payload": {
+        "abstract": "Montréal streets.",
+        "authors": [],
+        "categories": [
+          "maps",
+          "urban"
+        ],
+        "doi": null,
+        "published": "2020-01-01",
+        "source_url": "https://example.invalid/papers/cafe",
+        "title": "Café maps"
+      },
+      "payload_hash": "be9cf2db7edf96c89439ff82e241f10d4e79913a787c89cccdfc9f852fa69194",
+      "schema_version": 1,
+      "source": "fixture",
+      "source_updated_at": "2020-01-02T00:00:00.000000Z",
+      "source_version": 1
+    },
+    "fixture:dispute": {
+      "embedding_text_hash": "24cf3aca889821612908a097dcfa8dcad03521321b0f7ebea95adf9aedbd236c",
+      "event_id": "96f696bbdd1e81cb007fea6e2eb11c4909895df9794889b41b374883fd14c1d0",
+      "paper_id": "fixture:dispute",
+      "payload": {
+        "abstract": "",
+        "authors": [],
+        "categories": [],
+        "doi": null,
+        "published": null,
+        "source_url": "https://example.invalid/papers/dispute",
+        "title": "Known baseline"
+      },
+      "payload_hash": "dcce0f5997698ad58f5228f01df725575311224ea724830177b06141f7392ff5",
+      "schema_version": 1,
+      "source": "fixture",
+      "source_updated_at": "2020-01-01T00:00:00.000000Z",
+      "source_version": 1
+    },
+    "fixture:river": {
+      "embedding_text_hash": "5eb7a41c564acd9824a7671726967ffeb3b36a90302071cfa10b7efa4e38ca78",
+      "event_id": "09afa521f4c436509b74445d1a32f94a544d5520679487f1f3a6ce4468489955",
+      "paper_id": "fixture:river",
+      "payload": {
+        "abstract": "Three streams.",
+        "authors": [
+          "Zoë",
+          "Ana"
+        ],
+        "categories": [
+          "maps",
+          "water"
+        ],
+        "doi": null,
+        "published": null,
+        "source_url": "https://example.invalid/papers/river",
+        "title": "River survey"
+      },
+      "payload_hash": "95e926700a0768d7f519e36a57dfd03747a6a0724436624f513a4310ed9be419",
+      "schema_version": 1,
+      "source": "fixture",
+      "source_updated_at": "2020-01-04T00:00:00.000000Z",
+      "source_version": 3
+    }
+  },
+  "rejections": {
+    "266e718d0044cc619afa1be56e89c8badfc86d699cbcccc40e03089161cf0db6": "invalid_version",
+    "29dff4ef066e708a7dcbd48f172f609e2c030cb172fd298620e66634f0c71f5d": "invalid_json",
+    "3c8fdccdf60b2dbf6cf5e0e4a2ef75620a4adc4aacb10b590f9df357493fafff": "invalid_timestamp",
+    "c3065e128714110d2fc8aed385e7c7b134fd0c8588d834b48342966461b8e25a": "invalid_paper_id",
+    "e5cc11b1a6351858e2d7a822e9c91dbf258cf3252d714fde99038c104c86d99c": "invalid_url"
+  }
+}

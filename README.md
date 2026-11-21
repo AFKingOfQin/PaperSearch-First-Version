@@ -2,6 +2,18 @@
 
 PaperSearch will ingest revisions to paper metadata and preserve a reviewer's screening decisions across updates and restarts. Phase 0 provides the CLI, migration scaffold, and local service verification. The reviewer demo is a later milestone. See [project status](PROGRESS.md) and the [offline demo procedure](docs/DEMO_SCRIPT.md).
 
+## Run the offline reference processor
+
+With the project virtual environment installed, run these commands from the repository root in PowerShell. They generate exactly 1,000 synthetic input lines and compute which paper revision should be current.
+
+```powershell
+.\.venv\Scripts\python tests/fixtures/phase1/generate.py artifacts/phase1/development.jsonl
+.\.venv\Scripts\papersearch reference --format fixture --batch-id development --collected-at 2020-02-01T00:00:00Z --summary artifacts/phase1/development.jsonl
+.\.venv\Scripts\python -m pytest -q tests/unit/test_reference.py
+```
+
+Expect **986 current papers**, 2 duplicate deliveries, 5 malformed deliveries and 2 conflicting revision groups. Omit `--summary` to inspect the records. The same command accepts several paths in delivery order, including repeated copies of a batch. It runs locally without starting services. See the [record and event contract](docs/record-contract.md), [expected results](tests/fixtures/phase1/expected.json), and [M1 verification](docs/evidence/phase1-reference.txt).
+
 ## Check the skeleton on Windows
 
 From the repository root in PowerShell, use CPython 3.14 (tested with 3.14.4). If this checkout already has the project virtual environment, start with the second block. Initial installation needs the packages from PyPI.

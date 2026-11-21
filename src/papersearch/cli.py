@@ -1,5 +1,6 @@
 # AI-generated code (Codex): configuration checks and independent service probes.
 import argparse
+import json
 import os
 import sys
 from pathlib import Path
@@ -11,6 +12,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from .config import disk_preflight, mysql_url, reserve_gib, settings
 from .doctor import doctor
+from .reference import process_files
 
 
 def smoke(service: str, config: dict[str, str]) -> None:
@@ -42,8 +44,22 @@ def main() -> int:
     preflight = commands.add_parser("preflight", help="Check host storage before starting a workload")
     preflight.add_argument("--scale", action="store_true", help="Apply the larger scale-run reserve")
     commands.add_parser("smoke", help="Connect to one real service").add_argument("service", choices=("mysql", "kafka"))
+    reference = commands.add_parser("reference", help="Compute canonical paper revisions from local JSONL")
+    reference.add_argument("paths", type=Path, nargs="+")
+    reference.add_argument("--format", choices=("fixture", "arxiv", "event"), required=True)
+    reference.add_argument("--collected-at", help="Archive collection timestamp with UTC offset (raw formats)")
+    reference.add_argument("--batch-id", help="Archive batch identity (raw formats)")
+    reference.add_argument("--summary", action="store_true", help="Omit the full canonical paper mapping")
     args = parser.parse_args()
     try:
+        if args.command == "reference":
+            if args.format != "event" and not (args.batch_id and args.collected_at):
+                reference.error("raw records require --batch-id and --collected-at")
+            result = process_files(args.paths, args.format, args.batch_id, args.collected_at)
+            if args.summary:
+                del result["papers"]
+            print(json.dumps(result, sort_keys=True, indent=2))
+            return 0
         if args.command == "doctor":
             return 0 if doctor() else 1
         file = args.env_file or Path(".env")
