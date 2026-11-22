@@ -4,6 +4,8 @@ PaperSearch lets you search a published paper collection by title and abstract, 
 
 The reviewer offers BM25 over 100,000 real papers and exact cosine search over a published subset. It shows the number of papers each method can search and how often the encoder shortened an input. [Semantic search setup and verification](docs/semantic-ranking.md)
 
+The laptop benchmarks measure what happens when papers arrive, text changes, a consumer crashes, or metadata outgrows the published index. [Measured results and reproduction commands](docs/results.md)
+
 ## Verify the Spark batch merge
 
 With the pinned Spark image cached, run `.\.venv\Scripts\python scripts/verify-spark-fixture.py` from the configured Windows checkout. It checks the offline batch output against the original revision fixture. The larger comparison uses the retained 100,000-paper publication, measures fresh and warmed Spark applications, and checks every merged record and storage row. [Batch setup, input contract and reproduction commands](docs/spark-batch.md)

@@ -1,0 +1,5586 @@
+{
+  "source": {
+    "member": "arxiv-metadata-oai-snapshot.json",
+    "uncompressed_bytes": 5295483968,
+    "url": "https://api.kaggle.com/v1/datasets/download/Cornell-University/arxiv?datasetVersionNumber=287",
+    "zip_bytes": 1752710811,
+    "zip_sha256": "5e4bee80eb200b20e857f14c575ad031f1501bdd65231189f14c1070c2de50a9"
+  },
+  "input_manifest_sha256": "c8d3cf5eb3d532efecaafde1304bb1d50b9a21cb6e3dfb630361e8fedeccb56d",
+  "gates": [
+    {
+      "attempts": 5,
+      "blocks": 245,
+      "current": 1000000,
+      "decision": {
+        "current_text_hash": "d007c649bd4f1c181ea3fa68fb38e529b37a7612c9f39fba0bb837a49f726cee",
+        "history_id": 1,
+        "label": "relevant",
+        "needs_reconsideration": false,
+        "note": "Capacity restart check",
+        "reviewed_event_id": "789a62abcde98684f36588e75e69424cdd4c99d332c9a6bcb70c49b0ed7bcf17",
+        "reviewed_text_hash": "d007c649bd4f1c181ea3fa68fb38e529b37a7612c9f39fba0bb837a49f726cee",
+        "saved_at": "2026-11-22T00:33:21.466756"
+      },
+      "expected": {
+        "blocks": 245,
+        "current": 1000000,
+        "distinct_valid_events": 1000000,
+        "identity_sha256": "b0c60a5c7e69f282d9ba44d87ef556850dc2eef8313e3524a4f19c4e609bc676",
+        "lines": 1000482,
+        "rejected": {
+          "invalid_text": 482
+        }
+      },
+      "first_started": 1795307591.9533095,
+      "gate": "million",
+      "identity_sha256": "b0c60a5c7e69f282d9ba44d87ef556850dc2eef8313e3524a4f19c4e609bc676",
+      "lexical": 0,
+      "metadata_only": true,
+      "mysql_table_bytes": 4682547200,
+      "offsets": {
+        "0": {
+          "beginning": 250100,
+          "committed": 333793,
+          "end": 333793,
+          "lag": 0
+        },
+        "1": {
+          "beginning": 250137,
+          "committed": 333030,
+          "end": 333030,
+          "lag": 0
+        },
+        "2": {
+          "beginning": 250365,
+          "committed": 333659,
+          "end": 333659,
+          "lag": 0
+        }
+      },
+      "rejection_reasons": {
+        "invalid_text": 482
+      },
+      "semantic": 0,
+      "tables": {
+        "derived_jobs": 0,
+        "processed_events": 1000000,
+        "published_snapshots": 0,
+        "rejected_events": 482,
+        "screening_history": 1
+      },
+      "verified": 1795311897.8797092,
+      "delivery_outcomes": {
+        "applied": 1000000,
+        "rejected": 482
+      },
+      "active_block_seconds": 2265.420729160309
+    },
+    {
+      "attempts": 5,
+      "blocks": 746,
+      "current": 3050173,
+      "decision": {
+        "current_text_hash": "d007c649bd4f1c181ea3fa68fb38e529b37a7612c9f39fba0bb837a49f726cee",
+        "history_id": 1,
+        "label": "relevant",
+        "needs_reconsideration": false,
+        "note": "Capacity restart check",
+        "reviewed_event_id": "789a62abcde98684f36588e75e69424cdd4c99d332c9a6bcb70c49b0ed7bcf17",
+        "reviewed_text_hash": "d007c649bd4f1c181ea3fa68fb38e529b37a7612c9f39fba0bb837a49f726cee",
+        "saved_at": "2026-11-22T00:33:21.466756"
+      },
+      "expected": {
+        "blocks": 746,
+        "current": 3050173,
+        "distinct_valid_events": 3050188,
+        "identity_sha256": "ad70ebf826ea2ebd0521e4c7f5d8e7b90b57527ace74ddb8e6606a4dc9c32d59",
+        "lines": 3050852,
+        "rejected": {
+          "invalid_text": 653
+        }
+      },
+      "first_started": 1795307591.9533095,
+      "gate": "full",
+      "identity_sha256": "ad70ebf826ea2ebd0521e4c7f5d8e7b90b57527ace74ddb8e6606a4dc9c32d59",
+      "lexical": 0,
+      "metadata_only": true,
+      "mysql_table_bytes": 14827896832,
+      "offsets": {
+        "0": {
+          "beginning": 931755,
+          "committed": 1018403,
+          "end": 1018403,
+          "lag": 0
+        },
+        "1": {
+          "beginning": 922139,
+          "committed": 1016476,
+          "end": 1016476,
+          "lag": 0
+        },
+        "2": {
+          "beginning": 922163,
+          "committed": 1015973,
+          "end": 1015973,
+          "lag": 0
+        }
+      },
+      "rejection_reasons": {
+        "invalid_text": 653
+      },
+      "semantic": 0,
+      "tables": {
+        "derived_jobs": 0,
+        "processed_events": 3050188,
+        "published_snapshots": 0,
+        "rejected_events": 653,
+        "screening_history": 1
+      },
+      "verified": 1795319654.7965262,
+      "delivery_outcomes": {
+        "applied": 3050188,
+        "rejected": 653,
+        "duplicate": 11
+      },
+      "active_block_seconds": 9123.379422187805
+    }
+  ],
+  "attempts": [
+    {
+      "start": 1795307589.0296574,
+      "base_commit": "8c60c9dd37adef12284436629946d736162a50c4",
+      "dirty": true,
+      "sha256": {
+        "src/papersearch/__init__.py": "cd6aa91d3c4ccb0e35ee5701849bec82db719b01a232dde76c7567853558e898",
+        "src/papersearch/adapters.py": "518ce0b54936389f92a85cff8d5fdeff59025efa772672e3ffaa572d31885ba6",
+        "src/papersearch/api.py": "fbc4d69cb7d4a6b322f0e3f2091527ff484c2ed5ce6a3d617150f54614702bb6",
+        "src/papersearch/archive.py": "b38795cb26c76a7dde7de39ee26a75819c218a86a2ced07fa77663da5300e80a",
+        "src/papersearch/batch/reference_merge.py": "6cfee5feb9de6c332c1ca3e24c7c789ff32cbfd1934830d511d3caef35578fe7",
+        "src/papersearch/batch/spark_merge.py": "f0e88e8e55ecba31802fb208f8471e47bbecd8b945458cb7b44256a24e4634e9",
+        "src/papersearch/broker.py": "db3b2406fd05aef995cd34e8c31acca4d301c201b6bc76745c536f596eba8c6c",
+        "src/papersearch/cli.py": "d15ed375989dde1767c2c352aa445f33b8acc951f878aed3f455142246a3d70b",
+        "src/papersearch/config.py": "3f185fcfebb7e25a2e764ff22698d22c44c6e2b351df12d94f27a88edf637b03",
+        "src/papersearch/contracts.py": "5087c13fa9e2d51bf5fffd41497f956edd0e91ee31871612ff55c46bc07afcde",
+        "src/papersearch/derivation.py": "2e95eac3651f5927998fd2e193cebd42bf87a605215b9ab985883b88f328e828",
+        "src/papersearch/doctor.py": "e4e8760cd461f2a3fbbc40f4d00c86dfb98ef861a314e6b60444c1b21c8ef2f4",
+        "src/papersearch/encoder.py": "57176a02d436dafe6d6a8c57c9bf2a7c586833c0a2f5d201f8bf9d89d80d9ad1",
+        "src/papersearch/ingestion.py": "ad5ac04e364023b6db3c6977d44dafe18ba336589f5f5b610f521dd8179de3fb",
+        "src/papersearch/lexical.py": "95403518d698a7c14f897cc346dd029ce76aeb80e73364103191f3e1042034f0",
+        "src/papersearch/publication.py": "d7c443496feb06df5c114fbeac493007240c50c005e4022250f5e4109415bee9",
+        "src/papersearch/reference.py": "6724110979cd1e7383beb94de63226ef24087b112d71bd337f31b4a7998bcb16",
+        "src/papersearch/reviewer.py": "3aa8a1e02db34066f660ae3fd91754f7c57cdfae3d8a3ae79eee18aae5377e4e",
+        "src/papersearch/semantic_search.py": "f10239bc88b38a9ee7223c3f0514772c14e78f397a3c10b62d3b9b3471e5a8c1",
+        "src/papersearch/snapshot_cli.py": "57f9a324de396fb679a9cfb1363291a930adcf5cbac0116b181fe5eecbe7e403",
+        "src/papersearch/snapshot_format.py": "8f4490a2c2f4441935024c7b9ad05607302bec0eef6e15d2778c7059e8092930",
+        "src/papersearch/snapshots.py": "c95c812aed2ebf03957a4cde100eb638c9f7b7e3ec5242a5062d0844725f1f66",
+        "src/papersearch/storage/__init__.py": "f56c89b70aa3997ee63068b008e9b005ed7410b8db8279be67d1f37dbdcae832",
+        "src/papersearch/storage/commands.py": "75b5d2a52ff9ffe2f04083fdca1c8c54b67b2e29088695c2cf15b07a1473db6d",
+        "src/papersearch/storage/jobs.py": "259e1e85883c3075448bd596a9778de2911560d4b24d9720f89439bb903e6b57",
+        "src/papersearch/storage/metadata.py": "75e3e6f044c1fd7eae5f261584aee45c04b66a31fa880024f847a243b2e6fbbd",
+        "src/papersearch/storage/reviews.py": "098b7c3afa6defde32415e9d9269f1e3b74504076b762710e6bc944113d071db",
+        "src/papersearch/stream_cli.py": "979894da5fdd10d893dfe2d39aeb9f8a395d7b854f4383320363e38efeed5a82",
+        "migrations/env.py": "b15c7f037e5506b0899b832b1d94ebe64272b26ca84d3463b543afd7876d62a6",
+        "migrations/versions/0001_paper_state.py": "b8f8716a625e6a761686917d83c2ed0f65b5ce5b0066eb1b89cff8270ad2b29c",
+        "migrations/versions/0002_search_snapshots.py": "928bc431a4290d21ff84270bef212b49274d5444441d314009932d6d7007af8a",
+        "compose.yaml": "4801829ea25b2af85500d150d41afef6a86d90652d951af638b9194fe9829070",
+        "Dockerfile": "16ea433401aa7e153d0a72d0d80234187dbf4a5a11cddc3ebf5733d36aad86b2",
+        "requirements.lock": "d08f720952bb01cee104fed62b6db7acba114fc8d5b957b746452d3b7ec0a28e",
+        "alembic.ini": "ab204ff4d3787b09c6c8e5483538a9c15ea157d3bae812ab4b35a7566e0aec16",
+        "scripts/run-capacity.py": "fa6160c9de73cbb50a442943c9d36c8444269ccc7d7adde8bc01f31a8b679415",
+        "scripts/prepare-capacity.py": "4304b13f22e227d9c932c47ac448d203a6e7023d5008653b06ef5060240449d6",
+        "scripts/measure-capacity.py": "83dbb94ddc9e64a8eed6b45c9a7475f5eec8e71be279643322ce6e5328709a55"
+      }
+    },
+    {
+      "start": 1795307645.2082143,
+      "base_commit": "8c60c9dd37adef12284436629946d736162a50c4",
+      "dirty": true,
+      "sha256": {
+        "src/papersearch/__init__.py": "cd6aa91d3c4ccb0e35ee5701849bec82db719b01a232dde76c7567853558e898",
+        "src/papersearch/adapters.py": "518ce0b54936389f92a85cff8d5fdeff59025efa772672e3ffaa572d31885ba6",
+        "src/papersearch/api.py": "fbc4d69cb7d4a6b322f0e3f2091527ff484c2ed5ce6a3d617150f54614702bb6",
+        "src/papersearch/archive.py": "b38795cb26c76a7dde7de39ee26a75819c218a86a2ced07fa77663da5300e80a",
+        "src/papersearch/batch/reference_merge.py": "6cfee5feb9de6c332c1ca3e24c7c789ff32cbfd1934830d511d3caef35578fe7",
+        "src/papersearch/batch/spark_merge.py": "f0e88e8e55ecba31802fb208f8471e47bbecd8b945458cb7b44256a24e4634e9",
+        "src/papersearch/broker.py": "db3b2406fd05aef995cd34e8c31acca4d301c201b6bc76745c536f596eba8c6c",
+        "src/papersearch/cli.py": "d15ed375989dde1767c2c352aa445f33b8acc951f878aed3f455142246a3d70b",
+        "src/papersearch/config.py": "3f185fcfebb7e25a2e764ff22698d22c44c6e2b351df12d94f27a88edf637b03",
+        "src/papersearch/contracts.py": "5087c13fa9e2d51bf5fffd41497f956edd0e91ee31871612ff55c46bc07afcde",
+        "src/papersearch/derivation.py": "2e95eac3651f5927998fd2e193cebd42bf87a605215b9ab985883b88f328e828",
+        "src/papersearch/doctor.py": "e4e8760cd461f2a3fbbc40f4d00c86dfb98ef861a314e6b60444c1b21c8ef2f4",
+        "src/papersearch/encoder.py": "57176a02d436dafe6d6a8c57c9bf2a7c586833c0a2f5d201f8bf9d89d80d9ad1",
+        "src/papersearch/ingestion.py": "ad5ac04e364023b6db3c6977d44dafe18ba336589f5f5b610f521dd8179de3fb",
+        "src/papersearch/lexical.py": "95403518d698a7c14f897cc346dd029ce76aeb80e73364103191f3e1042034f0",
+        "src/papersearch/publication.py": "d7c443496feb06df5c114fbeac493007240c50c005e4022250f5e4109415bee9",
+        "src/papersearch/reference.py": "6724110979cd1e7383beb94de63226ef24087b112d71bd337f31b4a7998bcb16",
+        "src/papersearch/reviewer.py": "3aa8a1e02db34066f660ae3fd91754f7c57cdfae3d8a3ae79eee18aae5377e4e",
+        "src/papersearch/semantic_search.py": "f10239bc88b38a9ee7223c3f0514772c14e78f397a3c10b62d3b9b3471e5a8c1",
+        "src/papersearch/snapshot_cli.py": "57f9a324de396fb679a9cfb1363291a930adcf5cbac0116b181fe5eecbe7e403",
+        "src/papersearch/snapshot_format.py": "8f4490a2c2f4441935024c7b9ad05607302bec0eef6e15d2778c7059e8092930",
+        "src/papersearch/snapshots.py": "c95c812aed2ebf03957a4cde100eb638c9f7b7e3ec5242a5062d0844725f1f66",
+        "src/papersearch/storage/__init__.py": "f56c89b70aa3997ee63068b008e9b005ed7410b8db8279be67d1f37dbdcae832",
+        "src/papersearch/storage/commands.py": "75b5d2a52ff9ffe2f04083fdca1c8c54b67b2e29088695c2cf15b07a1473db6d",
+        "src/papersearch/storage/jobs.py": "259e1e85883c3075448bd596a9778de2911560d4b24d9720f89439bb903e6b57",
+        "src/papersearch/storage/metadata.py": "75e3e6f044c1fd7eae5f261584aee45c04b66a31fa880024f847a243b2e6fbbd",
+        "src/papersearch/storage/reviews.py": "098b7c3afa6defde32415e9d9269f1e3b74504076b762710e6bc944113d071db",
+        "src/papersearch/stream_cli.py": "979894da5fdd10d893dfe2d39aeb9f8a395d7b854f4383320363e38efeed5a82",
+        "migrations/env.py": "b15c7f037e5506b0899b832b1d94ebe64272b26ca84d3463b543afd7876d62a6",
+        "migrations/versions/0001_paper_state.py": "b8f8716a625e6a761686917d83c2ed0f65b5ce5b0066eb1b89cff8270ad2b29c",
+        "migrations/versions/0002_search_snapshots.py": "928bc431a4290d21ff84270bef212b49274d5444441d314009932d6d7007af8a",
+        "compose.yaml": "4801829ea25b2af85500d150d41afef6a86d90652d951af638b9194fe9829070",
+        "Dockerfile": "16ea433401aa7e153d0a72d0d80234187dbf4a5a11cddc3ebf5733d36aad86b2",
+        "requirements.lock": "d08f720952bb01cee104fed62b6db7acba114fc8d5b957b746452d3b7ec0a28e",
+        "alembic.ini": "ab204ff4d3787b09c6c8e5483538a9c15ea157d3bae812ab4b35a7566e0aec16",
+        "scripts/run-capacity.py": "93869fb4416e9079f9643d0d922ce67d3e41e5882c15fbf310e1817ca32650a9",
+        "scripts/prepare-capacity.py": "4304b13f22e227d9c932c47ac448d203a6e7023d5008653b06ef5060240449d6",
+        "scripts/measure-capacity.py": "83dbb94ddc9e64a8eed6b45c9a7475f5eec8e71be279643322ce6e5328709a55"
+      }
+    },
+    {
+      "start": 1795309216.2645812,
+      "base_commit": "8c60c9dd37adef12284436629946d736162a50c4",
+      "dirty": true,
+      "sha256": {
+        "src/papersearch/__init__.py": "cd6aa91d3c4ccb0e35ee5701849bec82db719b01a232dde76c7567853558e898",
+        "src/papersearch/adapters.py": "518ce0b54936389f92a85cff8d5fdeff59025efa772672e3ffaa572d31885ba6",
+        "src/papersearch/api.py": "fbc4d69cb7d4a6b322f0e3f2091527ff484c2ed5ce6a3d617150f54614702bb6",
+        "src/papersearch/archive.py": "b38795cb26c76a7dde7de39ee26a75819c218a86a2ced07fa77663da5300e80a",
+        "src/papersearch/batch/reference_merge.py": "6cfee5feb9de6c332c1ca3e24c7c789ff32cbfd1934830d511d3caef35578fe7",
+        "src/papersearch/batch/spark_merge.py": "f0e88e8e55ecba31802fb208f8471e47bbecd8b945458cb7b44256a24e4634e9",
+        "src/papersearch/broker.py": "db3b2406fd05aef995cd34e8c31acca4d301c201b6bc76745c536f596eba8c6c",
+        "src/papersearch/cli.py": "d15ed375989dde1767c2c352aa445f33b8acc951f878aed3f455142246a3d70b",
+        "src/papersearch/config.py": "3f185fcfebb7e25a2e764ff22698d22c44c6e2b351df12d94f27a88edf637b03",
+        "src/papersearch/contracts.py": "5087c13fa9e2d51bf5fffd41497f956edd0e91ee31871612ff55c46bc07afcde",
+        "src/papersearch/derivation.py": "9e76977d21ec2a1d6cb5769fda90e8362fc9f2e7fa20ad79c69d1ffa38aec620",
+        "src/papersearch/doctor.py": "e4e8760cd461f2a3fbbc40f4d00c86dfb98ef861a314e6b60444c1b21c8ef2f4",
+        "src/papersearch/encoder.py": "57176a02d436dafe6d6a8c57c9bf2a7c586833c0a2f5d201f8bf9d89d80d9ad1",
+        "src/papersearch/ingestion.py": "85ea79cc92a6c62ab7209b1d72ef79e8772179c653cb21c73ad848420eaeff0d",
+        "src/papersearch/lexical.py": "95403518d698a7c14f897cc346dd029ce76aeb80e73364103191f3e1042034f0",
+        "src/papersearch/publication.py": "d7c443496feb06df5c114fbeac493007240c50c005e4022250f5e4109415bee9",
+        "src/papersearch/reference.py": "6724110979cd1e7383beb94de63226ef24087b112d71bd337f31b4a7998bcb16",
+        "src/papersearch/reviewer.py": "3aa8a1e02db34066f660ae3fd91754f7c57cdfae3d8a3ae79eee18aae5377e4e",
+        "src/papersearch/semantic_search.py": "f10239bc88b38a9ee7223c3f0514772c14e78f397a3c10b62d3b9b3471e5a8c1",
+        "src/papersearch/snapshot_cli.py": "57f9a324de396fb679a9cfb1363291a930adcf5cbac0116b181fe5eecbe7e403",
+        "src/papersearch/snapshot_format.py": "8f4490a2c2f4441935024c7b9ad05607302bec0eef6e15d2778c7059e8092930",
+        "src/papersearch/snapshots.py": "c95c812aed2ebf03957a4cde100eb638c9f7b7e3ec5242a5062d0844725f1f66",
+        "src/papersearch/storage/__init__.py": "f56c89b70aa3997ee63068b008e9b005ed7410b8db8279be67d1f37dbdcae832",
+        "src/papersearch/storage/commands.py": "75b5d2a52ff9ffe2f04083fdca1c8c54b67b2e29088695c2cf15b07a1473db6d",
+        "src/papersearch/storage/jobs.py": "259e1e85883c3075448bd596a9778de2911560d4b24d9720f89439bb903e6b57",
+        "src/papersearch/storage/metadata.py": "ff1983fd2fc59733f369a0f94644f66b5d2996d5ef24f614a474393bf3eebc2a",
+        "src/papersearch/storage/reviews.py": "098b7c3afa6defde32415e9d9269f1e3b74504076b762710e6bc944113d071db",
+        "src/papersearch/stream_cli.py": "979894da5fdd10d893dfe2d39aeb9f8a395d7b854f4383320363e38efeed5a82",
+        "migrations/env.py": "b15c7f037e5506b0899b832b1d94ebe64272b26ca84d3463b543afd7876d62a6",
+        "migrations/versions/0001_paper_state.py": "b8f8716a625e6a761686917d83c2ed0f65b5ce5b0066eb1b89cff8270ad2b29c",
+        "migrations/versions/0002_search_snapshots.py": "928bc431a4290d21ff84270bef212b49274d5444441d314009932d6d7007af8a",
+        "compose.yaml": "4801829ea25b2af85500d150d41afef6a86d90652d951af638b9194fe9829070",
+        "Dockerfile": "16ea433401aa7e153d0a72d0d80234187dbf4a5a11cddc3ebf5733d36aad86b2",
+        "requirements.lock": "d08f720952bb01cee104fed62b6db7acba114fc8d5b957b746452d3b7ec0a28e",
+        "alembic.ini": "ab204ff4d3787b09c6c8e5483538a9c15ea157d3bae812ab4b35a7566e0aec16",
+        "scripts/run-capacity.py": "222c2081ab4a9633b75e34f42ab31ccfab175e57a9090be8783acd9fec4eaed5",
+        "scripts/prepare-capacity.py": "4304b13f22e227d9c932c47ac448d203a6e7023d5008653b06ef5060240449d6",
+        "scripts/measure-capacity.py": "6fa66c9a5b66d27f361f791b068321381e06935653d19732815fb63bece92045"
+      }
+    },
+    {
+      "start": 1795310390.0174077,
+      "base_commit": "8c60c9dd37adef12284436629946d736162a50c4",
+      "dirty": true,
+      "sha256": {
+        "src/papersearch/__init__.py": "cd6aa91d3c4ccb0e35ee5701849bec82db719b01a232dde76c7567853558e898",
+        "src/papersearch/adapters.py": "518ce0b54936389f92a85cff8d5fdeff59025efa772672e3ffaa572d31885ba6",
+        "src/papersearch/api.py": "fbc4d69cb7d4a6b322f0e3f2091527ff484c2ed5ce6a3d617150f54614702bb6",
+        "src/papersearch/archive.py": "b38795cb26c76a7dde7de39ee26a75819c218a86a2ced07fa77663da5300e80a",
+        "src/papersearch/batch/reference_merge.py": "6cfee5feb9de6c332c1ca3e24c7c789ff32cbfd1934830d511d3caef35578fe7",
+        "src/papersearch/batch/spark_merge.py": "f0e88e8e55ecba31802fb208f8471e47bbecd8b945458cb7b44256a24e4634e9",
+        "src/papersearch/broker.py": "db3b2406fd05aef995cd34e8c31acca4d301c201b6bc76745c536f596eba8c6c",
+        "src/papersearch/cli.py": "d15ed375989dde1767c2c352aa445f33b8acc951f878aed3f455142246a3d70b",
+        "src/papersearch/config.py": "3f185fcfebb7e25a2e764ff22698d22c44c6e2b351df12d94f27a88edf637b03",
+        "src/papersearch/contracts.py": "5087c13fa9e2d51bf5fffd41497f956edd0e91ee31871612ff55c46bc07afcde",
+        "src/papersearch/derivation.py": "9e76977d21ec2a1d6cb5769fda90e8362fc9f2e7fa20ad79c69d1ffa38aec620",
+        "src/papersearch/doctor.py": "e4e8760cd461f2a3fbbc40f4d00c86dfb98ef861a314e6b60444c1b21c8ef2f4",
+        "src/papersearch/encoder.py": "57176a02d436dafe6d6a8c57c9bf2a7c586833c0a2f5d201f8bf9d89d80d9ad1",
+        "src/papersearch/ingestion.py": "85ea79cc92a6c62ab7209b1d72ef79e8772179c653cb21c73ad848420eaeff0d",
+        "src/papersearch/lexical.py": "95403518d698a7c14f897cc346dd029ce76aeb80e73364103191f3e1042034f0",
+        "src/papersearch/publication.py": "d7c443496feb06df5c114fbeac493007240c50c005e4022250f5e4109415bee9",
+        "src/papersearch/reference.py": "6724110979cd1e7383beb94de63226ef24087b112d71bd337f31b4a7998bcb16",
+        "src/papersearch/reviewer.py": "3aa8a1e02db34066f660ae3fd91754f7c57cdfae3d8a3ae79eee18aae5377e4e",
+        "src/papersearch/semantic_search.py": "f10239bc88b38a9ee7223c3f0514772c14e78f397a3c10b62d3b9b3471e5a8c1",
+        "src/papersearch/snapshot_cli.py": "57f9a324de396fb679a9cfb1363291a930adcf5cbac0116b181fe5eecbe7e403",
+        "src/papersearch/snapshot_format.py": "8f4490a2c2f4441935024c7b9ad05607302bec0eef6e15d2778c7059e8092930",
+        "src/papersearch/snapshots.py": "c95c812aed2ebf03957a4cde100eb638c9f7b7e3ec5242a5062d0844725f1f66",
+        "src/papersearch/storage/__init__.py": "f56c89b70aa3997ee63068b008e9b005ed7410b8db8279be67d1f37dbdcae832",
+        "src/papersearch/storage/commands.py": "75b5d2a52ff9ffe2f04083fdca1c8c54b67b2e29088695c2cf15b07a1473db6d",
+        "src/papersearch/storage/jobs.py": "259e1e85883c3075448bd596a9778de2911560d4b24d9720f89439bb903e6b57",
+        "src/papersearch/storage/metadata.py": "57fea4856cf492da80bdc2971d847afdb65104daa36a9ece9c11376d068bba52",
+        "src/papersearch/storage/reviews.py": "098b7c3afa6defde32415e9d9269f1e3b74504076b762710e6bc944113d071db",
+        "src/papersearch/stream_cli.py": "979894da5fdd10d893dfe2d39aeb9f8a395d7b854f4383320363e38efeed5a82",
+        "migrations/env.py": "b15c7f037e5506b0899b832b1d94ebe64272b26ca84d3463b543afd7876d62a6",
+        "migrations/versions/0001_paper_state.py": "b8f8716a625e6a761686917d83c2ed0f65b5ce5b0066eb1b89cff8270ad2b29c",
+        "migrations/versions/0002_search_snapshots.py": "928bc431a4290d21ff84270bef212b49274d5444441d314009932d6d7007af8a",
+        "compose.yaml": "4801829ea25b2af85500d150d41afef6a86d90652d951af638b9194fe9829070",
+        "Dockerfile": "16ea433401aa7e153d0a72d0d80234187dbf4a5a11cddc3ebf5733d36aad86b2",
+        "requirements.lock": "d08f720952bb01cee104fed62b6db7acba114fc8d5b957b746452d3b7ec0a28e",
+        "alembic.ini": "ab204ff4d3787b09c6c8e5483538a9c15ea157d3bae812ab4b35a7566e0aec16",
+        "scripts/run-capacity.py": "8cf4e2c0fd71b0272baa3c48cb34791577c427b9bc4c75794f175844c9811db4",
+        "scripts/prepare-capacity.py": "4304b13f22e227d9c932c47ac448d203a6e7023d5008653b06ef5060240449d6",
+        "scripts/measure-capacity.py": "6fa66c9a5b66d27f361f791b068321381e06935653d19732815fb63bece92045"
+      }
+    },
+    {
+      "start": 1795310497.6233914,
+      "base_commit": "8c60c9dd37adef12284436629946d736162a50c4",
+      "dirty": true,
+      "sha256": {
+        "src/papersearch/__init__.py": "cd6aa91d3c4ccb0e35ee5701849bec82db719b01a232dde76c7567853558e898",
+        "src/papersearch/adapters.py": "518ce0b54936389f92a85cff8d5fdeff59025efa772672e3ffaa572d31885ba6",
+        "src/papersearch/api.py": "fbc4d69cb7d4a6b322f0e3f2091527ff484c2ed5ce6a3d617150f54614702bb6",
+        "src/papersearch/archive.py": "b38795cb26c76a7dde7de39ee26a75819c218a86a2ced07fa77663da5300e80a",
+        "src/papersearch/batch/reference_merge.py": "6cfee5feb9de6c332c1ca3e24c7c789ff32cbfd1934830d511d3caef35578fe7",
+        "src/papersearch/batch/spark_merge.py": "f0e88e8e55ecba31802fb208f8471e47bbecd8b945458cb7b44256a24e4634e9",
+        "src/papersearch/broker.py": "db3b2406fd05aef995cd34e8c31acca4d301c201b6bc76745c536f596eba8c6c",
+        "src/papersearch/cli.py": "d15ed375989dde1767c2c352aa445f33b8acc951f878aed3f455142246a3d70b",
+        "src/papersearch/config.py": "3f185fcfebb7e25a2e764ff22698d22c44c6e2b351df12d94f27a88edf637b03",
+        "src/papersearch/contracts.py": "5087c13fa9e2d51bf5fffd41497f956edd0e91ee31871612ff55c46bc07afcde",
+        "src/papersearch/derivation.py": "9e76977d21ec2a1d6cb5769fda90e8362fc9f2e7fa20ad79c69d1ffa38aec620",
+        "src/papersearch/doctor.py": "e4e8760cd461f2a3fbbc40f4d00c86dfb98ef861a314e6b60444c1b21c8ef2f4",
+        "src/papersearch/encoder.py": "57176a02d436dafe6d6a8c57c9bf2a7c586833c0a2f5d201f8bf9d89d80d9ad1",
+        "src/papersearch/ingestion.py": "85ea79cc92a6c62ab7209b1d72ef79e8772179c653cb21c73ad848420eaeff0d",
+        "src/papersearch/lexical.py": "95403518d698a7c14f897cc346dd029ce76aeb80e73364103191f3e1042034f0",
+        "src/papersearch/publication.py": "d7c443496feb06df5c114fbeac493007240c50c005e4022250f5e4109415bee9",
+        "src/papersearch/reference.py": "6724110979cd1e7383beb94de63226ef24087b112d71bd337f31b4a7998bcb16",
+        "src/papersearch/reviewer.py": "3aa8a1e02db34066f660ae3fd91754f7c57cdfae3d8a3ae79eee18aae5377e4e",
+        "src/papersearch/semantic_search.py": "f10239bc88b38a9ee7223c3f0514772c14e78f397a3c10b62d3b9b3471e5a8c1",
+        "src/papersearch/snapshot_cli.py": "57f9a324de396fb679a9cfb1363291a930adcf5cbac0116b181fe5eecbe7e403",
+        "src/papersearch/snapshot_format.py": "8f4490a2c2f4441935024c7b9ad05607302bec0eef6e15d2778c7059e8092930",
+        "src/papersearch/snapshots.py": "c95c812aed2ebf03957a4cde100eb638c9f7b7e3ec5242a5062d0844725f1f66",
+        "src/papersearch/storage/__init__.py": "f56c89b70aa3997ee63068b008e9b005ed7410b8db8279be67d1f37dbdcae832",
+        "src/papersearch/storage/commands.py": "75b5d2a52ff9ffe2f04083fdca1c8c54b67b2e29088695c2cf15b07a1473db6d",
+        "src/papersearch/storage/jobs.py": "259e1e85883c3075448bd596a9778de2911560d4b24d9720f89439bb903e6b57",
+        "src/papersearch/storage/metadata.py": "58580e249485e6a30737e06a09b661a3c33d37872a252b4c50244b2351eef89a",
+        "src/papersearch/storage/reviews.py": "098b7c3afa6defde32415e9d9269f1e3b74504076b762710e6bc944113d071db",
+        "src/papersearch/stream_cli.py": "979894da5fdd10d893dfe2d39aeb9f8a395d7b854f4383320363e38efeed5a82",
+        "migrations/env.py": "b15c7f037e5506b0899b832b1d94ebe64272b26ca84d3463b543afd7876d62a6",
+        "migrations/versions/0001_paper_state.py": "b8f8716a625e6a761686917d83c2ed0f65b5ce5b0066eb1b89cff8270ad2b29c",
+        "migrations/versions/0002_search_snapshots.py": "928bc431a4290d21ff84270bef212b49274d5444441d314009932d6d7007af8a",
+        "compose.yaml": "4801829ea25b2af85500d150d41afef6a86d90652d951af638b9194fe9829070",
+        "Dockerfile": "16ea433401aa7e153d0a72d0d80234187dbf4a5a11cddc3ebf5733d36aad86b2",
+        "requirements.lock": "d08f720952bb01cee104fed62b6db7acba114fc8d5b957b746452d3b7ec0a28e",
+        "alembic.ini": "ab204ff4d3787b09c6c8e5483538a9c15ea157d3bae812ab4b35a7566e0aec16",
+        "scripts/run-capacity.py": "8cf4e2c0fd71b0272baa3c48cb34791577c427b9bc4c75794f175844c9811db4",
+        "scripts/prepare-capacity.py": "4304b13f22e227d9c932c47ac448d203a6e7023d5008653b06ef5060240449d6",
+        "scripts/measure-capacity.py": "6fa66c9a5b66d27f361f791b068321381e06935653d19732815fb63bece92045"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "time": 1795307645.2143228,
+      "free_bytes": {
+        "artifact": 244099158016,
+        "docker_host": 255476666368
+      },
+      "host_available_ram": 13378580480,
+      "mysql": 471289856,
+      "kafka": 440111104
+    },
+    {
+      "time": 1795307675.6278603,
+      "free_bytes": {
+        "artifact": 243927535616,
+        "docker_host": 255309176832
+      },
+      "host_available_ram": 13416370176,
+      "mysql": 669417472,
+      "kafka": 489394176
+    },
+    {
+      "time": 1795307706.0091004,
+      "free_bytes": {
+        "artifact": 243713921024,
+        "docker_host": 255073677312
+      },
+      "host_available_ram": 13404446720,
+      "mysql": 770772992,
+      "kafka": 585211904
+    },
+    {
+      "time": 1795307736.3506587,
+      "free_bytes": {
+        "artifact": 243507601408,
+        "docker_host": 254972346368
+      },
+      "host_available_ram": 13329612800,
+      "mysql": 799326208,
+      "kafka": 620195840
+    },
+    {
+      "time": 1795307766.693643,
+      "free_bytes": {
+        "artifact": 243305545728,
+        "docker_host": 254837411840
+      },
+      "host_available_ram": 13364240384,
+      "mysql": 826589184,
+      "kafka": 642797568
+    },
+    {
+      "time": 1795307797.0370195,
+      "free_bytes": {
+        "artifact": 243093798912,
+        "docker_host": 254771847168
+      },
+      "host_available_ram": 13373927424,
+      "mysql": 851693568,
+      "kafka": 668680192
+    },
+    {
+      "time": 1795307827.4030573,
+      "free_bytes": {
+        "artifact": 242897235968,
+        "docker_host": 254670671872
+      },
+      "host_available_ram": 13090603008,
+      "mysql": 875220992,
+      "kafka": 691220480
+    },
+    {
+      "time": 1795307857.803867,
+      "free_bytes": {
+        "artifact": 242691915776,
+        "docker_host": 254566092800
+      },
+      "host_available_ram": 13013704704,
+      "mysql": 897839104,
+      "kafka": 707035136
+    },
+    {
+      "time": 1795307888.2143989,
+      "free_bytes": {
+        "artifact": 242486292480,
+        "docker_host": 254465818624
+      },
+      "host_available_ram": 12914761728,
+      "mysql": 918433792,
+      "kafka": 728555520
+    },
+    {
+      "time": 1795307918.5474958,
+      "free_bytes": {
+        "artifact": 242288414720,
+        "docker_host": 254369968128
+      },
+      "host_available_ram": 12815622144,
+      "mysql": 942284800,
+      "kafka": 741195776
+    },
+    {
+      "time": 1795307948.899044,
+      "free_bytes": {
+        "artifact": 242149572608,
+        "docker_host": 254066065408
+      },
+      "host_available_ram": 11699343360,
+      "mysql": 958730240,
+      "kafka": 768163840
+    },
+    {
+      "time": 1795307979.412053,
+      "free_bytes": {
+        "artifact": 242009124864,
+        "docker_host": 253728763904
+      },
+      "host_available_ram": 10485358592,
+      "mysql": 971550720,
+      "kafka": 773263360
+    },
+    {
+      "time": 1795308009.9538531,
+      "free_bytes": {
+        "artifact": 241842462720,
+        "docker_host": 253729218560
+      },
+      "host_available_ram": 10583617536,
+      "mysql": 972427264,
+      "kafka": 773263360
+    },
+    {
+      "time": 1795308040.456284,
+      "free_bytes": {
+        "artifact": 241681375232,
+        "docker_host": 253695037440
+      },
+      "host_available_ram": 10476232704,
+      "mysql": 973815808,
+      "kafka": 777216000
+    },
+    {
+      "time": 1795308070.9819994,
+      "free_bytes": {
+        "artifact": 241485611008,
+        "docker_host": 253696118784
+      },
+      "host_available_ram": 10555723776,
+      "mysql": 973815808,
+      "kafka": 777216000
+    },
+    {
+      "time": 1795308101.465305,
+      "free_bytes": {
+        "artifact": 241289072640,
+        "docker_host": 253696540672
+      },
+      "host_available_ram": 10629730304,
+      "mysql": 973840384,
+      "kafka": 777216000
+    },
+    {
+      "time": 1795308131.8310568,
+      "free_bytes": {
+        "artifact": 241092182016,
+        "docker_host": 253662265344
+      },
+      "host_available_ram": 10434965504,
+      "mysql": 973840384,
+      "kafka": 777216000
+    },
+    {
+      "time": 1795308162.1893525,
+      "free_bytes": {
+        "artifact": 240886079488,
+        "docker_host": 253629071360
+      },
+      "host_available_ram": 10261790720,
+      "mysql": 973840384,
+      "kafka": 777216000
+    },
+    {
+      "time": 1795308192.6212044,
+      "free_bytes": {
+        "artifact": 240671313920,
+        "docker_host": 253628608512
+      },
+      "host_available_ram": 10299977728,
+      "mysql": 973840384,
+      "kafka": 777216000
+    },
+    {
+      "time": 1795308223.0056555,
+      "free_bytes": {
+        "artifact": 240457170944,
+        "docker_host": 253595648000
+      },
+      "host_available_ram": 10154790912,
+      "mysql": 973840384,
+      "kafka": 777216000
+    },
+    {
+      "time": 1795308253.383346,
+      "free_bytes": {
+        "artifact": 240259145728,
+        "docker_host": 253595009024
+      },
+      "host_available_ram": 10085138432,
+      "mysql": 973840384,
+      "kafka": 777216000
+    },
+    {
+      "time": 1795308283.784566,
+      "free_bytes": {
+        "artifact": 240061947904,
+        "docker_host": 253595009024
+      },
+      "host_available_ram": 10061262848,
+      "mysql": 973840384,
+      "kafka": 777216000
+    },
+    {
+      "time": 1795308314.1715505,
+      "free_bytes": {
+        "artifact": 239920447488,
+        "docker_host": 252486230016
+      },
+      "host_available_ram": 9982640128,
+      "mysql": 975478784,
+      "kafka": 777216000
+    },
+    {
+      "time": 1795308344.517785,
+      "free_bytes": {
+        "artifact": 239920250880,
+        "docker_host": 253333422080
+      },
+      "host_available_ram": 9827061760,
+      "mysql": 1126916096,
+      "kafka": 777216000
+    },
+    {
+      "time": 1795308374.8531036,
+      "free_bytes": {
+        "artifact": 239920128000,
+        "docker_host": 253299232768
+      },
+      "host_available_ram": 10154356736,
+      "mysql": 1126916096,
+      "kafka": 777216000
+    },
+    {
+      "time": 1795308405.2084112,
+      "free_bytes": {
+        "artifact": 239919083520,
+        "docker_host": 253299511296
+      },
+      "host_available_ram": 10215473152,
+      "mysql": 1126916096,
+      "kafka": 777216000
+    },
+    {
+      "time": 1795308435.5288534,
+      "free_bytes": {
+        "artifact": 239918223360,
+        "docker_host": 253265014784
+      },
+      "host_available_ram": 10010611712,
+      "mysql": 1126916096,
+      "kafka": 777216000
+    },
+    {
+      "time": 1795308465.8944867,
+      "free_bytes": {
+        "artifact": 239917686784,
+        "docker_host": 253265137664
+      },
+      "host_available_ram": 9988366336,
+      "mysql": 1126916096,
+      "kafka": 777216000
+    },
+    {
+      "time": 1795308496.260235,
+      "free_bytes": {
+        "artifact": 239917543424,
+        "docker_host": 253264265216
+      },
+      "host_available_ram": 10025316352,
+      "mysql": 1126916096,
+      "kafka": 777216000
+    },
+    {
+      "time": 1795308526.6093922,
+      "free_bytes": {
+        "artifact": 239917469696,
+        "docker_host": 253264670720
+      },
+      "host_available_ram": 9911738368,
+      "mysql": 1126916096,
+      "kafka": 777216000
+    },
+    {
+      "time": 1795308556.9440274,
+      "free_bytes": {
+        "artifact": 239916871680,
+        "docker_host": 253264105472
+      },
+      "host_available_ram": 9935769600,
+      "mysql": 1126916096,
+      "kafka": 777216000
+    },
+    {
+      "time": 1795308587.3270571,
+      "free_bytes": {
+        "artifact": 239916011520,
+        "docker_host": 253230538752
+      },
+      "host_available_ram": 9901584384,
+      "mysql": 1126916096,
+      "kafka": 777216000
+    },
+    {
+      "time": 1795308617.6792467,
+      "free_bytes": {
+        "artifact": 239914491904,
+        "docker_host": 253230006272
+      },
+      "host_available_ram": 9984888832,
+      "mysql": 1126916096,
+      "kafka": 777216000
+    },
+    {
+      "time": 1795308647.9953496,
+      "free_bytes": {
+        "artifact": 239913611264,
+        "docker_host": 253196255232
+      },
+      "host_available_ram": 9967706112,
+      "mysql": 1126916096,
+      "kafka": 784834560
+    },
+    {
+      "time": 1795308678.4146104,
+      "free_bytes": {
+        "artifact": 239913504768,
+        "docker_host": 253163073536
+      },
+      "host_available_ram": 10212155392,
+      "mysql": 1126916096,
+      "kafka": 784834560
+    },
+    {
+      "time": 1795308708.779042,
+      "free_bytes": {
+        "artifact": 239913500672,
+        "docker_host": 253061857280
+      },
+      "host_available_ram": 10403368960,
+      "mysql": 1309253632,
+      "kafka": 809218048
+    },
+    {
+      "time": 1795308739.120312,
+      "free_bytes": {
+        "artifact": 239913496576,
+        "docker_host": 252792602624
+      },
+      "host_available_ram": 10447572992,
+      "mysql": 1545760768,
+      "kafka": 815341568
+    },
+    {
+      "time": 1795308769.4521337,
+      "free_bytes": {
+        "artifact": 239913496576,
+        "docker_host": 252558983168
+      },
+      "host_available_ram": 10403139584,
+      "mysql": 1751302144,
+      "kafka": 858464256
+    },
+    {
+      "time": 1795308799.7960186,
+      "free_bytes": {
+        "artifact": 239913496576,
+        "docker_host": 252356726784
+      },
+      "host_available_ram": 10298191872,
+      "mysql": 1938882560,
+      "kafka": 871477248
+    },
+    {
+      "time": 1795308830.2559962,
+      "free_bytes": {
+        "artifact": 239913496576,
+        "docker_host": 252087554048
+      },
+      "host_available_ram": 9546395648,
+      "mysql": 2098126848,
+      "kafka": 903049216
+    },
+    {
+      "time": 1795308860.597995,
+      "free_bytes": {
+        "artifact": 239913488384,
+        "docker_host": 251920232448
+      },
+      "host_available_ram": 9234657280,
+      "mysql": 2247372800,
+      "kafka": 925921280
+    },
+    {
+      "time": 1795308891.0346913,
+      "free_bytes": {
+        "artifact": 239913488384,
+        "docker_host": 251786342400
+      },
+      "host_available_ram": 9280958464,
+      "mysql": 2386337792,
+      "kafka": 945848320
+    },
+    {
+      "time": 1795308921.3997576,
+      "free_bytes": {
+        "artifact": 239913484288,
+        "docker_host": 251617976320
+      },
+      "host_available_ram": 9161756672,
+      "mysql": 2526867456,
+      "kafka": 959733760
+    },
+    {
+      "time": 1795308951.7336736,
+      "free_bytes": {
+        "artifact": 239913484288,
+        "docker_host": 251449548800
+      },
+      "host_available_ram": 8979206144,
+      "mysql": 2633216000,
+      "kafka": 986865664
+    },
+    {
+      "time": 1795308982.0626624,
+      "free_bytes": {
+        "artifact": 239913484288,
+        "docker_host": 251314540544
+      },
+      "host_available_ram": 8821092352,
+      "mysql": 2748502016,
+      "kafka": 1007980544
+    },
+    {
+      "time": 1795309012.4126093,
+      "free_bytes": {
+        "artifact": 239913484288,
+        "docker_host": 251214221312
+      },
+      "host_available_ram": 8518942720,
+      "mysql": 2833195008,
+      "kafka": 1024704512
+    },
+    {
+      "time": 1795309042.7657373,
+      "free_bytes": {
+        "artifact": 239913484288,
+        "docker_host": 251045343232
+      },
+      "host_available_ram": 8335040512,
+      "mysql": 2960863232,
+      "kafka": 1047633920
+    },
+    {
+      "time": 1795309073.2665372,
+      "free_bytes": {
+        "artifact": 239912947712,
+        "docker_host": 250810458112
+      },
+      "host_available_ram": 8367083520,
+      "mysql": 3059097600,
+      "kafka": 1058578432
+    },
+    {
+      "time": 1795309103.6590302,
+      "free_bytes": {
+        "artifact": 239912947712,
+        "docker_host": 250710319104
+      },
+      "host_available_ram": 8127107072,
+      "mysql": 3166736384,
+      "kafka": 1073782784
+    },
+    {
+      "time": 1795309134.069434,
+      "free_bytes": {
+        "artifact": 239912947712,
+        "docker_host": 250575380480
+      },
+      "host_available_ram": 7777488896,
+      "mysql": 3264729088,
+      "kafka": 1073790976
+    },
+    {
+      "time": 1795309216.2716446,
+      "free_bytes": {
+        "artifact": 239912947712,
+        "docker_host": 250441404416
+      },
+      "host_available_ram": 8345948160,
+      "mysql": 962822144,
+      "kafka": 476250112
+    },
+    {
+      "time": 1795309246.643808,
+      "free_bytes": {
+        "artifact": 239912939520,
+        "docker_host": 250441596928
+      },
+      "host_available_ram": 8429887488,
+      "mysql": 1302831104,
+      "kafka": 506986496
+    },
+    {
+      "time": 1795309277.0521502,
+      "free_bytes": {
+        "artifact": 239912939520,
+        "docker_host": 250440998912
+      },
+      "host_available_ram": 8526958592,
+      "mysql": 1559257088,
+      "kafka": 565612544
+    },
+    {
+      "time": 1795309307.3875732,
+      "free_bytes": {
+        "artifact": 239912939520,
+        "docker_host": 250440400896
+      },
+      "host_available_ram": 8474857472,
+      "mysql": 1814380544,
+      "kafka": 586268672
+    },
+    {
+      "time": 1795309337.7312133,
+      "free_bytes": {
+        "artifact": 239912939520,
+        "docker_host": 250441953280
+      },
+      "host_available_ram": 8477507584,
+      "mysql": 2025119744,
+      "kafka": 620113920
+    },
+    {
+      "time": 1795309368.0795307,
+      "free_bytes": {
+        "artifact": 239912939520,
+        "docker_host": 250307076096
+      },
+      "host_available_ram": 8382185472,
+      "mysql": 2247856128,
+      "kafka": 646303744
+    },
+    {
+      "time": 1795309398.4010642,
+      "free_bytes": {
+        "artifact": 239912939520,
+        "docker_host": 250104901632
+      },
+      "host_available_ram": 8436232192,
+      "mysql": 2462588928,
+      "kafka": 682770432
+    },
+    {
+      "time": 1795309428.8486795,
+      "free_bytes": {
+        "artifact": 239912931328,
+        "docker_host": 249903378432
+      },
+      "host_available_ram": 8469094400,
+      "mysql": 2672099328,
+      "kafka": 716038144
+    },
+    {
+      "time": 1795309459.2511618,
+      "free_bytes": {
+        "artifact": 239912931328,
+        "docker_host": 249668890624
+      },
+      "host_available_ram": 8465526784,
+      "mysql": 2889830400,
+      "kafka": 730116096
+    },
+    {
+      "time": 1795309489.5795102,
+      "free_bytes": {
+        "artifact": 239912931328,
+        "docker_host": 249433477120
+      },
+      "host_available_ram": 8470114304,
+      "mysql": 3105427456,
+      "kafka": 766914560
+    },
+    {
+      "time": 1795309519.9093592,
+      "free_bytes": {
+        "artifact": 239912931328,
+        "docker_host": 249198977024
+      },
+      "host_available_ram": 8470392832,
+      "mysql": 3323600896,
+      "kafka": 800444416
+    },
+    {
+      "time": 1795309550.2438745,
+      "free_bytes": {
+        "artifact": 239912407040,
+        "docker_host": 248964485120
+      },
+      "host_available_ram": 8343216128,
+      "mysql": 3516461056,
+      "kafka": 851255296
+    },
+    {
+      "time": 1795309580.591137,
+      "free_bytes": {
+        "artifact": 239912390656,
+        "docker_host": 248730136576
+      },
+      "host_available_ram": 8052756480,
+      "mysql": 3739447296,
+      "kafka": 883220480
+    },
+    {
+      "time": 1795309610.9154077,
+      "free_bytes": {
+        "artifact": 239920254976,
+        "docker_host": 248528154624
+      },
+      "host_available_ram": 7740039168,
+      "mysql": 3946799104,
+      "kafka": 916373504
+    },
+    {
+      "time": 1795309641.253931,
+      "free_bytes": {
+        "artifact": 239920254976,
+        "docker_host": 248259952640
+      },
+      "host_available_ram": 7630041088,
+      "mysql": 4142448640,
+      "kafka": 936521728
+    },
+    {
+      "time": 1795309671.6034536,
+      "free_bytes": {
+        "artifact": 239920254976,
+        "docker_host": 248092700672
+      },
+      "host_available_ram": 7632572416,
+      "mysql": 4294967296,
+      "kafka": 975429632
+    },
+    {
+      "time": 1795309701.9271343,
+      "free_bytes": {
+        "artifact": 239920254976,
+        "docker_host": 247924015104
+      },
+      "host_available_ram": 7496286208,
+      "mysql": 4295229440,
+      "kafka": 1023148032
+    },
+    {
+      "time": 1795309732.2589958,
+      "free_bytes": {
+        "artifact": 239920250880,
+        "docker_host": 247756636160
+      },
+      "host_available_ram": 7539699712,
+      "mysql": 4295229440,
+      "kafka": 1053462528
+    },
+    {
+      "time": 1795309762.5850582,
+      "free_bytes": {
+        "artifact": 239920250880,
+        "docker_host": 247588339712
+      },
+      "host_available_ram": 7505874944,
+      "mysql": 4295229440,
+      "kafka": 1073872896
+    },
+    {
+      "time": 1795309792.9320486,
+      "free_bytes": {
+        "artifact": 239920250880,
+        "docker_host": 247454547968
+      },
+      "host_available_ram": 7324708864,
+      "mysql": 4295229440,
+      "kafka": 1073885184
+    },
+    {
+      "time": 1795309823.2656686,
+      "free_bytes": {
+        "artifact": 239920230400,
+        "docker_host": 247253565440
+      },
+      "host_available_ram": 7310667776,
+      "mysql": 4295229440,
+      "kafka": 1073885184
+    },
+    {
+      "time": 1795309853.585305,
+      "free_bytes": {
+        "artifact": 239920230400,
+        "docker_host": 247118696448
+      },
+      "host_available_ram": 7116304384,
+      "mysql": 4295229440,
+      "kafka": 1073885184
+    },
+    {
+      "time": 1795309883.9376695,
+      "free_bytes": {
+        "artifact": 239919706112,
+        "docker_host": 246950268928
+      },
+      "host_available_ram": 7110623232,
+      "mysql": 4295229440,
+      "kafka": 1073885184
+    },
+    {
+      "time": 1795309914.2681558,
+      "free_bytes": {
+        "artifact": 239919706112,
+        "docker_host": 246783922176
+      },
+      "host_available_ram": 6908801024,
+      "mysql": 4295229440,
+      "kafka": 1073885184
+    },
+    {
+      "time": 1795309944.611059,
+      "free_bytes": {
+        "artifact": 239919706112,
+        "docker_host": 246614806528
+      },
+      "host_available_ram": 6786039808,
+      "mysql": 4295229440,
+      "kafka": 1073885184
+    },
+    {
+      "time": 1795309974.9568944,
+      "free_bytes": {
+        "artifact": 239919706112,
+        "docker_host": 246480068608
+      },
+      "host_available_ram": 6898737152,
+      "mysql": 4295229440,
+      "kafka": 1073885184
+    },
+    {
+      "time": 1795310005.2924497,
+      "free_bytes": {
+        "artifact": 239919706112,
+        "docker_host": 246311415808
+      },
+      "host_available_ram": 7100575744,
+      "mysql": 4295229440,
+      "kafka": 1073885184
+    },
+    {
+      "time": 1795310035.629526,
+      "free_bytes": {
+        "artifact": 239919706112,
+        "docker_host": 246178074624
+      },
+      "host_available_ram": 7028494336,
+      "mysql": 4295229440,
+      "kafka": 1073885184
+    },
+    {
+      "time": 1795310065.9571216,
+      "free_bytes": {
+        "artifact": 239919706112,
+        "docker_host": 246043901952
+      },
+      "host_available_ram": 7107416064,
+      "mysql": 4295229440,
+      "kafka": 1073885184
+    },
+    {
+      "time": 1795310096.3028069,
+      "free_bytes": {
+        "artifact": 239919689728,
+        "docker_host": 245908840448
+      },
+      "host_available_ram": 7113789440,
+      "mysql": 4295229440,
+      "kafka": 1073885184
+    },
+    {
+      "time": 1795310126.6339405,
+      "free_bytes": {
+        "artifact": 239919689728,
+        "docker_host": 245808664576
+      },
+      "host_available_ram": 7190798336,
+      "mysql": 4295229440,
+      "kafka": 1073885184
+    },
+    {
+      "time": 1795310390.024528,
+      "free_bytes": {
+        "artifact": 239919665152,
+        "docker_host": 245638643712
+      },
+      "host_available_ram": 13492326400,
+      "mysql": 1046892544,
+      "kafka": 470470656
+    },
+    {
+      "time": 1795310497.6296217,
+      "free_bytes": {
+        "artifact": 239919661056,
+        "docker_host": 245637906432
+      },
+      "host_available_ram": 13339066368,
+      "mysql": 812081152,
+      "kafka": 468451328
+    },
+    {
+      "time": 1795310528.0020628,
+      "free_bytes": {
+        "artifact": 239919652864,
+        "docker_host": 245637902336
+      },
+      "host_available_ram": 12175405056,
+      "mysql": 1262202880,
+      "kafka": 472068096
+    },
+    {
+      "time": 1795310558.356235,
+      "free_bytes": {
+        "artifact": 239918616576,
+        "docker_host": 245637357568
+      },
+      "host_available_ram": 10261344256,
+      "mysql": 1466957824,
+      "kafka": 519299072
+    },
+    {
+      "time": 1795310588.7410355,
+      "free_bytes": {
+        "artifact": 239916924928,
+        "docker_host": 245636182016
+      },
+      "host_available_ram": 10071056384,
+      "mysql": 1466994688,
+      "kafka": 526860288
+    },
+    {
+      "time": 1795310619.1253157,
+      "free_bytes": {
+        "artifact": 239916064768,
+        "docker_host": 245639512064
+      },
+      "host_available_ram": 9976553472,
+      "mysql": 1466994688,
+      "kafka": 526860288
+    },
+    {
+      "time": 1795310649.4701598,
+      "free_bytes": {
+        "artifact": 239914835968,
+        "docker_host": 245639884800
+      },
+      "host_available_ram": 9806585856,
+      "mysql": 1466994688,
+      "kafka": 526860288
+    },
+    {
+      "time": 1795310679.8018262,
+      "free_bytes": {
+        "artifact": 239914049536,
+        "docker_host": 245638967296
+      },
+      "host_available_ram": 9636855808,
+      "mysql": 1466994688,
+      "kafka": 527958016
+    },
+    {
+      "time": 1795310710.1656938,
+      "free_bytes": {
+        "artifact": 239913897984,
+        "docker_host": 245637795840
+      },
+      "host_available_ram": 9424084992,
+      "mysql": 1466994688,
+      "kafka": 527958016
+    },
+    {
+      "time": 1795310740.6534698,
+      "free_bytes": {
+        "artifact": 239913738240,
+        "docker_host": 245638164480
+      },
+      "host_available_ram": 9346691072,
+      "mysql": 1466994688,
+      "kafka": 529952768
+    },
+    {
+      "time": 1795310771.0256262,
+      "free_bytes": {
+        "artifact": 239913598976,
+        "docker_host": 245637939200
+      },
+      "host_available_ram": 9166221312,
+      "mysql": 1467052032,
+      "kafka": 529952768
+    },
+    {
+      "time": 1795310801.3957884,
+      "free_bytes": {
+        "artifact": 239913435136,
+        "docker_host": 245646520320
+      },
+      "host_available_ram": 9257897984,
+      "mysql": 1467052032,
+      "kafka": 529952768
+    },
+    {
+      "time": 1795310831.745636,
+      "free_bytes": {
+        "artifact": 239912562688,
+        "docker_host": 245646647296
+      },
+      "host_available_ram": 9015197696,
+      "mysql": 1467052032,
+      "kafka": 532725760
+    },
+    {
+      "time": 1795310862.0750651,
+      "free_bytes": {
+        "artifact": 239912398848,
+        "docker_host": 245645389824
+      },
+      "host_available_ram": 8851820544,
+      "mysql": 1467052032,
+      "kafka": 532725760
+    },
+    {
+      "time": 1795310892.410525,
+      "free_bytes": {
+        "artifact": 239912243200,
+        "docker_host": 245645635584
+      },
+      "host_available_ram": 8799768576,
+      "mysql": 1467052032,
+      "kafka": 532725760
+    },
+    {
+      "time": 1795310922.7837663,
+      "free_bytes": {
+        "artifact": 239912103936,
+        "docker_host": 245645180928
+      },
+      "host_available_ram": 7738998784,
+      "mysql": 1467052032,
+      "kafka": 532725760
+    },
+    {
+      "time": 1795310953.234462,
+      "free_bytes": {
+        "artifact": 239911968768,
+        "docker_host": 245636444160
+      },
+      "host_available_ram": 8339439616,
+      "mysql": 1467052032,
+      "kafka": 534712320
+    },
+    {
+      "time": 1795310983.654149,
+      "free_bytes": {
+        "artifact": 239911407616,
+        "docker_host": 245636771840
+      },
+      "host_available_ram": 8633745408,
+      "mysql": 1467052032,
+      "kafka": 534712320
+    },
+    {
+      "time": 1795311014.048447,
+      "free_bytes": {
+        "artifact": 239910010880,
+        "docker_host": 245636136960
+      },
+      "host_available_ram": 8817049600,
+      "mysql": 1467617280,
+      "kafka": 534712320
+    },
+    {
+      "time": 1795311044.4363022,
+      "free_bytes": {
+        "artifact": 239909158912,
+        "docker_host": 245636456448
+      },
+      "host_available_ram": 8813293568,
+      "mysql": 1467617280,
+      "kafka": 534712320
+    },
+    {
+      "time": 1795311074.842351,
+      "free_bytes": {
+        "artifact": 239908974592,
+        "docker_host": 245636710400
+      },
+      "host_available_ram": 8857309184,
+      "mysql": 1467617280,
+      "kafka": 534712320
+    },
+    {
+      "time": 1795311105.2341006,
+      "free_bytes": {
+        "artifact": 239908831232,
+        "docker_host": 245636050944
+      },
+      "host_available_ram": 8862367744,
+      "mysql": 1467617280,
+      "kafka": 534712320
+    },
+    {
+      "time": 1795311135.6751401,
+      "free_bytes": {
+        "artifact": 239908192256,
+        "docker_host": 245636374528
+      },
+      "host_available_ram": 8870776832,
+      "mysql": 1467617280,
+      "kafka": 534712320
+    },
+    {
+      "time": 1795311166.0499766,
+      "free_bytes": {
+        "artifact": 239907336192,
+        "docker_host": 245636272128
+      },
+      "host_available_ram": 8715796480,
+      "mysql": 1467617280,
+      "kafka": 547147776
+    },
+    {
+      "time": 1795311196.5005362,
+      "free_bytes": {
+        "artifact": 239906463744,
+        "docker_host": 245635612672
+      },
+      "host_available_ram": 8848326656,
+      "mysql": 1467617280,
+      "kafka": 547147776
+    },
+    {
+      "time": 1795311226.8736625,
+      "free_bytes": {
+        "artifact": 239905603584,
+        "docker_host": 245634826240
+      },
+      "host_available_ram": 8871342080,
+      "mysql": 1467617280,
+      "kafka": 547147776
+    },
+    {
+      "time": 1795311257.2755592,
+      "free_bytes": {
+        "artifact": 239905439744,
+        "docker_host": 245636460544
+      },
+      "host_available_ram": 8915156992,
+      "mysql": 1467617280,
+      "kafka": 547147776
+    },
+    {
+      "time": 1795311287.6529043,
+      "free_bytes": {
+        "artifact": 239905345536,
+        "docker_host": 245634711552
+      },
+      "host_available_ram": 8816164864,
+      "mysql": 1590296576,
+      "kafka": 563376128
+    },
+    {
+      "time": 1795311318.0438204,
+      "free_bytes": {
+        "artifact": 239905345536,
+        "docker_host": 245633855488
+      },
+      "host_available_ram": 9290555392,
+      "mysql": 1836576768,
+      "kafka": 581754880
+    },
+    {
+      "time": 1795311348.4107697,
+      "free_bytes": {
+        "artifact": 239905345536,
+        "docker_host": 245634035712
+      },
+      "host_available_ram": 9186926592,
+      "mysql": 2075406336,
+      "kafka": 597311488
+    },
+    {
+      "time": 1795311378.80523,
+      "free_bytes": {
+        "artifact": 239904821248,
+        "docker_host": 245632794624
+      },
+      "host_available_ram": 9242750976,
+      "mysql": 2320908288,
+      "kafka": 622080000
+    },
+    {
+      "time": 1795311409.2284844,
+      "free_bytes": {
+        "artifact": 239904821248,
+        "docker_host": 245633736704
+      },
+      "host_available_ram": 9312759808,
+      "mysql": 2552213504,
+      "kafka": 629301248
+    },
+    {
+      "time": 1795311439.8211355,
+      "free_bytes": {
+        "artifact": 239904821248,
+        "docker_host": 245632897024
+      },
+      "host_available_ram": 9166659584,
+      "mysql": 2764300288,
+      "kafka": 649945088
+    },
+    {
+      "time": 1795311470.2786431,
+      "free_bytes": {
+        "artifact": 239904821248,
+        "docker_host": 245498937344
+      },
+      "host_available_ram": 9274417152,
+      "mysql": 2981335040,
+      "kafka": 678723584
+    },
+    {
+      "time": 1795311500.7048137,
+      "free_bytes": {
+        "artifact": 239904821248,
+        "docker_host": 245331050496
+      },
+      "host_available_ram": 9258647552,
+      "mysql": 3196002304,
+      "kafka": 694280192
+    },
+    {
+      "time": 1795311531.3148322,
+      "free_bytes": {
+        "artifact": 239904821248,
+        "docker_host": 245195784192
+      },
+      "host_available_ram": 9247494144,
+      "mysql": 3422011392,
+      "kafka": 717225984
+    },
+    {
+      "time": 1795311561.7402585,
+      "free_bytes": {
+        "artifact": 239904776192,
+        "docker_host": 245061730304
+      },
+      "host_available_ram": 9235992576,
+      "mysql": 3607994368,
+      "kafka": 724135936
+    },
+    {
+      "time": 1795311592.273228,
+      "free_bytes": {
+        "artifact": 239904776192,
+        "docker_host": 244928679936
+      },
+      "host_available_ram": 9046401024,
+      "mysql": 3814445056,
+      "kafka": 749228032
+    },
+    {
+      "time": 1795311622.641616,
+      "free_bytes": {
+        "artifact": 239904776192,
+        "docker_host": 244760055808
+      },
+      "host_available_ram": 8824418304,
+      "mysql": 4008493056,
+      "kafka": 777609216
+    },
+    {
+      "time": 1795311653.0400562,
+      "free_bytes": {
+        "artifact": 239904776192,
+        "docker_host": 244624445440
+      },
+      "host_available_ram": 8623996928,
+      "mysql": 4222791680,
+      "kafka": 799195136
+    },
+    {
+      "time": 1795311683.4076958,
+      "free_bytes": {
+        "artifact": 239904772096,
+        "docker_host": 244458176512
+      },
+      "host_available_ram": 8457519104,
+      "mysql": 4295225344,
+      "kafka": 830656512
+    },
+    {
+      "time": 1795311713.8091078,
+      "free_bytes": {
+        "artifact": 239904772096,
+        "docker_host": 244325036032
+      },
+      "host_available_ram": 8455430144,
+      "mysql": 4295225344,
+      "kafka": 832872448
+    },
+    {
+      "time": 1795311744.3427455,
+      "free_bytes": {
+        "artifact": 239904772096,
+        "docker_host": 244156612608
+      },
+      "host_available_ram": 8380280832,
+      "mysql": 4295225344,
+      "kafka": 858550272
+    },
+    {
+      "time": 1795311774.7117708,
+      "free_bytes": {
+        "artifact": 239904772096,
+        "docker_host": 243990192128
+      },
+      "host_available_ram": 8576651264,
+      "mysql": 4295225344,
+      "kafka": 886075392
+    },
+    {
+      "time": 1795311805.0867338,
+      "free_bytes": {
+        "artifact": 239904772096,
+        "docker_host": 243821084672
+      },
+      "host_available_ram": 8582639616,
+      "mysql": 4295245824,
+      "kafka": 908894208
+    },
+    {
+      "time": 1795311835.4629054,
+      "free_bytes": {
+        "artifact": 239904772096,
+        "docker_host": 243820490752
+      },
+      "host_available_ram": 8655675392,
+      "mysql": 4295245824,
+      "kafka": 911749120
+    },
+    {
+      "time": 1795311865.8113258,
+      "free_bytes": {
+        "artifact": 239904772096,
+        "docker_host": 243787128832
+      },
+      "host_available_ram": 8630161408,
+      "mysql": 4295245824,
+      "kafka": 917417984
+    },
+    {
+      "time": 1795311896.1472292,
+      "free_bytes": {
+        "artifact": 239904772096,
+        "docker_host": 243787476992
+      },
+      "host_available_ram": 8681631744,
+      "mysql": 4295245824,
+      "kafka": 917417984
+    },
+    {
+      "time": 1795311926.4800236,
+      "free_bytes": {
+        "artifact": 239904768000,
+        "docker_host": 243686289408
+      },
+      "host_available_ram": 8619900928,
+      "mysql": 4295245824,
+      "kafka": 923992064
+    },
+    {
+      "time": 1795311956.8326294,
+      "free_bytes": {
+        "artifact": 239904768000,
+        "docker_host": 243485102080
+      },
+      "host_available_ram": 8501567488,
+      "mysql": 4295245824,
+      "kafka": 951910400
+    },
+    {
+      "time": 1795311987.2148454,
+      "free_bytes": {
+        "artifact": 239904768000,
+        "docker_host": 243383717888
+      },
+      "host_available_ram": 8410386432,
+      "mysql": 4295360512,
+      "kafka": 975290368
+    },
+    {
+      "time": 1795312017.5591178,
+      "free_bytes": {
+        "artifact": 239904243712,
+        "docker_host": 243250028544
+      },
+      "host_available_ram": 8198889472,
+      "mysql": 4295360512,
+      "kafka": 1007173632
+    },
+    {
+      "time": 1795312047.9336715,
+      "free_bytes": {
+        "artifact": 239904243712,
+        "docker_host": 243149869056
+      },
+      "host_available_ram": 7765483520,
+      "mysql": 4295360512,
+      "kafka": 1029812224
+    },
+    {
+      "time": 1795312078.316389,
+      "free_bytes": {
+        "artifact": 239904243712,
+        "docker_host": 243048587264
+      },
+      "host_available_ram": 8247209984,
+      "mysql": 4295360512,
+      "kafka": 1039925248
+    },
+    {
+      "time": 1795312108.6768534,
+      "free_bytes": {
+        "artifact": 239904243712,
+        "docker_host": 242948050944
+      },
+      "host_available_ram": 8124870656,
+      "mysql": 4295360512,
+      "kafka": 1052737536
+    },
+    {
+      "time": 1795312139.0436063,
+      "free_bytes": {
+        "artifact": 239904243712,
+        "docker_host": 242814238720
+      },
+      "host_available_ram": 8218980352,
+      "mysql": 4295360512,
+      "kafka": 1066708992
+    },
+    {
+      "time": 1795312169.4195533,
+      "free_bytes": {
+        "artifact": 239904243712,
+        "docker_host": 242746331136
+      },
+      "host_available_ram": 8242995200,
+      "mysql": 4295360512,
+      "kafka": 1073758208
+    },
+    {
+      "time": 1795312199.8056397,
+      "free_bytes": {
+        "artifact": 239904243712,
+        "docker_host": 242610802688
+      },
+      "host_available_ram": 8342089728,
+      "mysql": 4295360512,
+      "kafka": 1073836032
+    },
+    {
+      "time": 1795312230.178291,
+      "free_bytes": {
+        "artifact": 239904243712,
+        "docker_host": 242511630336
+      },
+      "host_available_ram": 8334872576,
+      "mysql": 4295360512,
+      "kafka": 1073836032
+    },
+    {
+      "time": 1795312260.5503335,
+      "free_bytes": {
+        "artifact": 239904243712,
+        "docker_host": 242410250240
+      },
+      "host_available_ram": 8343105536,
+      "mysql": 4295360512,
+      "kafka": 1073836032
+    },
+    {
+      "time": 1795312290.993507,
+      "free_bytes": {
+        "artifact": 239904243712,
+        "docker_host": 242308702208
+      },
+      "host_available_ram": 8388403200,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312321.4439003,
+      "free_bytes": {
+        "artifact": 239904243712,
+        "docker_host": 242209214464
+      },
+      "host_available_ram": 8239411200,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312351.825005,
+      "free_bytes": {
+        "artifact": 239904243712,
+        "docker_host": 242107891712
+      },
+      "host_available_ram": 8095711232,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312382.2239783,
+      "free_bytes": {
+        "artifact": 239904243712,
+        "docker_host": 242007355392
+      },
+      "host_available_ram": 8204963840,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312412.5916562,
+      "free_bytes": {
+        "artifact": 239904210944,
+        "docker_host": 241906159616
+      },
+      "host_available_ram": 7990874112,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312442.9952323,
+      "free_bytes": {
+        "artifact": 239904210944,
+        "docker_host": 241839382528
+      },
+      "host_available_ram": 8018415616,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312473.3755825,
+      "free_bytes": {
+        "artifact": 239904210944,
+        "docker_host": 241738797056
+      },
+      "host_available_ram": 8073392128,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312503.7762396,
+      "free_bytes": {
+        "artifact": 239904210944,
+        "docker_host": 241637539840
+      },
+      "host_available_ram": 8295948288,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312534.1607149,
+      "free_bytes": {
+        "artifact": 239903686656,
+        "docker_host": 241537302528
+      },
+      "host_available_ram": 8339775488,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312564.5394385,
+      "free_bytes": {
+        "artifact": 239903686656,
+        "docker_host": 241437069312
+      },
+      "host_available_ram": 8298663936,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312594.9034216,
+      "free_bytes": {
+        "artifact": 239903686656,
+        "docker_host": 241335549952
+      },
+      "host_available_ram": 8285466624,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312625.271285,
+      "free_bytes": {
+        "artifact": 239903686656,
+        "docker_host": 241234321408
+      },
+      "host_available_ram": 8180523008,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312655.6299403,
+      "free_bytes": {
+        "artifact": 239903686656,
+        "docker_host": 241134886912
+      },
+      "host_available_ram": 8028364800,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312686.0220234,
+      "free_bytes": {
+        "artifact": 239903686656,
+        "docker_host": 241066659840
+      },
+      "host_available_ram": 8147136512,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312716.3542047,
+      "free_bytes": {
+        "artifact": 239903686656,
+        "docker_host": 240965140480
+      },
+      "host_available_ram": 7807741952,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312746.724386,
+      "free_bytes": {
+        "artifact": 239903686656,
+        "docker_host": 240864534528
+      },
+      "host_available_ram": 7888453632,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312777.0794425,
+      "free_bytes": {
+        "artifact": 239903686656,
+        "docker_host": 240764198912
+      },
+      "host_available_ram": 8075243520,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312807.44706,
+      "free_bytes": {
+        "artifact": 239903686656,
+        "docker_host": 240662634496
+      },
+      "host_available_ram": 8051318784,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312837.757901,
+      "free_bytes": {
+        "artifact": 239903686656,
+        "docker_host": 240562327552
+      },
+      "host_available_ram": 8104550400,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312868.0918593,
+      "free_bytes": {
+        "artifact": 239903686656,
+        "docker_host": 240462053376
+      },
+      "host_available_ram": 8130662400,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312898.4413502,
+      "free_bytes": {
+        "artifact": 239903686656,
+        "docker_host": 240394072064
+      },
+      "host_available_ram": 8132202496,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312928.7511148,
+      "free_bytes": {
+        "artifact": 239903686656,
+        "docker_host": 240293629952
+      },
+      "host_available_ram": 8106991616,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312959.0602934,
+      "free_bytes": {
+        "artifact": 239903686656,
+        "docker_host": 240192339968
+      },
+      "host_available_ram": 7904628736,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795312989.3924854,
+      "free_bytes": {
+        "artifact": 239903686656,
+        "docker_host": 240091934720
+      },
+      "host_available_ram": 8073023488,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795313019.7490053,
+      "free_bytes": {
+        "artifact": 239903686656,
+        "docker_host": 239991521280
+      },
+      "host_available_ram": 8051621888,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795313050.0619895,
+      "free_bytes": {
+        "artifact": 239903686656,
+        "docker_host": 239923359744
+      },
+      "host_available_ram": 8163164160,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795313080.3859894,
+      "free_bytes": {
+        "artifact": 239903162368,
+        "docker_host": 239823032320
+      },
+      "host_available_ram": 8168488960,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795313110.7134545,
+      "free_bytes": {
+        "artifact": 239903162368,
+        "docker_host": 239722643456
+      },
+      "host_available_ram": 8191766528,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795313141.0304563,
+      "free_bytes": {
+        "artifact": 239903162368,
+        "docker_host": 239621238784
+      },
+      "host_available_ram": 8176373760,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795313171.3894188,
+      "free_bytes": {
+        "artifact": 239903162368,
+        "docker_host": 239553605632
+      },
+      "host_available_ram": 8164954112,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795313201.8472533,
+      "free_bytes": {
+        "artifact": 239903162368,
+        "docker_host": 239453528064
+      },
+      "host_available_ram": 8093667328,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795313232.1895769,
+      "free_bytes": {
+        "artifact": 239903162368,
+        "docker_host": 239385501696
+      },
+      "host_available_ram": 8110411776,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795313262.523043,
+      "free_bytes": {
+        "artifact": 239903129600,
+        "docker_host": 239283871744
+      },
+      "host_available_ram": 8041734144,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795313292.841731,
+      "free_bytes": {
+        "artifact": 239903129600,
+        "docker_host": 239218401280
+      },
+      "host_available_ram": 8094179328,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795313323.151566,
+      "free_bytes": {
+        "artifact": 239903117312,
+        "docker_host": 239117074432
+      },
+      "host_available_ram": 8023183360,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795313353.4851656,
+      "free_bytes": {
+        "artifact": 239903117312,
+        "docker_host": 239015628800
+      },
+      "host_available_ram": 8123670528,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795313383.816341,
+      "free_bytes": {
+        "artifact": 239903117312,
+        "docker_host": 238915411968
+      },
+      "host_available_ram": 8173903872,
+      "mysql": 4295360512,
+      "kafka": 1073917952
+    },
+    {
+      "time": 1795313414.1356716,
+      "free_bytes": {
+        "artifact": 239903117312,
+        "docker_host": 238848532480
+      },
+      "host_available_ram": 8184078336,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795313444.451029,
+      "free_bytes": {
+        "artifact": 239903117312,
+        "docker_host": 238780768256
+      },
+      "host_available_ram": 8176082944,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795313474.7706077,
+      "free_bytes": {
+        "artifact": 239903117312,
+        "docker_host": 238680494080
+      },
+      "host_available_ram": 8160374784,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795313505.1121871,
+      "free_bytes": {
+        "artifact": 239903117312,
+        "docker_host": 238579105792
+      },
+      "host_available_ram": 8170545152,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795313535.4378908,
+      "free_bytes": {
+        "artifact": 239903117312,
+        "docker_host": 238478721024
+      },
+      "host_available_ram": 8140038144,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795313565.755507,
+      "free_bytes": {
+        "artifact": 239903117312,
+        "docker_host": 238379028480
+      },
+      "host_available_ram": 8093827072,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795313596.0977151,
+      "free_bytes": {
+        "artifact": 239903117312,
+        "docker_host": 238311145472
+      },
+      "host_available_ram": 8149630976,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795313626.4739072,
+      "free_bytes": {
+        "artifact": 239903117312,
+        "docker_host": 238209560576
+      },
+      "host_available_ram": 8015659008,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795313656.7987041,
+      "free_bytes": {
+        "artifact": 239903100928,
+        "docker_host": 238110502912
+      },
+      "host_available_ram": 8203358208,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795313687.1222534,
+      "free_bytes": {
+        "artifact": 239902576640,
+        "docker_host": 238042132480
+      },
+      "host_available_ram": 8214171648,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795313717.4578524,
+      "free_bytes": {
+        "artifact": 239902576640,
+        "docker_host": 237940887552
+      },
+      "host_available_ram": 8221257728,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795313747.7847736,
+      "free_bytes": {
+        "artifact": 239902576640,
+        "docker_host": 237875023872
+      },
+      "host_available_ram": 8201129984,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795313778.1248143,
+      "free_bytes": {
+        "artifact": 239902576640,
+        "docker_host": 237773582336
+      },
+      "host_available_ram": 8135307264,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795313808.4431982,
+      "free_bytes": {
+        "artifact": 239902576640,
+        "docker_host": 237672534016
+      },
+      "host_available_ram": 8039141376,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795313838.7819998,
+      "free_bytes": {
+        "artifact": 239902576640,
+        "docker_host": 237606965248
+      },
+      "host_available_ram": 8124178432,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795313869.1035311,
+      "free_bytes": {
+        "artifact": 239902576640,
+        "docker_host": 237505425408
+      },
+      "host_available_ram": 8018755584,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795313899.4366152,
+      "free_bytes": {
+        "artifact": 239902576640,
+        "docker_host": 237403824128
+      },
+      "host_available_ram": 8083238912,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795313929.7430131,
+      "free_bytes": {
+        "artifact": 239902576640,
+        "docker_host": 237336870912
+      },
+      "host_available_ram": 8144437248,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795313960.0554209,
+      "free_bytes": {
+        "artifact": 239902576640,
+        "docker_host": 237236568064
+      },
+      "host_available_ram": 8140832768,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795313990.3900044,
+      "free_bytes": {
+        "artifact": 239902576640,
+        "docker_host": 237135179776
+      },
+      "host_available_ram": 8167211008,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795314020.723068,
+      "free_bytes": {
+        "artifact": 239902576640,
+        "docker_host": 237035036672
+      },
+      "host_available_ram": 8166199296,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795314051.0555406,
+      "free_bytes": {
+        "artifact": 239902576640,
+        "docker_host": 236933525504
+      },
+      "host_available_ram": 8151945216,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795314081.3657148,
+      "free_bytes": {
+        "artifact": 239902576640,
+        "docker_host": 236866609152
+      },
+      "host_available_ram": 8143802368,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795314111.691654,
+      "free_bytes": {
+        "artifact": 239902576640,
+        "docker_host": 236766142464
+      },
+      "host_available_ram": 7931297792,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795314142.1402683,
+      "free_bytes": {
+        "artifact": 239902576640,
+        "docker_host": 236664807424
+      },
+      "host_available_ram": 8057827328,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795314172.5593767,
+      "free_bytes": {
+        "artifact": 239902511104,
+        "docker_host": 236598550528
+      },
+      "host_available_ram": 8023904256,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795314202.90194,
+      "free_bytes": {
+        "artifact": 239902511104,
+        "docker_host": 236497174528
+      },
+      "host_available_ram": 8040562688,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795314233.2453558,
+      "free_bytes": {
+        "artifact": 239902511104,
+        "docker_host": 236429213696
+      },
+      "host_available_ram": 8057200640,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795314263.5694983,
+      "free_bytes": {
+        "artifact": 239902511104,
+        "docker_host": 236329000960
+      },
+      "host_available_ram": 8054026240,
+      "mysql": 4295360512,
+      "kafka": 1073922048
+    },
+    {
+      "time": 1795314293.8934534,
+      "free_bytes": {
+        "artifact": 239901986816,
+        "docker_host": 236262330368
+      },
+      "host_available_ram": 8085225472,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314324.240812,
+      "free_bytes": {
+        "artifact": 239901986816,
+        "docker_host": 236160892928
+      },
+      "host_available_ram": 8122138624,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314354.5627542,
+      "free_bytes": {
+        "artifact": 239901986816,
+        "docker_host": 236094046208
+      },
+      "host_available_ram": 8099315712,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314384.8876264,
+      "free_bytes": {
+        "artifact": 239901986816,
+        "docker_host": 235993808896
+      },
+      "host_available_ram": 8093069312,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314415.205248,
+      "free_bytes": {
+        "artifact": 239901986816,
+        "docker_host": 235925778432
+      },
+      "host_available_ram": 7853133824,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314445.5719302,
+      "free_bytes": {
+        "artifact": 239901986816,
+        "docker_host": 235825135616
+      },
+      "host_available_ram": 7811870720,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314475.9140599,
+      "free_bytes": {
+        "artifact": 239901986816,
+        "docker_host": 235955294208
+      },
+      "host_available_ram": 7923286016,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314506.2307968,
+      "free_bytes": {
+        "artifact": 239901986816,
+        "docker_host": 235854893056
+      },
+      "host_available_ram": 7983276032,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314536.5578532,
+      "free_bytes": {
+        "artifact": 239901986816,
+        "docker_host": 235788115968
+      },
+      "host_available_ram": 7986589696,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314566.891429,
+      "free_bytes": {
+        "artifact": 239901986816,
+        "docker_host": 235686727680
+      },
+      "host_available_ram": 8042590208,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314597.2248116,
+      "free_bytes": {
+        "artifact": 239901986816,
+        "docker_host": 235586252800
+      },
+      "host_available_ram": 8057561088,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314627.542149,
+      "free_bytes": {
+        "artifact": 239901986816,
+        "docker_host": 235519660032
+      },
+      "host_available_ram": 8044756992,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314657.8427372,
+      "free_bytes": {
+        "artifact": 239901986816,
+        "docker_host": 235418210304
+      },
+      "host_available_ram": 8067276800,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314688.176692,
+      "free_bytes": {
+        "artifact": 239901986816,
+        "docker_host": 235317006336
+      },
+      "host_available_ram": 8093843456,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314718.4920297,
+      "free_bytes": {
+        "artifact": 239901986816,
+        "docker_host": 235251388416
+      },
+      "host_available_ram": 7937462272,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314748.8444502,
+      "free_bytes": {
+        "artifact": 239901986816,
+        "docker_host": 235149451264
+      },
+      "host_available_ram": 7796641792,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314779.1941383,
+      "free_bytes": {
+        "artifact": 239901986816,
+        "docker_host": 235047661568
+      },
+      "host_available_ram": 8048947200,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314809.5301235,
+      "free_bytes": {
+        "artifact": 239901986816,
+        "docker_host": 234980880384
+      },
+      "host_available_ram": 7840649216,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314839.8551352,
+      "free_bytes": {
+        "artifact": 239901986816,
+        "docker_host": 234880643072
+      },
+      "host_available_ram": 8011481088,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314870.1860127,
+      "free_bytes": {
+        "artifact": 239901986816,
+        "docker_host": 234812940288
+      },
+      "host_available_ram": 7996780544,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314900.4960124,
+      "free_bytes": {
+        "artifact": 239901986816,
+        "docker_host": 234745974784
+      },
+      "host_available_ram": 8025808896,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314930.8302128,
+      "free_bytes": {
+        "artifact": 239901462528,
+        "docker_host": 234679074816
+      },
+      "host_available_ram": 8036204544,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314961.1637607,
+      "free_bytes": {
+        "artifact": 239901462528,
+        "docker_host": 234577887232
+      },
+      "host_available_ram": 8003391488,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795314991.474853,
+      "free_bytes": {
+        "artifact": 239901462528,
+        "docker_host": 234511106048
+      },
+      "host_available_ram": 8012955648,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315021.7989137,
+      "free_bytes": {
+        "artifact": 239901462528,
+        "docker_host": 234409787392
+      },
+      "host_available_ram": 7907663872,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315052.142301,
+      "free_bytes": {
+        "artifact": 239901462528,
+        "docker_host": 234309279744
+      },
+      "host_available_ram": 7798382592,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315082.5648084,
+      "free_bytes": {
+        "artifact": 239901462528,
+        "docker_host": 234243104768
+      },
+      "host_available_ram": 7663665152,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315112.9581583,
+      "free_bytes": {
+        "artifact": 239901462528,
+        "docker_host": 234141278208
+      },
+      "host_available_ram": 7627280384,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315143.3045344,
+      "free_bytes": {
+        "artifact": 239901462528,
+        "docker_host": 234074693632
+      },
+      "host_available_ram": 7902642176,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315173.6354196,
+      "free_bytes": {
+        "artifact": 239901462528,
+        "docker_host": 234012180480
+      },
+      "host_available_ram": 7942316032,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315203.9593372,
+      "free_bytes": {
+        "artifact": 239901462528,
+        "docker_host": 233944174592
+      },
+      "host_available_ram": 7930777600,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315234.2786877,
+      "free_bytes": {
+        "artifact": 239901462528,
+        "docker_host": 233875881984
+      },
+      "host_available_ram": 8032260096,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315264.594287,
+      "free_bytes": {
+        "artifact": 239901462528,
+        "docker_host": 233818447872
+      },
+      "host_available_ram": 8027004928,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315294.9385855,
+      "free_bytes": {
+        "artifact": 239901462528,
+        "docker_host": 233750450176
+      },
+      "host_available_ram": 8051445760,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315325.2625203,
+      "free_bytes": {
+        "artifact": 239901462528,
+        "docker_host": 233682608128
+      },
+      "host_available_ram": 7910674432,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315355.5877998,
+      "free_bytes": {
+        "artifact": 239901462528,
+        "docker_host": 233616887808
+      },
+      "host_available_ram": 7942205440,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315385.906026,
+      "free_bytes": {
+        "artifact": 239901462528,
+        "docker_host": 233548865536
+      },
+      "host_available_ram": 7869288448,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315416.2166042,
+      "free_bytes": {
+        "artifact": 239901462528,
+        "docker_host": 233480904704
+      },
+      "host_available_ram": 7949709312,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315446.541385,
+      "free_bytes": {
+        "artifact": 239901462528,
+        "docker_host": 233414270976
+      },
+      "host_available_ram": 7726239744,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315476.8826714,
+      "free_bytes": {
+        "artifact": 239901462528,
+        "docker_host": 233347354624
+      },
+      "host_available_ram": 7766003712,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315507.208969,
+      "free_bytes": {
+        "artifact": 239901462528,
+        "docker_host": 233279344640
+      },
+      "host_available_ram": 7991705600,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315537.5505974,
+      "free_bytes": {
+        "artifact": 239901462528,
+        "docker_host": 233212239872
+      },
+      "host_available_ram": 7920234496,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315567.883458,
+      "free_bytes": {
+        "artifact": 239900938240,
+        "docker_host": 233110564864
+      },
+      "host_available_ram": 7819403264,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315598.238503,
+      "free_bytes": {
+        "artifact": 239900938240,
+        "docker_host": 233043738624
+      },
+      "host_available_ram": 7866261504,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315628.5854511,
+      "free_bytes": {
+        "artifact": 239900938240,
+        "docker_host": 232943370240
+      },
+      "host_available_ram": 7675195392,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315658.9192352,
+      "free_bytes": {
+        "artifact": 239900938240,
+        "docker_host": 232842448896
+      },
+      "host_available_ram": 7558819840,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315689.2450275,
+      "free_bytes": {
+        "artifact": 239900938240,
+        "docker_host": 232774483968
+      },
+      "host_available_ram": 7835717632,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315719.5936723,
+      "free_bytes": {
+        "artifact": 239900938240,
+        "docker_host": 232707604480
+      },
+      "host_available_ram": 7719272448,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315749.9126122,
+      "free_bytes": {
+        "artifact": 239900938240,
+        "docker_host": 232606097408
+      },
+      "host_available_ram": 7813246976,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315780.2387261,
+      "free_bytes": {
+        "artifact": 239900938240,
+        "docker_host": 232539348992
+      },
+      "host_available_ram": 7804686336,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315810.5625975,
+      "free_bytes": {
+        "artifact": 239900938240,
+        "docker_host": 232472854528
+      },
+      "host_available_ram": 7871266816,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315840.8647106,
+      "free_bytes": {
+        "artifact": 239900938240,
+        "docker_host": 232371150848
+      },
+      "host_available_ram": 7903047680,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315871.172134,
+      "free_bytes": {
+        "artifact": 239900938240,
+        "docker_host": 232304525312
+      },
+      "host_available_ram": 7864352768,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315901.5071466,
+      "free_bytes": {
+        "artifact": 239900938240,
+        "docker_host": 232237813760
+      },
+      "host_available_ram": 7864303616,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315931.832317,
+      "free_bytes": {
+        "artifact": 239900938240,
+        "docker_host": 232169951232
+      },
+      "host_available_ram": 7901995008,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315962.1694913,
+      "free_bytes": {
+        "artifact": 239900938240,
+        "docker_host": 232069509120
+      },
+      "host_available_ram": 7859945472,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795315992.4942195,
+      "free_bytes": {
+        "artifact": 239900938240,
+        "docker_host": 232001638400
+      },
+      "host_available_ram": 7870922752,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316022.86801,
+      "free_bytes": {
+        "artifact": 239900938240,
+        "docker_host": 231934935040
+      },
+      "host_available_ram": 7826321408,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316053.285129,
+      "free_bytes": {
+        "artifact": 239900938240,
+        "docker_host": 231834333184
+      },
+      "host_available_ram": 7821504512,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316083.6181068,
+      "free_bytes": {
+        "artifact": 239900938240,
+        "docker_host": 231766499328
+      },
+      "host_available_ram": 7915286528,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316113.9445767,
+      "free_bytes": {
+        "artifact": 239900938240,
+        "docker_host": 231699652608
+      },
+      "host_available_ram": 7892652032,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316144.2530334,
+      "free_bytes": {
+        "artifact": 239900938240,
+        "docker_host": 231599378432
+      },
+      "host_available_ram": 7914057728,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316174.5790195,
+      "free_bytes": {
+        "artifact": 239900938240,
+        "docker_host": 231531008000
+      },
+      "host_available_ram": 7812571136,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316204.9028614,
+      "free_bytes": {
+        "artifact": 239900413952,
+        "docker_host": 231429545984
+      },
+      "host_available_ram": 7775662080,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316235.270147,
+      "free_bytes": {
+        "artifact": 239900413952,
+        "docker_host": 231363710976
+      },
+      "host_available_ram": 7917916160,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316265.6013198,
+      "free_bytes": {
+        "artifact": 239900413952,
+        "docker_host": 231295827968
+      },
+      "host_available_ram": 7929315328,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316295.9230378,
+      "free_bytes": {
+        "artifact": 239900348416,
+        "docker_host": 231227973632
+      },
+      "host_available_ram": 7934222336,
+      "mysql": 4295360512,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316326.2614326,
+      "free_bytes": {
+        "artifact": 239900348416,
+        "docker_host": 231127527424
+      },
+      "host_available_ram": 7815921664,
+      "mysql": 4295376896,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316356.5820293,
+      "free_bytes": {
+        "artifact": 239900348416,
+        "docker_host": 231060283392
+      },
+      "host_available_ram": 7946588160,
+      "mysql": 4295376896,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316386.897999,
+      "free_bytes": {
+        "artifact": 239900348416,
+        "docker_host": 230958759936
+      },
+      "host_available_ram": 7960756224,
+      "mysql": 4295376896,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316417.2149706,
+      "free_bytes": {
+        "artifact": 239900348416,
+        "docker_host": 230891913216
+      },
+      "host_available_ram": 7922388992,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316447.5427816,
+      "free_bytes": {
+        "artifact": 239900348416,
+        "docker_host": 230791573504
+      },
+      "host_available_ram": 7772487680,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316477.9345477,
+      "free_bytes": {
+        "artifact": 239900299264,
+        "docker_host": 230690054144
+      },
+      "host_available_ram": 7945523200,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316508.2689312,
+      "free_bytes": {
+        "artifact": 239900299264,
+        "docker_host": 230623404032
+      },
+      "host_available_ram": 7860473856,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316538.601009,
+      "free_bytes": {
+        "artifact": 239900299264,
+        "docker_host": 230555320320
+      },
+      "host_available_ram": 7824183296,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316568.932516,
+      "free_bytes": {
+        "artifact": 239900299264,
+        "docker_host": 230454919168
+      },
+      "host_available_ram": 7853215744,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316599.2691658,
+      "free_bytes": {
+        "artifact": 239900299264,
+        "docker_host": 230388305920
+      },
+      "host_available_ram": 7878520832,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316629.612014,
+      "free_bytes": {
+        "artifact": 239900299264,
+        "docker_host": 230320345088
+      },
+      "host_available_ram": 7856828416,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316659.9371114,
+      "free_bytes": {
+        "artifact": 239900299264,
+        "docker_host": 230253232128
+      },
+      "host_available_ram": 7909933056,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316690.2814584,
+      "free_bytes": {
+        "artifact": 239900299264,
+        "docker_host": 230152794112
+      },
+      "host_available_ram": 7926530048,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316720.613619,
+      "free_bytes": {
+        "artifact": 239900299264,
+        "docker_host": 230084358144
+      },
+      "host_available_ram": 7815942144,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316750.937987,
+      "free_bytes": {
+        "artifact": 239900299264,
+        "docker_host": 229983432704
+      },
+      "host_available_ram": 7944581120,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316781.2499285,
+      "free_bytes": {
+        "artifact": 239900299264,
+        "docker_host": 229917831168
+      },
+      "host_available_ram": 7730999296,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316811.5729613,
+      "free_bytes": {
+        "artifact": 239900299264,
+        "docker_host": 229816377344
+      },
+      "host_available_ram": 7764971520,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316841.89079,
+      "free_bytes": {
+        "artifact": 239900299264,
+        "docker_host": 229748736000
+      },
+      "host_available_ram": 7745388544,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316872.2083235,
+      "free_bytes": {
+        "artifact": 239899774976,
+        "docker_host": 229648269312
+      },
+      "host_available_ram": 7922708480,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316902.5473204,
+      "free_bytes": {
+        "artifact": 239899774976,
+        "docker_host": 229581258752
+      },
+      "host_available_ram": 7959605248,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316932.8664105,
+      "free_bytes": {
+        "artifact": 239899774976,
+        "docker_host": 229513428992
+      },
+      "host_available_ram": 7954939904,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316963.2359147,
+      "free_bytes": {
+        "artifact": 239899774976,
+        "docker_host": 229413199872
+      },
+      "host_available_ram": 7930093568,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795316993.6481225,
+      "free_bytes": {
+        "artifact": 239899774976,
+        "docker_host": 229349789696
+      },
+      "host_available_ram": 7795691520,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317023.9692404,
+      "free_bytes": {
+        "artifact": 239899774976,
+        "docker_host": 229281730560
+      },
+      "host_available_ram": 7947771904,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317054.3196647,
+      "free_bytes": {
+        "artifact": 239899774976,
+        "docker_host": 229214867456
+      },
+      "host_available_ram": 7987691520,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317084.6355827,
+      "free_bytes": {
+        "artifact": 239899774976,
+        "docker_host": 229146988544
+      },
+      "host_available_ram": 7968989184,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317114.9690783,
+      "free_bytes": {
+        "artifact": 239899774976,
+        "docker_host": 229080137728
+      },
+      "host_available_ram": 7738064896,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317145.302972,
+      "free_bytes": {
+        "artifact": 239899774976,
+        "docker_host": 228979605504
+      },
+      "host_available_ram": 7605944320,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317175.6442223,
+      "free_bytes": {
+        "artifact": 239899774976,
+        "docker_host": 228911833088
+      },
+      "host_available_ram": 7884705792,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317205.9603922,
+      "free_bytes": {
+        "artifact": 239899774976,
+        "docker_host": 228844683264
+      },
+      "host_available_ram": 7666274304,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317236.3147607,
+      "free_bytes": {
+        "artifact": 239899774976,
+        "docker_host": 228777119744
+      },
+      "host_available_ram": 7751475200,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317266.6667519,
+      "free_bytes": {
+        "artifact": 239899774976,
+        "docker_host": 228709957632
+      },
+      "host_available_ram": 7987273728,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317296.9905643,
+      "free_bytes": {
+        "artifact": 239899774976,
+        "docker_host": 228641931264
+      },
+      "host_available_ram": 7959076864,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317327.306918,
+      "free_bytes": {
+        "artifact": 239899774976,
+        "docker_host": 228576370688
+      },
+      "host_available_ram": 7955206144,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317357.6405306,
+      "free_bytes": {
+        "artifact": 239899774976,
+        "docker_host": 228508315648
+      },
+      "host_available_ram": 7945494528,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317387.968891,
+      "free_bytes": {
+        "artifact": 239899774976,
+        "docker_host": 228474093568
+      },
+      "host_available_ram": 7963693056,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317418.281643,
+      "free_bytes": {
+        "artifact": 239899774976,
+        "docker_host": 228408197120
+      },
+      "host_available_ram": 7750455296,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317448.6185434,
+      "free_bytes": {
+        "artifact": 239899774976,
+        "docker_host": 228373696512
+      },
+      "host_available_ram": 7613865984,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317478.9418628,
+      "free_bytes": {
+        "artifact": 239899774976,
+        "docker_host": 228306059264
+      },
+      "host_available_ram": 7921188864,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317509.285888,
+      "free_bytes": {
+        "artifact": 239899774976,
+        "docker_host": 228272693248
+      },
+      "host_available_ram": 7717961728,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317539.6179307,
+      "free_bytes": {
+        "artifact": 239899250688,
+        "docker_host": 228205699072
+      },
+      "host_available_ram": 7868186624,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317569.9527428,
+      "free_bytes": {
+        "artifact": 239899250688,
+        "docker_host": 228137746432
+      },
+      "host_available_ram": 7957630976,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317600.2698417,
+      "free_bytes": {
+        "artifact": 239899250688,
+        "docker_host": 228070850560
+      },
+      "host_available_ram": 7780265984,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317630.6131408,
+      "free_bytes": {
+        "artifact": 239899250688,
+        "docker_host": 228003102720
+      },
+      "host_available_ram": 7827738624,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317660.9380612,
+      "free_bytes": {
+        "artifact": 239899250688,
+        "docker_host": 227934752768
+      },
+      "host_available_ram": 7892819968,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317691.257581,
+      "free_bytes": {
+        "artifact": 239899250688,
+        "docker_host": 227901632512
+      },
+      "host_available_ram": 7897194496,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317721.6066725,
+      "free_bytes": {
+        "artifact": 239899250688,
+        "docker_host": 227832623104
+      },
+      "host_available_ram": 7793176576,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317751.9395456,
+      "free_bytes": {
+        "artifact": 239899250688,
+        "docker_host": 227799420928
+      },
+      "host_available_ram": 7790546944,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317782.2747788,
+      "free_bytes": {
+        "artifact": 239899250688,
+        "docker_host": 227732467712
+      },
+      "host_available_ram": 7883517952,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317812.6182067,
+      "free_bytes": {
+        "artifact": 239899250688,
+        "docker_host": 227664502784
+      },
+      "host_available_ram": 7667564544,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317842.9587634,
+      "free_bytes": {
+        "artifact": 239899250688,
+        "docker_host": 227596599296
+      },
+      "host_available_ram": 7892516864,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317873.3092513,
+      "free_bytes": {
+        "artifact": 239899250688,
+        "docker_host": 227564548096
+      },
+      "host_available_ram": 7934808064,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317903.6671944,
+      "free_bytes": {
+        "artifact": 239899250688,
+        "docker_host": 227496370176
+      },
+      "host_available_ram": 7649558528,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317934.1102026,
+      "free_bytes": {
+        "artifact": 239899250688,
+        "docker_host": 227429281792
+      },
+      "host_available_ram": 7670546432,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317964.4532492,
+      "free_bytes": {
+        "artifact": 239899250688,
+        "docker_host": 227395846144
+      },
+      "host_available_ram": 7889248256,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795317994.7951205,
+      "free_bytes": {
+        "artifact": 239899250688,
+        "docker_host": 227328163840
+      },
+      "host_available_ram": 7830798336,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318025.1291022,
+      "free_bytes": {
+        "artifact": 239899250688,
+        "docker_host": 227264421888
+      },
+      "host_available_ram": 7686934528,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318055.454141,
+      "free_bytes": {
+        "artifact": 239899250688,
+        "docker_host": 227229941760
+      },
+      "host_available_ram": 7717941248,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318085.78827,
+      "free_bytes": {
+        "artifact": 239899250688,
+        "docker_host": 227163131904
+      },
+      "host_available_ram": 7734460416,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318116.1180458,
+      "free_bytes": {
+        "artifact": 239899185152,
+        "docker_host": 227096158208
+      },
+      "host_available_ram": 7718887424,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318146.4516218,
+      "free_bytes": {
+        "artifact": 239899185152,
+        "docker_host": 227061542912
+      },
+      "host_available_ram": 7857033216,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318176.7530832,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226994679808
+      },
+      "host_available_ram": 7845203968,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318207.152857,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226961272832
+      },
+      "host_available_ram": 7677370368,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318237.4758387,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226893369344
+      },
+      "host_available_ram": 7670648832,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318267.8110793,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226825732096
+      },
+      "host_available_ram": 7868190720,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318298.129744,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226792435712
+      },
+      "host_available_ram": 7875932160,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318328.4552455,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226758070272
+      },
+      "host_available_ram": 7780937728,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318358.8144317,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226690150400
+      },
+      "host_available_ram": 7738462208,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318389.1771848,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226657013760
+      },
+      "host_available_ram": 7811145728,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318419.5052822,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226623737856
+      },
+      "host_available_ram": 7707889664,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318449.823755,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226555854848
+      },
+      "host_available_ram": 7878516736,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318480.17278,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226522427392
+      },
+      "host_available_ram": 7948255232,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318510.4917758,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226522656768
+      },
+      "host_available_ram": 7951839232,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318540.8172696,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226488320000
+      },
+      "host_available_ram": 7919149056,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318571.126085,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226488692736
+      },
+      "host_available_ram": 7930814464,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318601.458056,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226454355968
+      },
+      "host_available_ram": 7912968192,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318631.7853453,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226454687744
+      },
+      "host_available_ram": 7892639744,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318662.1096187,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226420633600
+      },
+      "host_available_ram": 7708442624,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318692.420974,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226352799744
+      },
+      "host_available_ram": 7661404160,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318722.761993,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226319577088
+      },
+      "host_available_ram": 7707336704,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318753.0882335,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226252988416
+      },
+      "host_available_ram": 7907651584,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318783.421472,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226164137984
+      },
+      "host_available_ram": 7899598848,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318813.7624466,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226100256768
+      },
+      "host_available_ram": 7916113920,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318844.1294122,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226068709376
+      },
+      "host_available_ram": 7922352128,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318874.5111217,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226034069504
+      },
+      "host_available_ram": 7872618496,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318904.857418,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226033078272
+      },
+      "host_available_ram": 7906607104,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318935.1801267,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226034147328
+      },
+      "host_available_ram": 7901970432,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318965.525048,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226032726016
+      },
+      "host_available_ram": 7711862784,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795318995.8429954,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226031939584
+      },
+      "host_available_ram": 7765708800,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795319026.1742694,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226032287744
+      },
+      "host_available_ram": 7725006848,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795319056.5087404,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226033123328
+      },
+      "host_available_ram": 7868682240,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795319086.8268368,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226032066560
+      },
+      "host_available_ram": 7911178240,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795319117.1418793,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226032377856
+      },
+      "host_available_ram": 7874957312,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795319147.4761002,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226031087616
+      },
+      "host_available_ram": 7832969216,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795319177.7948086,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226031554560
+      },
+      "host_available_ram": 7664291840,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795319208.1287444,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226031841280
+      },
+      "host_available_ram": 7645290496,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795319238.4492018,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226031247360
+      },
+      "host_available_ram": 7554428928,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795319268.7788675,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226031226880
+      },
+      "host_available_ram": 7583252480,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795319299.1062872,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226030497792
+      },
+      "host_available_ram": 7647199232,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795319329.4309497,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226029658112
+      },
+      "host_available_ram": 7705505792,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795319359.7732308,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226028527616
+      },
+      "host_available_ram": 7737270272,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795319390.0988905,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226029559808
+      },
+      "host_available_ram": 7788589056,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795319420.4145572,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226028523520
+      },
+      "host_available_ram": 7817859072,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795319450.7587495,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226027909120
+      },
+      "host_available_ram": 7881949184,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795319481.0834494,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226029494272
+      },
+      "host_available_ram": 7767654400,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795319511.400969,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226028568576
+      },
+      "host_available_ram": 7561007104,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795319541.716203,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226027671552
+      },
+      "host_available_ram": 7465074688,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795319572.0433915,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226028105728
+      },
+      "host_available_ram": 7711952896,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795319602.3693504,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226028281856
+      },
+      "host_available_ram": 7803166720,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    },
+    {
+      "time": 1795319632.6945696,
+      "free_bytes": {
+        "artifact": 239898636288,
+        "docker_host": 226027429888
+      },
+      "host_available_ram": 7670763520,
+      "mysql": 4295389184,
+      "kafka": 1073995776
+    }
+  ],
+  "volume_samples": [
+    {
+      "time": 1795308033.0867443,
+      "completed_blocks": 33,
+      "mysql_volume_bytes": 1164378112,
+      "vm_used_bytes": 3397885952,
+      "kafka_volume_bytes": 233111552
+    },
+    {
+      "time": 1795308093.4722252,
+      "completed_blocks": 33,
+      "mysql_volume_bytes": 1164378112,
+      "vm_used_bytes": 3592105984,
+      "kafka_volume_bytes": 233119744
+    },
+    {
+      "time": 1795308153.7307134,
+      "completed_blocks": 33,
+      "mysql_volume_bytes": 1164378112,
+      "vm_used_bytes": 3483471872,
+      "kafka_volume_bytes": 233132032
+    },
+    {
+      "time": 1795308214.0087137,
+      "completed_blocks": 33,
+      "mysql_volume_bytes": 1164378112,
+      "vm_used_bytes": 3386769408,
+      "kafka_volume_bytes": 233140224
+    },
+    {
+      "time": 1795308274.2928371,
+      "completed_blocks": 33,
+      "mysql_volume_bytes": 1164378112,
+      "vm_used_bytes": 3556200448,
+      "kafka_volume_bytes": 233148416
+    },
+    {
+      "time": 1795308334.5601146,
+      "completed_blocks": 33,
+      "mysql_volume_bytes": 2102984704,
+      "vm_used_bytes": 3686957056,
+      "kafka_volume_bytes": 233156608
+    },
+    {
+      "time": 1795308394.8319526,
+      "completed_blocks": 33,
+      "mysql_volume_bytes": 2102984704,
+      "vm_used_bytes": 3660025856,
+      "kafka_volume_bytes": 233164800
+    },
+    {
+      "time": 1795308455.1053984,
+      "completed_blocks": 33,
+      "mysql_volume_bytes": 2102984704,
+      "vm_used_bytes": 3742978048,
+      "kafka_volume_bytes": 233172992
+    },
+    {
+      "time": 1795308515.346318,
+      "completed_blocks": 33,
+      "mysql_volume_bytes": 2102984704,
+      "vm_used_bytes": 3674374144,
+      "kafka_volume_bytes": 233181184
+    },
+    {
+      "time": 1795308575.5912695,
+      "completed_blocks": 33,
+      "mysql_volume_bytes": 2102984704,
+      "vm_used_bytes": 3732168704,
+      "kafka_volume_bytes": 233189376
+    },
+    {
+      "time": 1795308635.839116,
+      "completed_blocks": 33,
+      "mysql_volume_bytes": 2102984704,
+      "vm_used_bytes": 3640250368,
+      "kafka_volume_bytes": 233201664
+    },
+    {
+      "time": 1795308696.0912442,
+      "completed_blocks": 34,
+      "mysql_volume_bytes": 2186006528,
+      "vm_used_bytes": 2573709312,
+      "kafka_volume_bytes": 247562240
+    },
+    {
+      "time": 1795308756.3674138,
+      "completed_blocks": 41,
+      "mysql_volume_bytes": 2368253952,
+      "vm_used_bytes": 3201261568,
+      "kafka_volume_bytes": 297660416
+    },
+    {
+      "time": 1795308816.6445239,
+      "completed_blocks": 48,
+      "mysql_volume_bytes": 2574499840,
+      "vm_used_bytes": 3665387520,
+      "kafka_volume_bytes": 348659712
+    },
+    {
+      "time": 1795308876.936871,
+      "completed_blocks": 54,
+      "mysql_volume_bytes": 2729046016,
+      "vm_used_bytes": 3798568960,
+      "kafka_volume_bytes": 392445952
+    },
+    {
+      "time": 1795308937.1816287,
+      "completed_blocks": 60,
+      "mysql_volume_bytes": 2895851520,
+      "vm_used_bytes": 4263084032,
+      "kafka_volume_bytes": 436027392
+    },
+    {
+      "time": 1795308997.4387288,
+      "completed_blocks": 64,
+      "mysql_volume_bytes": 3020636160,
+      "vm_used_bytes": 4285186048,
+      "kafka_volume_bytes": 465309696
+    },
+    {
+      "time": 1795309057.6914957,
+      "completed_blocks": 69,
+      "mysql_volume_bytes": 3153747968,
+      "vm_used_bytes": 4344397824,
+      "kafka_volume_bytes": 502112256
+    },
+    {
+      "time": 1795309117.9459872,
+      "completed_blocks": 73,
+      "mysql_volume_bytes": 3276431360,
+      "vm_used_bytes": 4577804288,
+      "kafka_volume_bytes": 531443712
+    },
+    {
+      "time": 1795309240.655891,
+      "completed_blocks": 77,
+      "mysql_volume_bytes": 3386286080,
+      "vm_used_bytes": 2763575296,
+      "kafka_volume_bytes": 560668672
+    },
+    {
+      "time": 1795309300.9231021,
+      "completed_blocks": 83,
+      "mysql_volume_bytes": 3556438016,
+      "vm_used_bytes": 3080548352,
+      "kafka_volume_bytes": 604057600
+    },
+    {
+      "time": 1795309361.1768677,
+      "completed_blocks": 89,
+      "mysql_volume_bytes": 3750379520,
+      "vm_used_bytes": 3329880064,
+      "kafka_volume_bytes": 499376128
+    },
+    {
+      "time": 1795309421.4218018,
+      "completed_blocks": 97,
+      "mysql_volume_bytes": 3958366208,
+      "vm_used_bytes": 3655213056,
+      "kafka_volume_bytes": 558739456
+    },
+    {
+      "time": 1795309481.6784773,
+      "completed_blocks": 105,
+      "mysql_volume_bytes": 4194717696,
+      "vm_used_bytes": 3778322432,
+      "kafka_volume_bytes": 618369024
+    },
+    {
+      "time": 1795309541.921642,
+      "completed_blocks": 114,
+      "mysql_volume_bytes": 4447199232,
+      "vm_used_bytes": 3990618112,
+      "kafka_volume_bytes": 682446848
+    },
+    {
+      "time": 1795309602.1902862,
+      "completed_blocks": 122,
+      "mysql_volume_bytes": 4706439168,
+      "vm_used_bytes": 4111867904,
+      "kafka_volume_bytes": 494809088
+    },
+    {
+      "time": 1795309662.4367876,
+      "completed_blocks": 131,
+      "mysql_volume_bytes": 4944117760,
+      "vm_used_bytes": 4363116544,
+      "kafka_volume_bytes": 563367936
+    },
+    {
+      "time": 1795309722.6785789,
+      "completed_blocks": 140,
+      "mysql_volume_bytes": 5204971520,
+      "vm_used_bytes": 4554350592,
+      "kafka_volume_bytes": 632000512
+    },
+    {
+      "time": 1795309782.9263353,
+      "completed_blocks": 149,
+      "mysql_volume_bytes": 5472759808,
+      "vm_used_bytes": 4871168000,
+      "kafka_volume_bytes": 700682240
+    },
+    {
+      "time": 1795309843.172047,
+      "completed_blocks": 158,
+      "mysql_volume_bytes": 5738885120,
+      "vm_used_bytes": 5200912384,
+      "kafka_volume_bytes": 769818624
+    },
+    {
+      "time": 1795309903.4434419,
+      "completed_blocks": 167,
+      "mysql_volume_bytes": 6003646464,
+      "vm_used_bytes": 5144997888,
+      "kafka_volume_bytes": 487428096
+    },
+    {
+      "time": 1795309963.690915,
+      "completed_blocks": 175,
+      "mysql_volume_bytes": 6247559168,
+      "vm_used_bytes": 5192204288,
+      "kafka_volume_bytes": 549195776
+    },
+    {
+      "time": 1795310023.9513135,
+      "completed_blocks": 183,
+      "mysql_volume_bytes": 6471442432,
+      "vm_used_bytes": 5276884992,
+      "kafka_volume_bytes": 604389376
+    },
+    {
+      "time": 1795310084.2262776,
+      "completed_blocks": 190,
+      "mysql_volume_bytes": 6674247680,
+      "vm_used_bytes": 5243904000,
+      "kafka_volume_bytes": 661651456
+    },
+    {
+      "time": 1795310144.4733768,
+      "completed_blocks": 197,
+      "mysql_volume_bytes": 6876950528,
+      "vm_used_bytes": 5234741248,
+      "kafka_volume_bytes": 717500416
+    },
+    {
+      "time": 1795310521.9991484,
+      "completed_blocks": 200,
+      "mysql_volume_bytes": 6963195904,
+      "vm_used_bytes": 3634868224,
+      "kafka_volume_bytes": 435466240
+    },
+    {
+      "time": 1795310582.299173,
+      "completed_blocks": 202,
+      "mysql_volume_bytes": 7023595520,
+      "vm_used_bytes": 5214117888,
+      "kafka_volume_bytes": 450183168
+    },
+    {
+      "time": 1795310642.5793927,
+      "completed_blocks": 202,
+      "mysql_volume_bytes": 7023595520,
+      "vm_used_bytes": 5254295552,
+      "kafka_volume_bytes": 450191360
+    },
+    {
+      "time": 1795310702.832362,
+      "completed_blocks": 202,
+      "mysql_volume_bytes": 7023595520,
+      "vm_used_bytes": 5362327552,
+      "kafka_volume_bytes": 450199552
+    },
+    {
+      "time": 1795310763.0810134,
+      "completed_blocks": 202,
+      "mysql_volume_bytes": 7023595520,
+      "vm_used_bytes": 5334888448,
+      "kafka_volume_bytes": 450207744
+    },
+    {
+      "time": 1795310823.3316994,
+      "completed_blocks": 202,
+      "mysql_volume_bytes": 7023595520,
+      "vm_used_bytes": 5319614464,
+      "kafka_volume_bytes": 450220032
+    },
+    {
+      "time": 1795310883.6111116,
+      "completed_blocks": 202,
+      "mysql_volume_bytes": 7023595520,
+      "vm_used_bytes": 5414330368,
+      "kafka_volume_bytes": 450228224
+    },
+    {
+      "time": 1795310943.8890822,
+      "completed_blocks": 202,
+      "mysql_volume_bytes": 7023595520,
+      "vm_used_bytes": 4541935616,
+      "kafka_volume_bytes": 450236416
+    },
+    {
+      "time": 1795311004.1681209,
+      "completed_blocks": 202,
+      "mysql_volume_bytes": 7023595520,
+      "vm_used_bytes": 4268048384,
+      "kafka_volume_bytes": 450244608
+    },
+    {
+      "time": 1795311064.4783006,
+      "completed_blocks": 202,
+      "mysql_volume_bytes": 7023595520,
+      "vm_used_bytes": 4295798784,
+      "kafka_volume_bytes": 450252800
+    },
+    {
+      "time": 1795311124.744954,
+      "completed_blocks": 202,
+      "mysql_volume_bytes": 7023595520,
+      "vm_used_bytes": 4439543808,
+      "kafka_volume_bytes": 450260992
+    },
+    {
+      "time": 1795311185.0229392,
+      "completed_blocks": 202,
+      "mysql_volume_bytes": 7023595520,
+      "vm_used_bytes": 4319932416,
+      "kafka_volume_bytes": 450269184
+    },
+    {
+      "time": 1795311245.3196173,
+      "completed_blocks": 202,
+      "mysql_volume_bytes": 7023595520,
+      "vm_used_bytes": 4278796288,
+      "kafka_volume_bytes": 450277376
+    },
+    {
+      "time": 1795311305.607443,
+      "completed_blocks": 204,
+      "mysql_volume_bytes": 7094595584,
+      "vm_used_bytes": 3329822720,
+      "kafka_volume_bytes": 473710592
+    },
+    {
+      "time": 1795311365.8859296,
+      "completed_blocks": 208,
+      "mysql_volume_bytes": 7217672192,
+      "vm_used_bytes": 3582115840,
+      "kafka_volume_bytes": 505135104
+    },
+    {
+      "time": 1795311426.1813183,
+      "completed_blocks": 212,
+      "mysql_volume_bytes": 7340617728,
+      "vm_used_bytes": 3892310016,
+      "kafka_volume_bytes": 536592384
+    },
+    {
+      "time": 1795311486.4744673,
+      "completed_blocks": 217,
+      "mysql_volume_bytes": 7477985280,
+      "vm_used_bytes": 4182765568,
+      "kafka_volume_bytes": 475451392
+    },
+    {
+      "time": 1795311546.7579863,
+      "completed_blocks": 222,
+      "mysql_volume_bytes": 7628296192,
+      "vm_used_bytes": 4452921344,
+      "kafka_volume_bytes": 510369792
+    },
+    {
+      "time": 1795311607.067861,
+      "completed_blocks": 226,
+      "mysql_volume_bytes": 7783710720,
+      "vm_used_bytes": 4675620864,
+      "kafka_volume_bytes": 546721792
+    },
+    {
+      "time": 1795311667.3568308,
+      "completed_blocks": 232,
+      "mysql_volume_bytes": 7931002880,
+      "vm_used_bytes": 4944293888,
+      "kafka_volume_bytes": 590983168
+    },
+    {
+      "time": 1795311727.6516829,
+      "completed_blocks": 237,
+      "mysql_volume_bytes": 8082599936,
+      "vm_used_bytes": 5017968640,
+      "kafka_volume_bytes": 634359808
+    },
+    {
+      "time": 1795311787.9285274,
+      "completed_blocks": 242,
+      "mysql_volume_bytes": 8247398400,
+      "vm_used_bytes": 5035364352,
+      "kafka_volume_bytes": 473022464
+    },
+    {
+      "time": 1795311848.25185,
+      "completed_blocks": 245,
+      "mysql_volume_bytes": 8301678592,
+      "vm_used_bytes": 5180555264,
+      "kafka_volume_bytes": 483131392
+    },
+    {
+      "time": 1795311908.5150356,
+      "completed_blocks": 246,
+      "mysql_volume_bytes": 8329592832,
+      "vm_used_bytes": 5101531136,
+      "kafka_volume_bytes": 497053696
+    },
+    {
+      "time": 1795311968.777118,
+      "completed_blocks": 252,
+      "mysql_volume_bytes": 8507494400,
+      "vm_used_bytes": 5178167296,
+      "kafka_volume_bytes": 537497600
+    },
+    {
+      "time": 1795312029.0595672,
+      "completed_blocks": 257,
+      "mysql_volume_bytes": 8666263552,
+      "vm_used_bytes": 5234425856,
+      "kafka_volume_bytes": 584916992
+    },
+    {
+      "time": 1795312089.3355908,
+      "completed_blocks": 262,
+      "mysql_volume_bytes": 8836423680,
+      "vm_used_bytes": 5096796160,
+      "kafka_volume_bytes": 474009600
+    },
+    {
+      "time": 1795312149.6440284,
+      "completed_blocks": 268,
+      "mysql_volume_bytes": 8989601792,
+      "vm_used_bytes": 5104504832,
+      "kafka_volume_bytes": 522264576
+    },
+    {
+      "time": 1795312209.9129677,
+      "completed_blocks": 273,
+      "mysql_volume_bytes": 9156337664,
+      "vm_used_bytes": 5124276224,
+      "kafka_volume_bytes": 562638848
+    },
+    {
+      "time": 1795312270.1611116,
+      "completed_blocks": 278,
+      "mysql_volume_bytes": 9315905536,
+      "vm_used_bytes": 5183913984,
+      "kafka_volume_bytes": 602927104
+    },
+    {
+      "time": 1795312330.4238064,
+      "completed_blocks": 283,
+      "mysql_volume_bytes": 9478270976,
+      "vm_used_bytes": 5157335040,
+      "kafka_volume_bytes": 643383296
+    },
+    {
+      "time": 1795312390.7318842,
+      "completed_blocks": 288,
+      "mysql_volume_bytes": 9634238464,
+      "vm_used_bytes": 5109051392,
+      "kafka_volume_bytes": 482758656
+    },
+    {
+      "time": 1795312451.0342045,
+      "completed_blocks": 293,
+      "mysql_volume_bytes": 9778069504,
+      "vm_used_bytes": 5053087744,
+      "kafka_volume_bytes": 523268096
+    },
+    {
+      "time": 1795312511.4430387,
+      "completed_blocks": 298,
+      "mysql_volume_bytes": 9928769536,
+      "vm_used_bytes": 5157249024,
+      "kafka_volume_bytes": 563834880
+    },
+    {
+      "time": 1795312571.756347,
+      "completed_blocks": 303,
+      "mysql_volume_bytes": 10075480064,
+      "vm_used_bytes": 5147836416,
+      "kafka_volume_bytes": 604348416
+    },
+    {
+      "time": 1795312632.033081,
+      "completed_blocks": 308,
+      "mysql_volume_bytes": 10221486080,
+      "vm_used_bytes": 5147205632,
+      "kafka_volume_bytes": 645140480
+    },
+    {
+      "time": 1795312692.3002493,
+      "completed_blocks": 313,
+      "mysql_volume_bytes": 10372247552,
+      "vm_used_bytes": 5103808512,
+      "kafka_volume_bytes": 480722944
+    },
+    {
+      "time": 1795312752.628317,
+      "completed_blocks": 317,
+      "mysql_volume_bytes": 10523754496,
+      "vm_used_bytes": 5094330368,
+      "kafka_volume_bytes": 517464064
+    },
+    {
+      "time": 1795312812.8808072,
+      "completed_blocks": 322,
+      "mysql_volume_bytes": 10672160768,
+      "vm_used_bytes": 5142712320,
+      "kafka_volume_bytes": 558911488
+    },
+    {
+      "time": 1795312873.1400065,
+      "completed_blocks": 327,
+      "mysql_volume_bytes": 10823118848,
+      "vm_used_bytes": 5159653376,
+      "kafka_volume_bytes": 600514560
+    },
+    {
+      "time": 1795312933.3990707,
+      "completed_blocks": 332,
+      "mysql_volume_bytes": 10969157632,
+      "vm_used_bytes": 5156802560,
+      "kafka_volume_bytes": 641974272
+    },
+    {
+      "time": 1795312993.6733472,
+      "completed_blocks": 337,
+      "mysql_volume_bytes": 11115868160,
+      "vm_used_bytes": 5186560000,
+      "kafka_volume_bytes": 482271232
+    },
+    {
+      "time": 1795313053.932895,
+      "completed_blocks": 342,
+      "mysql_volume_bytes": 11265196032,
+      "vm_used_bytes": 5155594240,
+      "kafka_volume_bytes": 519380992
+    },
+    {
+      "time": 1795313114.1717346,
+      "completed_blocks": 346,
+      "mysql_volume_bytes": 11417321472,
+      "vm_used_bytes": 5123940352,
+      "kafka_volume_bytes": 557277184
+    },
+    {
+      "time": 1795313174.43056,
+      "completed_blocks": 351,
+      "mysql_volume_bytes": 11557400576,
+      "vm_used_bytes": 5141549056,
+      "kafka_volume_bytes": 598851584
+    },
+    {
+      "time": 1795313234.668172,
+      "completed_blocks": 356,
+      "mysql_volume_bytes": 11703058432,
+      "vm_used_bytes": 5194661888,
+      "kafka_volume_bytes": 639070208
+    },
+    {
+      "time": 1795313294.9125159,
+      "completed_blocks": 360,
+      "mysql_volume_bytes": 11858845696,
+      "vm_used_bytes": 5128548352,
+      "kafka_volume_bytes": 472514560
+    },
+    {
+      "time": 1795313355.1653244,
+      "completed_blocks": 365,
+      "mysql_volume_bytes": 11995521024,
+      "vm_used_bytes": 5185724416,
+      "kafka_volume_bytes": 514420736
+    },
+    {
+      "time": 1795313415.4279382,
+      "completed_blocks": 370,
+      "mysql_volume_bytes": 12149821440,
+      "vm_used_bytes": 5225213952,
+      "kafka_volume_bytes": 550576128
+    },
+    {
+      "time": 1795313475.6819475,
+      "completed_blocks": 374,
+      "mysql_volume_bytes": 12290134016,
+      "vm_used_bytes": 5156823040,
+      "kafka_volume_bytes": 589778944
+    },
+    {
+      "time": 1795313535.920799,
+      "completed_blocks": 379,
+      "mysql_volume_bytes": 12430565376,
+      "vm_used_bytes": 5155270656,
+      "kafka_volume_bytes": 631762944
+    },
+    {
+      "time": 1795313596.1677034,
+      "completed_blocks": 383,
+      "mysql_volume_bytes": 12578316288,
+      "vm_used_bytes": 5144748032,
+      "kafka_volume_bytes": 463982592
+    },
+    {
+      "time": 1795313656.4211473,
+      "completed_blocks": 388,
+      "mysql_volume_bytes": 12716896256,
+      "vm_used_bytes": 5201383424,
+      "kafka_volume_bytes": 505884672
+    },
+    {
+      "time": 1795313716.6690538,
+      "completed_blocks": 392,
+      "mysql_volume_bytes": 12868325376,
+      "vm_used_bytes": 5182144512,
+      "kafka_volume_bytes": 539459584
+    },
+    {
+      "time": 1795313776.9106653,
+      "completed_blocks": 397,
+      "mysql_volume_bytes": 13002756096,
+      "vm_used_bytes": 5265358848,
+      "kafka_volume_bytes": 581566464
+    },
+    {
+      "time": 1795313837.167339,
+      "completed_blocks": 401,
+      "mysql_volume_bytes": 13144793088,
+      "vm_used_bytes": 5284179968,
+      "kafka_volume_bytes": 615116800
+    },
+    {
+      "time": 1795313897.4173565,
+      "completed_blocks": 406,
+      "mysql_volume_bytes": 13282394112,
+      "vm_used_bytes": 5167292416,
+      "kafka_volume_bytes": 489332736
+    },
+    {
+      "time": 1795313957.6737754,
+      "completed_blocks": 410,
+      "mysql_volume_bytes": 13424807936,
+      "vm_used_bytes": 5269073920,
+      "kafka_volume_bytes": 523051008
+    },
+    {
+      "time": 1795314017.9133193,
+      "completed_blocks": 415,
+      "mysql_volume_bytes": 13563027456,
+      "vm_used_bytes": 5280014336,
+      "kafka_volume_bytes": 565264384
+    },
+    {
+      "time": 1795314078.1737893,
+      "completed_blocks": 419,
+      "mysql_volume_bytes": 13713182720,
+      "vm_used_bytes": 5228654592,
+      "kafka_volume_bytes": 598953984
+    },
+    {
+      "time": 1795314138.4245763,
+      "completed_blocks": 424,
+      "mysql_volume_bytes": 13848481792,
+      "vm_used_bytes": 5196951552,
+      "kafka_volume_bytes": 637820928
+    },
+    {
+      "time": 1795314198.6674154,
+      "completed_blocks": 428,
+      "mysql_volume_bytes": 13987164160,
+      "vm_used_bytes": 5181067264,
+      "kafka_volume_bytes": 490319872
+    },
+    {
+      "time": 1795314258.9047275,
+      "completed_blocks": 432,
+      "mysql_volume_bytes": 14133305344,
+      "vm_used_bytes": 5208403968,
+      "kafka_volume_bytes": 523960320
+    },
+    {
+      "time": 1795314319.1440551,
+      "completed_blocks": 437,
+      "mysql_volume_bytes": 14265802752,
+      "vm_used_bytes": 5305589760,
+      "kafka_volume_bytes": 566063104
+    },
+    {
+      "time": 1795314379.3959465,
+      "completed_blocks": 441,
+      "mysql_volume_bytes": 14400675840,
+      "vm_used_bytes": 5301338112,
+      "kafka_volume_bytes": 599982080
+    },
+    {
+      "time": 1795314439.6453865,
+      "completed_blocks": 445,
+      "mysql_volume_bytes": 14550179840,
+      "vm_used_bytes": 5271060480,
+      "kafka_volume_bytes": 633868288
+    },
+    {
+      "time": 1795314499.9016058,
+      "completed_blocks": 450,
+      "mysql_volume_bytes": 14679314432,
+      "vm_used_bytes": 5182803968,
+      "kafka_volume_bytes": 475086848
+    },
+    {
+      "time": 1795314560.1440845,
+      "completed_blocks": 454,
+      "mysql_volume_bytes": 14820499456,
+      "vm_used_bytes": 5258326016,
+      "kafka_volume_bytes": 509427712
+    },
+    {
+      "time": 1795314620.4043677,
+      "completed_blocks": 458,
+      "mysql_volume_bytes": 14964482048,
+      "vm_used_bytes": 5314416640,
+      "kafka_volume_bytes": 543420416
+    },
+    {
+      "time": 1795314680.6574917,
+      "completed_blocks": 463,
+      "mysql_volume_bytes": 15088676864,
+      "vm_used_bytes": 5267066880,
+      "kafka_volume_bytes": 586203136
+    },
+    {
+      "time": 1795314740.9099233,
+      "completed_blocks": 467,
+      "mysql_volume_bytes": 15234838528,
+      "vm_used_bytes": 5225791488,
+      "kafka_volume_bytes": 620572672
+    },
+    {
+      "time": 1795314801.1478493,
+      "completed_blocks": 471,
+      "mysql_volume_bytes": 15375073280,
+      "vm_used_bytes": 5239238656,
+      "kafka_volume_bytes": 470528000
+    },
+    {
+      "time": 1795314861.3994002,
+      "completed_blocks": 476,
+      "mysql_volume_bytes": 15503773696,
+      "vm_used_bytes": 5199327232,
+      "kafka_volume_bytes": 513552384
+    },
+    {
+      "time": 1795314921.664281,
+      "completed_blocks": 480,
+      "mysql_volume_bytes": 15647911936,
+      "vm_used_bytes": 5289926656,
+      "kafka_volume_bytes": 547807232
+    },
+    {
+      "time": 1795314981.903096,
+      "completed_blocks": 484,
+      "mysql_volume_bytes": 15791472640,
+      "vm_used_bytes": 5328465920,
+      "kafka_volume_bytes": 582066176
+    },
+    {
+      "time": 1795315042.1560855,
+      "completed_blocks": 489,
+      "mysql_volume_bytes": 15922466816,
+      "vm_used_bytes": 5235970048,
+      "kafka_volume_bytes": 619319296
+    },
+    {
+      "time": 1795315102.467416,
+      "completed_blocks": 493,
+      "mysql_volume_bytes": 16055214080,
+      "vm_used_bytes": 5150052352,
+      "kafka_volume_bytes": 491659264
+    },
+    {
+      "time": 1795315162.7694569,
+      "completed_blocks": 497,
+      "mysql_volume_bytes": 16196075520,
+      "vm_used_bytes": 5236752384,
+      "kafka_volume_bytes": 526331904
+    },
+    {
+      "time": 1795315223.0457404,
+      "completed_blocks": 501,
+      "mysql_volume_bytes": 16348520448,
+      "vm_used_bytes": 5250117632,
+      "kafka_volume_bytes": 560857088
+    },
+    {
+      "time": 1795315283.29589,
+      "completed_blocks": 506,
+      "mysql_volume_bytes": 16478404608,
+      "vm_used_bytes": 5298184192,
+      "kafka_volume_bytes": 598913024
+    },
+    {
+      "time": 1795315343.5380642,
+      "completed_blocks": 510,
+      "mysql_volume_bytes": 16616071168,
+      "vm_used_bytes": 5402058752,
+      "kafka_volume_bytes": 638971904
+    },
+    {
+      "time": 1795315403.8313615,
+      "completed_blocks": 514,
+      "mysql_volume_bytes": 16752635904,
+      "vm_used_bytes": 5306040320,
+      "kafka_volume_bytes": 472260608
+    },
+    {
+      "time": 1795315464.0803566,
+      "completed_blocks": 518,
+      "mysql_volume_bytes": 16897724416,
+      "vm_used_bytes": 5281697792,
+      "kafka_volume_bytes": 507064320
+    },
+    {
+      "time": 1795315524.3173766,
+      "completed_blocks": 523,
+      "mysql_volume_bytes": 17031618560,
+      "vm_used_bytes": 5263298560,
+      "kafka_volume_bytes": 546799616
+    },
+    {
+      "time": 1795315584.5601914,
+      "completed_blocks": 527,
+      "mysql_volume_bytes": 17155710976,
+      "vm_used_bytes": 5279412224,
+      "kafka_volume_bytes": 585261056
+    },
+    {
+      "time": 1795315644.822891,
+      "completed_blocks": 531,
+      "mysql_volume_bytes": 17299972096,
+      "vm_used_bytes": 5285314560,
+      "kafka_volume_bytes": 620269568
+    },
+    {
+      "time": 1795315705.107697,
+      "completed_blocks": 535,
+      "mysql_volume_bytes": 17434189824,
+      "vm_used_bytes": 5230465024,
+      "kafka_volume_bytes": 487170048
+    },
+    {
+      "time": 1795315765.3548956,
+      "completed_blocks": 539,
+      "mysql_volume_bytes": 17562988544,
+      "vm_used_bytes": 5279510528,
+      "kafka_volume_bytes": 522113024
+    },
+    {
+      "time": 1795315825.6189346,
+      "completed_blocks": 543,
+      "mysql_volume_bytes": 17701703680,
+      "vm_used_bytes": 5240840192,
+      "kafka_volume_bytes": 556859392
+    },
+    {
+      "time": 1795315885.86287,
+      "completed_blocks": 547,
+      "mysql_volume_bytes": 17832071168,
+      "vm_used_bytes": 5320216576,
+      "kafka_volume_bytes": 591724544
+    },
+    {
+      "time": 1795315946.0991678,
+      "completed_blocks": 552,
+      "mysql_volume_bytes": 17974374400,
+      "vm_used_bytes": 5315293184,
+      "kafka_volume_bytes": 631590912
+    },
+    {
+      "time": 1795316006.352289,
+      "completed_blocks": 556,
+      "mysql_volume_bytes": 18103205888,
+      "vm_used_bytes": 5294096384,
+      "kafka_volume_bytes": 484585472
+    },
+    {
+      "time": 1795316066.602802,
+      "completed_blocks": 560,
+      "mysql_volume_bytes": 18236567552,
+      "vm_used_bytes": 5338677248,
+      "kafka_volume_bytes": 521756672
+    },
+    {
+      "time": 1795316126.854698,
+      "completed_blocks": 564,
+      "mysql_volume_bytes": 18375639040,
+      "vm_used_bytes": 5378334720,
+      "kafka_volume_bytes": 556953600
+    },
+    {
+      "time": 1795316187.103146,
+      "completed_blocks": 568,
+      "mysql_volume_bytes": 18506506240,
+      "vm_used_bytes": 5338308608,
+      "kafka_volume_bytes": 592334848
+    },
+    {
+      "time": 1795316247.3691735,
+      "completed_blocks": 572,
+      "mysql_volume_bytes": 18648285184,
+      "vm_used_bytes": 5348642816,
+      "kafka_volume_bytes": 627912704
+    },
+    {
+      "time": 1795316307.6402574,
+      "completed_blocks": 576,
+      "mysql_volume_bytes": 18778697728,
+      "vm_used_bytes": 5177933824,
+      "kafka_volume_bytes": 495702016
+    },
+    {
+      "time": 1795316367.8912354,
+      "completed_blocks": 580,
+      "mysql_volume_bytes": 18917699584,
+      "vm_used_bytes": 5158629376,
+      "kafka_volume_bytes": 531243008
+    },
+    {
+      "time": 1795316428.1292694,
+      "completed_blocks": 584,
+      "mysql_volume_bytes": 19057029120,
+      "vm_used_bytes": 5228998656,
+      "kafka_volume_bytes": 566829056
+    },
+    {
+      "time": 1795316488.3666272,
+      "completed_blocks": 588,
+      "mysql_volume_bytes": 19191099392,
+      "vm_used_bytes": 5281775616,
+      "kafka_volume_bytes": 602464256
+    },
+    {
+      "time": 1795316548.627935,
+      "completed_blocks": 593,
+      "mysql_volume_bytes": 19321483264,
+      "vm_used_bytes": 5300965376,
+      "kafka_volume_bytes": 641806336
+    },
+    {
+      "time": 1795316608.884335,
+      "completed_blocks": 597,
+      "mysql_volume_bytes": 19454971904,
+      "vm_used_bytes": 5220605952,
+      "kafka_volume_bytes": 495099904
+    },
+    {
+      "time": 1795316669.1378715,
+      "completed_blocks": 601,
+      "mysql_volume_bytes": 19589107712,
+      "vm_used_bytes": 5248004096,
+      "kafka_volume_bytes": 533622784
+    },
+    {
+      "time": 1795316729.376817,
+      "completed_blocks": 605,
+      "mysql_volume_bytes": 19718909952,
+      "vm_used_bytes": 5309288448,
+      "kafka_volume_bytes": 569393152
+    },
+    {
+      "time": 1795316789.624295,
+      "completed_blocks": 609,
+      "mysql_volume_bytes": 19847921664,
+      "vm_used_bytes": 5256552448,
+      "kafka_volume_bytes": 605147136
+    },
+    {
+      "time": 1795316849.870609,
+      "completed_blocks": 613,
+      "mysql_volume_bytes": 19986812928,
+      "vm_used_bytes": 5308559360,
+      "kafka_volume_bytes": 640806912
+    },
+    {
+      "time": 1795316910.1301374,
+      "completed_blocks": 617,
+      "mysql_volume_bytes": 20117741568,
+      "vm_used_bytes": 5253349376,
+      "kafka_volume_bytes": 475185152
+    },
+    {
+      "time": 1795316970.3758802,
+      "completed_blocks": 621,
+      "mysql_volume_bytes": 20255178752,
+      "vm_used_bytes": 5250367488,
+      "kafka_volume_bytes": 511062016
+    },
+    {
+      "time": 1795317030.6199772,
+      "completed_blocks": 625,
+      "mysql_volume_bytes": 20380758016,
+      "vm_used_bytes": 5336494080,
+      "kafka_volume_bytes": 546947072
+    },
+    {
+      "time": 1795317090.869477,
+      "completed_blocks": 629,
+      "mysql_volume_bytes": 20514717696,
+      "vm_used_bytes": 5306593280,
+      "kafka_volume_bytes": 583229440
+    },
+    {
+      "time": 1795317151.1258972,
+      "completed_blocks": 633,
+      "mysql_volume_bytes": 20657496064,
+      "vm_used_bytes": 5330911232,
+      "kafka_volume_bytes": 619417600
+    },
+    {
+      "time": 1795317211.4271598,
+      "completed_blocks": 637,
+      "mysql_volume_bytes": 20787249152,
+      "vm_used_bytes": 5314842624,
+      "kafka_volume_bytes": 488050688
+    },
+    {
+      "time": 1795317271.6886613,
+      "completed_blocks": 641,
+      "mysql_volume_bytes": 20921835520,
+      "vm_used_bytes": 5379809280,
+      "kafka_volume_bytes": 524660736
+    },
+    {
+      "time": 1795317331.9493568,
+      "completed_blocks": 645,
+      "mysql_volume_bytes": 21059665920,
+      "vm_used_bytes": 5266452480,
+      "kafka_volume_bytes": 559190016
+    },
+    {
+      "time": 1795317392.1954973,
+      "completed_blocks": 649,
+      "mysql_volume_bytes": 21188071424,
+      "vm_used_bytes": 5297311744,
+      "kafka_volume_bytes": 591376384
+    },
+    {
+      "time": 1795317452.4462247,
+      "completed_blocks": 653,
+      "mysql_volume_bytes": 21311713280,
+      "vm_used_bytes": 5361496064,
+      "kafka_volume_bytes": 624254976
+    },
+    {
+      "time": 1795317512.741476,
+      "completed_blocks": 657,
+      "mysql_volume_bytes": 21440589824,
+      "vm_used_bytes": 5291606016,
+      "kafka_volume_bytes": 473833472
+    },
+    {
+      "time": 1795317573.0060008,
+      "completed_blocks": 662,
+      "mysql_volume_bytes": 21563273216,
+      "vm_used_bytes": 5415534592,
+      "kafka_volume_bytes": 511516672
+    },
+    {
+      "time": 1795317633.248959,
+      "completed_blocks": 666,
+      "mysql_volume_bytes": 21688930304,
+      "vm_used_bytes": 5418303488,
+      "kafka_volume_bytes": 542281728
+    },
+    {
+      "time": 1795317693.5422394,
+      "completed_blocks": 670,
+      "mysql_volume_bytes": 21818429440,
+      "vm_used_bytes": 5366009856,
+      "kafka_volume_bytes": 570224640
+    },
+    {
+      "time": 1795317753.8648338,
+      "completed_blocks": 675,
+      "mysql_volume_bytes": 21930160128,
+      "vm_used_bytes": 5387202560,
+      "kafka_volume_bytes": 605794304
+    },
+    {
+      "time": 1795317814.1415224,
+      "completed_blocks": 679,
+      "mysql_volume_bytes": 22055710720,
+      "vm_used_bytes": 5356482560,
+      "kafka_volume_bytes": 483074048
+    },
+    {
+      "time": 1795317874.3938494,
+      "completed_blocks": 683,
+      "mysql_volume_bytes": 22177161216,
+      "vm_used_bytes": 5344915456,
+      "kafka_volume_bytes": 510218240
+    },
+    {
+      "time": 1795317934.6514566,
+      "completed_blocks": 688,
+      "mysql_volume_bytes": 22286696448,
+      "vm_used_bytes": 5337989120,
+      "kafka_volume_bytes": 544006144
+    },
+    {
+      "time": 1795317994.8998358,
+      "completed_blocks": 692,
+      "mysql_volume_bytes": 22401339392,
+      "vm_used_bytes": 5379325952,
+      "kafka_volume_bytes": 569339904
+    },
+    {
+      "time": 1795318055.1669743,
+      "completed_blocks": 697,
+      "mysql_volume_bytes": 22519099392,
+      "vm_used_bytes": 5380153344,
+      "kafka_volume_bytes": 598937600
+    },
+    {
+      "time": 1795318115.4155233,
+      "completed_blocks": 701,
+      "mysql_volume_bytes": 22633824256,
+      "vm_used_bytes": 5274247168,
+      "kafka_volume_bytes": 476123136
+    },
+    {
+      "time": 1795318175.6724331,
+      "completed_blocks": 706,
+      "mysql_volume_bytes": 22744162304,
+      "vm_used_bytes": 5257142272,
+      "kafka_volume_bytes": 503492608
+    },
+    {
+      "time": 1795318235.9232438,
+      "completed_blocks": 710,
+      "mysql_volume_bytes": 22857588736,
+      "vm_used_bytes": 5347287040,
+      "kafka_volume_bytes": 533381120
+    },
+    {
+      "time": 1795318296.1721957,
+      "completed_blocks": 714,
+      "mysql_volume_bytes": 22972641280,
+      "vm_used_bytes": 5348687872,
+      "kafka_volume_bytes": 558616576
+    },
+    {
+      "time": 1795318356.423996,
+      "completed_blocks": 719,
+      "mysql_volume_bytes": 23081299968,
+      "vm_used_bytes": 5316595712,
+      "kafka_volume_bytes": 589340672
+    },
+    {
+      "time": 1795318416.662956,
+      "completed_blocks": 723,
+      "mysql_volume_bytes": 23183634432,
+      "vm_used_bytes": 5315657728,
+      "kafka_volume_bytes": 461791232
+    },
+    {
+      "time": 1795318476.9207954,
+      "completed_blocks": 726,
+      "mysql_volume_bytes": 23267606528,
+      "vm_used_bytes": 5291069440,
+      "kafka_volume_bytes": 479641600
+    },
+    {
+      "time": 1795318537.184399,
+      "completed_blocks": 728,
+      "mysql_volume_bytes": 23301308416,
+      "vm_used_bytes": 5294886912,
+      "kafka_volume_bytes": 491601920
+    },
+    {
+      "time": 1795318597.4397962,
+      "completed_blocks": 729,
+      "mysql_volume_bytes": 23336501248,
+      "vm_used_bytes": 5303779328,
+      "kafka_volume_bytes": 497401856
+    },
+    {
+      "time": 1795318657.6981533,
+      "completed_blocks": 732,
+      "mysql_volume_bytes": 23398576128,
+      "vm_used_bytes": 5344804864,
+      "kafka_volume_bytes": 517001216
+    },
+    {
+      "time": 1795318717.945753,
+      "completed_blocks": 736,
+      "mysql_volume_bytes": 23517716480,
+      "vm_used_bytes": 5356183552,
+      "kafka_volume_bytes": 476540928
+    },
+    {
+      "time": 1795318778.1991267,
+      "completed_blocks": 741,
+      "mysql_volume_bytes": 23637852160,
+      "vm_used_bytes": 5302218752,
+      "kafka_volume_bytes": 505044992
+    },
+    {
+      "time": 1795318838.4544792,
+      "completed_blocks": 745,
+      "mysql_volume_bytes": 23751036928,
+      "vm_used_bytes": 5378351104,
+      "kafka_volume_bytes": 535138304
+    },
+    {
+      "time": 1795318898.692053,
+      "completed_blocks": 746,
+      "mysql_volume_bytes": 23763841024,
+      "vm_used_bytes": 5287231488,
+      "kafka_volume_bytes": 535146496
+    },
+    {
+      "time": 1795318958.9323387,
+      "completed_blocks": 746,
+      "mysql_volume_bytes": 23763841024,
+      "vm_used_bytes": 5192388608,
+      "kafka_volume_bytes": 535154688
+    },
+    {
+      "time": 1795319019.1751592,
+      "completed_blocks": 746,
+      "mysql_volume_bytes": 23763841024,
+      "vm_used_bytes": 5178679296,
+      "kafka_volume_bytes": 434466816
+    },
+    {
+      "time": 1795319079.415033,
+      "completed_blocks": 746,
+      "mysql_volume_bytes": 23763841024,
+      "vm_used_bytes": 5217906688,
+      "kafka_volume_bytes": 434475008
+    },
+    {
+      "time": 1795319139.6641226,
+      "completed_blocks": 746,
+      "mysql_volume_bytes": 23763841024,
+      "vm_used_bytes": 5244338176,
+      "kafka_volume_bytes": 434483200
+    },
+    {
+      "time": 1795319199.9057357,
+      "completed_blocks": 746,
+      "mysql_volume_bytes": 23763841024,
+      "vm_used_bytes": 5249810432,
+      "kafka_volume_bytes": 434491392
+    },
+    {
+      "time": 1795319260.144565,
+      "completed_blocks": 746,
+      "mysql_volume_bytes": 23763841024,
+      "vm_used_bytes": 5241856000,
+      "kafka_volume_bytes": 434499584
+    },
+    {
+      "time": 1795319320.387551,
+      "completed_blocks": 746,
+      "mysql_volume_bytes": 23763841024,
+      "vm_used_bytes": 5307383808,
+      "kafka_volume_bytes": 434507776
+    },
+    {
+      "time": 1795319380.6366475,
+      "completed_blocks": 746,
+      "mysql_volume_bytes": 23763841024,
+      "vm_used_bytes": 5220839424,
+      "kafka_volume_bytes": 434515968
+    },
+    {
+      "time": 1795319440.8808522,
+      "completed_blocks": 746,
+      "mysql_volume_bytes": 23763841024,
+      "vm_used_bytes": 5256065024,
+      "kafka_volume_bytes": 434524160
+    },
+    {
+      "time": 1795319501.1310983,
+      "completed_blocks": 746,
+      "mysql_volume_bytes": 23763841024,
+      "vm_used_bytes": 5210988544,
+      "kafka_volume_bytes": 434536448
+    },
+    {
+      "time": 1795319561.3818254,
+      "completed_blocks": 746,
+      "mysql_volume_bytes": 23763841024,
+      "vm_used_bytes": 5229899776,
+      "kafka_volume_bytes": 434544640
+    },
+    {
+      "time": 1795319621.6295323,
+      "completed_blocks": 746,
+      "mysql_volume_bytes": 23763841024,
+      "vm_used_bytes": 5242593280,
+      "kafka_volume_bytes": 434552832
+    }
+  ],
+  "final_volumes": {
+    "kafka_volume_bytes": 434585600,
+    "observed_utc": "2026-11-22T03:54:55.5045803Z",
+    "reader_image": "sha256:a81d043930e51745522bd5c430961cf8286f0a23f0a9a2a6e0108f7ea71b0902",
+    "mysql_volume_bytes": 23750729728
+  },
+  "tuning": {
+    "host_free_bytes": 10063446016,
+    "sql": [
+      "ROUND(UNIX_TIMESTAMP(NOW(6)),3)\t@@innodb_buffer_pool_size\t@@innodb_redo_log_capacity",
+      "1795308324.783\t134217728\t104857600",
+      "ROUND(UNIX_TIMESTAMP(NOW(6)),3)\t@@innodb_buffer_pool_size\t@@innodb_redo_log_capacity\t@@innodb_flush_log_at_trx_commit\t@@sync_binlog",
+      "1795308325.932\t2147483648\t1073741824\t1\t1"
+    ],
+    "block": 33,
+    "applied_limit_bytes": 4294967296
+  },
+  "batch_path_restart": {
+    "at": 1795309136.6383939,
+    "blocks": 75
+  },
+  "state": {
+    "attempts": 5,
+    "blocks": 746,
+    "cluster": "7vQpYv_4RkSzt14LWjLjlw",
+    "paper": "arxiv:0704.0001",
+    "project": "94d012c2-2166-48a0-b53a-a93ae34a35dc",
+    "reviewed": "789a62abcde98684f36588e75e69424cdd4c99d332c9a6bcb70c49b0ed7bcf17",
+    "server": "3ce0898d-e60c-11f1-840d-a6579a7600d7",
+    "started": 1795307591.9533095
+  },
+  "recovered_blocks": [
+    {
+      "ack": 1795310506.9467704,
+      "artifact_free": 239919661056,
+      "block": 199,
+      "cgroup_peak": 65032192,
+      "durable": 1795310507.3035781,
+      "net_outcomes": {
+        "applied": 4092,
+        "rejected": 4
+      },
+      "outcomes": {},
+      "partition_ends": {
+        "0": 271968,
+        "1": 271434,
+        "2": 271702
+      },
+      "resumed_line": 4096,
+      "resumed_outcomes": {
+        "applied": 3324,
+        "rejected": 4
+      },
+      "start": 1795310498.5945764,
+      "through": 815104
+    }
+  ]
+}

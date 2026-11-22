@@ -1,0 +1,52 @@
+{
+  "spark_readback": "bb76b7190cfa54027a2c80a15d75b40521a3485e4de28457b5f7d6c5c04e93f9",
+  "spark_retained": "bb76b7190cfa54027a2c80a15d75b40521a3485e4de28457b5f7d6c5c04e93f9",
+  "review_input_recheck": [
+    "PASS 10000 raw-selected IDs and event IDs equal every ordered index row; corpus SHA256 ca0b5fdcaeadc8792481e5835773f37e4840f0430f9fd005c364390f3d5a85d1",
+    "PASS 50000 raw-selected IDs and event IDs equal every ordered index row; corpus SHA256 95f5bbb0d618426a1c7a7c03289c72a03d5e9a4dbdece29ac8965392aed518c9",
+    "PASS 100000 raw-selected IDs and event IDs equal every ordered index row; corpus SHA256 0d788a47831762a44ee8b5a93e2e3ba92adf172250dfc19647b712a7ae01d1eb"
+  ],
+  "unit": [
+    "31 passed, 4 subtests passed in 2.04s"
+  ],
+  "suites": [
+    {
+      "suite": "storage",
+      "passed_assertion_lines": 62,
+      "log_sha256": "c2b64ae125ec17b18dcb1f130c51ad229ee6e23a6717a0eaa17e8f77d8cf6100",
+      "verified": [
+        "PASS batch interruption rolls back every parent: expected=0 actual=0",
+        "PASS overlapping first deliveries resolve exactly once: expected=[(('applied', 3),), (('duplicate', 3),)] actual=[(('applied', 3),), (('duplicate', 3),)]",
+        "PASS mixed new, replay and malformed delivery: expected={'applied': 2, 'duplicate': 1, 'rejected': 1} actual={'applied': 2, 'duplicate': 1, 'rejected': 1}",
+        "PASS bulk revision and marker counts: expected=(5, 5) actual=(5, 5)",
+        "PASS M2 MySQL persistence and recovery (papersearch-m2-60108841b9d8)"
+      ]
+    },
+    {
+      "suite": "ingestion",
+      "passed_assertion_lines": 52,
+      "log_sha256": "c9ef2272f6b9b0c61adf468bddeb5cc2142dbd8102794c89c31160319fe17fe2",
+      "verified": [
+        "PASS baseline matches uninterrupted corpus, label, ledger, jobs and generation: True",
+        "PASS M3 Kafka recovery (papersearch-m3-e1508baba869)"
+      ]
+    },
+    {
+      "suite": "snapshots",
+      "passed_assertion_lines": 41,
+      "log_sha256": "7e94710ed2ec035304176014a9654516347aab1c771fbd3d92e3462acd9412e2",
+      "verified": [
+        "PASS mismatched vector mapping rejected despite matching file hashes: 'Invalid test-vector identity or row mapping'",
+        "PASS M4 snapshot publication and recovery (papersearch-m4-8b1e5c5e32fb)"
+      ]
+    }
+  ],
+  "recovered_source_record": {
+    "paper": "arxiv:1701.06478",
+    "block": 199,
+    "line": 879,
+    "event": "bf87e007e1014e44d82b8beb377f9436b489e625cf0a691311c1f79a72609f29",
+    "raw_sha256": "0de218f3f116ef21dcaf2aaad52e3dde2f812f7dd7766e5b6b3b34a968512a5d",
+    "check": "Decoded complete stored MySQL record_json equals normalized original source row"
+  }
+}

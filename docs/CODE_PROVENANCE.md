@@ -16,3 +16,6 @@ Python modules, tests and the fixture generator carry inline Codex attribution. 
 | `docs/evidence/phase6-serving.json` | Measured HTTP and Streamlit results and independent cosine checks from the Codex-authored serving verifier. |
 | `docs/evidence/phase6-snapshot.json` | Unmodified manifest from the CPU semantic package published against the retained 100k collection. |
 | `docs/evidence/phase7-batch.json` | Runtime output from the Codex-authored batch verifier. Includes real source identity, deterministic synthetic update controls, input/output file hashes, laptop timings and reference equality checks. |
+| `docs/evidence/phase8-system.json`, `phase8-timings.csv` and `phase8-timings.png` | Real Docker, MySQL, Kafka and CPU model measurements from the Codex-authored experiment drivers. The CSV contains individual trial measurements. The base R figure plots those observations. |
+| `docs/evidence/phase8-capacity.json` and `phase8-blocks.csv` | Runtime input checksums, delivery outcomes, database reconciliation, timings and resource samples from the isolated Cornell v287 metadata expansion. |
+| `docs/evidence/phase8-checks.json` | Observed assertion lines and checksums from the real-service recovery scripts, local tests, and the M5 and M7 readbacks. |

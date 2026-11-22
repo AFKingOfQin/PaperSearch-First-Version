@@ -42,6 +42,7 @@ def rank(candidates, encoder, queries, root):
     directory.mkdir(parents=True)
     path = directory / "lexical.sqlite"
     ids = [r[0] for r in candidates]
+    lexical_start = time.perf_counter()
     with sqlite3.connect(path) as db:
         db.execute(
             "CREATE VIRTUAL TABLE documents USING fts5(title,abstract,paper_id UNINDEXED,event_id UNINDEXED,text_hash UNINDEXED,tokenize='unicode61')"
@@ -51,6 +52,7 @@ def rank(candidates, encoder, queries, root):
             [(t, a, i) for i, t, a in candidates],
         )
     db.close()
+    lexical_seconds = time.perf_counter() - lexical_start
     manifest = dict(
         snapshot_id="pool",
         files={
@@ -84,7 +86,12 @@ def rank(candidates, encoder, queries, root):
             bm25=(lexical, lexical_ms),
             semantic=(semantic, 1000 * (time.perf_counter() - t)),
         )
-    return results, indexing
+    return results, dict(
+        semantic_seconds=indexing,
+        semantic_matrix_bytes=matrix.nbytes,
+        lexical_seconds=lexical_seconds,
+        lexical_file_bytes=path.stat().st_size,
+    )
 
 
 def evaluate(name, folder, encoder, forms):
@@ -128,7 +135,8 @@ def evaluate(name, folder, encoder, forms):
         size=len(rows),
         included=len(truth),
         title_only=sum(not a for _, _, a in candidates),
-        document_encode_seconds=indexing,
+        document_encode_seconds=indexing["semantic_seconds"],
+        index_build=indexing,
         metrics=metrics,
     )
 

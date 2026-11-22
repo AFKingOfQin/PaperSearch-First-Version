@@ -5,8 +5,10 @@ import os
 import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
+from dataclasses import replace
 from pathlib import Path
 from threading import Barrier
+from types import SimpleNamespace
 from uuid import uuid4
 
 from sqlalchemy import create_engine, event as sql_event, text
@@ -15,6 +17,7 @@ from sqlalchemy.exc import DBAPIError
 from papersearch.adapters import json_record, parse_record, raw_lines
 from papersearch.config import mysql_url
 from papersearch.contracts import digest
+from papersearch.ingestion import apply_delivery_batch
 from papersearch.storage.jobs import claim_job, finish_job
 from papersearch.storage.metadata import apply_event, export_rows
 from papersearch.storage.reviews import read_decision, save_decision
@@ -396,6 +399,74 @@ def after(work):
         "out-of-collection import creates no embedding backlog",
         query("SELECT COUNT(*) FROM derived_jobs")[0][0],
         before_jobs,
+    )
+    batch_delivery_checks(work)
+
+
+def batch_delivery_checks(work):
+    line, checksum, raw = next(raw_lines(FIXTURE / "cases.jsonl"))
+    template = parse_record(
+        json_record(raw),
+        "fixture",
+        batch_id="m8",
+        collected_at=STAMP,
+        checksum=checksum,
+        location=f"fixture#{line}",
+    )
+
+    def wire(key):
+        item = replace(
+            template,
+            paper_id="fixture:bulk-" + key,
+            payload=replace(
+                template.payload,
+                abstract="We compare delimiter selection methods in multilingual text.",
+            ),
+        )
+        return SimpleNamespace(
+            key=item.paper_id.encode(), value=json.dumps(item.envelope()).encode()
+        )
+
+    def deliver(*rows):
+        return dict(apply_delivery_batch(ENGINE, rows, work / "quarantine"))
+
+    rows = [wire(k) for k in ("a", "b", "c")]
+
+    def interrupt(_):
+        raise RuntimeError("controlled batch interruption")
+
+    sql_event.listen(ENGINE, "commit", interrupt, once=True)
+    try:
+        deliver(*rows)
+    except RuntimeError as exc:
+        assert str(exc) == "controlled batch interruption"
+    else:
+        raise AssertionError("Expected interrupted transaction")
+    check(
+        "batch interruption rolls back every parent",
+        query("SELECT COUNT(*) FROM papers WHERE paper_id LIKE 'fixture:bulk-%'")[0][0],
+        0,
+    )
+    outcomes = race(lambda: deliver(*rows), 2)
+    check(
+        "overlapping first deliveries resolve exactly once",
+        sorted(tuple(sorted(r.items())) for r in outcomes),
+        [(("applied", 3),), (("duplicate", 3),)],
+    )
+    check(
+        "mixed new, replay and malformed delivery",
+        deliver(wire("d"), rows[1], SimpleNamespace(key=b"bad", value=None), wire("e")),
+        {"applied": 2, "duplicate": 1, "rejected": 1},
+    )
+    check(
+        "bulk revision and marker counts",
+        tuple(
+            query("""
+        SELECT COUNT(*), COUNT(p.event_id) FROM paper_revisions r
+        LEFT JOIN processed_events p ON r.event_id=p.event_id WHERE r.paper_id LIKE 'fixture:bulk-%'
+        """)[0]
+        ),
+        (5, 5),
     )
 
 

@@ -16,7 +16,7 @@ from .adapters import json_record
 from .archive import write_atomic
 from .contracts import RecordError, parse_envelope, provenance
 from .broker import group_reader, log, offsets, topic_info
-from .storage.metadata import apply_event, reject_record
+from .storage.metadata import apply_event, apply_fresh_events, reject_record
 
 
 def apply_message(engine, record, quarantine: Path):
@@ -58,6 +58,38 @@ def apply_message(engine, record, quarantine: Path):
     return apply_event(engine, event), event.canonical()["event_id"]
 
 
+def apply_delivery_batch(engine, records, quarantine):
+    """Apply contiguous fresh spans in bulk and resolve exceptional deliveries in order."""
+    if not 1 <= len(records) <= 256:
+        raise ValueError("Expected 1 to 256 deliveries")
+    counts = Counter()
+    pending = []
+
+    def flush():
+        if not pending:
+            return
+        if apply_fresh_events(engine, [event for _, event in pending]):
+            counts["applied"] += len(pending)
+        else:
+            counts.update(
+                apply_message(engine, record, quarantine)[0] for record, _ in pending
+            )
+        pending.clear()
+
+    for record in records:
+        try:
+            event = parse_envelope(json_record(record.value))
+            if record.key != event.paper_id.encode():
+                raise RecordError("paper_key_mismatch")
+        except RecordError:
+            flush()
+            counts[apply_message(engine, record, quarantine)[0]] += 1
+        else:
+            pending.append((record, event))
+    flush()
+    return counts
+
+
 class Assignment(ConsumerRebalanceListener):
     def __init__(self):
         self.next_offsets = {}
@@ -70,7 +102,17 @@ class Assignment(ConsumerRebalanceListener):
 
 
 def consume(
-    engine, broker, topic, group, quarantine, *, drain=False, fault=None, at=None
+    engine,
+    broker,
+    topic,
+    group,
+    quarantine,
+    *,
+    drain=False,
+    fault=None,
+    at=None,
+    drain_signal=None,
+    on_commit=None,
 ):
     if fault or at:
         if os.environ.get("PAPERSEARCH_TEST_FAULTS") != "1" or not (
@@ -92,7 +134,9 @@ def consume(
             polled = reader.poll(timeout_ms=1000)
             if not polled:
                 state = offsets(reader, topic)
-                if drain and all(p["lag"] == 0 for p in state.values()):
+                if (drain or (drain_signal and drain_signal())) and all(
+                    p["lag"] == 0 for p in state.values()
+                ):
                     log("drained", group=group, partitions=state, outcomes=dict(counts))
                     return
                 continue
@@ -144,6 +188,8 @@ def consume(
                     )
                     assignment.next_offsets[part] = following
                     counts[outcome] += 1
+                    if on_commit is not None:
+                        on_commit(record, outcome)
                     log(
                         "offset_commit",
                         next_offset=following,

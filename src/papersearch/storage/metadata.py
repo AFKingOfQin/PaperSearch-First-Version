@@ -3,16 +3,21 @@ import json
 from collections import Counter
 from pathlib import Path
 
-from sqlalchemy import text
+from mysql.connector import Error as MySQLError
+from mysql.connector.connection import MySQLConnection
+from mysql.connector.cursor import MySQLCursorPrepared
+from sqlalchemy import bindparam, text
+from sqlalchemy.exc import DBAPIError, IntegrityError
 from sqlalchemy.engine import Engine
 
 from ..adapters import json_record, parse_record, raw_lines
 from ..encoder import eligibility_sql
 from ..contracts import Event, RecordError, provenance, utc
 
-def apply_event(engine: Engine, event: Event) -> str:
+
+def revision_args(event: Event):
     record = event.canonical()
-    args = dict(
+    return dict(
         paper=event.paper_id,
         event=record["event_id"],
         rank=event.source_version or 0,
@@ -24,6 +29,99 @@ def apply_event(engine: Engine, event: Event) -> str:
         location=event.raw_location,
         raw=event.raw_sha256,
     )
+
+
+REVISION_FIELDS = (
+    "paper",
+    "event",
+    "rank",
+    "stamp",
+    "hash",
+    "record",
+    "batch",
+    "collected",
+    "location",
+    "raw",
+)
+INSERT_REVISION = """
+    INSERT INTO paper_revisions
+        (paper_id,event_id,version_rank,source_updated_at,text_hash,record_json,
+         batch_id,collected_at,raw_location,raw_sha256)
+    VALUES """
+
+
+def insert_revisions(conn, rows):
+    # Use the binary parameter protocol: source prose may contain MySQL client script delimiters.
+    placeholders = "(" + ",".join(["%s"] * len(REVISION_FIELDS)) + ")"
+    statement = INSERT_REVISION + ",".join([placeholders] * len(rows))
+    values = tuple(row[key] for row in rows for key in REVISION_FIELDS)
+    driver = conn.connection.driver_connection
+    if isinstance(driver, MySQLConnection):
+        cursor_type = MySQLCursorPrepared
+    else:
+        # The C extension inherits the connection's buffered flag even when passed False.
+        from mysql.connector.cursor_cext import CMySQLCursorPrepared
+        cursor_type = CMySQLCursorPrepared
+    try:
+        with driver.cursor(prepared=True, cursor_class=cursor_type) as cursor:
+            cursor.execute(statement, values)
+    except MySQLError as exc:
+        disconnected = conn.dialect.is_disconnect(exc, driver, None)
+        if disconnected:
+            conn.invalidate(exc)
+        raise DBAPIError.instance(
+            statement, None, exc, MySQLError, connection_invalidated=disconnected
+        ) from exc
+
+
+def apply_fresh_events(engine: Engine, events: list[Event]) -> bool:
+    """Atomically apply a bounded group of first-seen papers. A collision rolls back the entire group."""
+    if not 1 <= len(events) <= 256:
+        raise ValueError("Expected 1 to 256 normalized events")
+    rows = sorted((revision_args(e) for e in events), key=lambda r: r["paper"])
+    ids = [r["paper"] for r in rows]
+    if len(set(ids)) != len(ids):
+        return False
+    with engine.begin() as conn:
+        # Do not ignore a collision, including one with a concurrently inserted parent.
+        try:
+            conn.execute(text("INSERT INTO papers (paper_id) VALUES (:paper)"), rows)
+        except IntegrityError as error:
+            if getattr(error.orig, "errno", None) != 1062:
+                raise
+            conn.rollback()
+            return False
+        insert_revisions(conn, rows)
+        conn.execute(
+            text(
+                "INSERT INTO current_revisions (paper_id,event_id) VALUES (:paper,:event)"
+            ),
+            rows,
+        )
+        conn.execute(
+            text(
+                "INSERT INTO processed_events (event_id,outcome) VALUES (:event,'applied')"
+            ),
+            rows,
+        )
+        conn.execute(
+            text(f"""
+            INSERT INTO derived_jobs(paper_id,text_hash,kind,model_id,model_revision,preprocessing)
+            SELECT r.paper_id,r.text_hash,s.kind,s.model_id,s.model_revision,s.preprocessing
+            FROM paper_revisions r JOIN derivation_state s ON s.singleton=1
+            WHERE r.paper_id IN :ids AND {eligibility_sql("r.paper_id", "s.kind")}
+        """).bindparams(bindparam("ids", expanding=True)),
+            dict(ids=ids),
+        )
+        conn.execute(
+            text("UPDATE system_state SET generation=generation+:n WHERE singleton=1"),
+            dict(n=len(rows)),
+        )
+    return True
+
+
+def apply_event(engine: Engine, event: Event) -> str:
+    args = revision_args(event)
     with engine.begin() as conn:
         # Acquire the stable parent lock before the transaction's first snapshot read.
         conn.execute(
@@ -39,15 +137,7 @@ def apply_event(engine: Engine, event: Event) -> str:
         old = conn.scalar(
             text("SELECT event_id FROM current_revisions WHERE paper_id=:paper"), args
         )
-        conn.execute(
-            text("""
-            INSERT INTO paper_revisions
-                (paper_id,event_id,version_rank,source_updated_at,text_hash,record_json,
-                 batch_id,collected_at,raw_location,raw_sha256)
-            VALUES (:paper,:event,:rank,:stamp,:hash,:record,:batch,:collected,:location,:raw)
-        """),
-            args,
-        )
+        insert_revisions(conn, [args])
         siblings = conn.execute(
             text("""
             SELECT event_id FROM paper_revisions WHERE paper_id=:paper AND version_rank=:rank

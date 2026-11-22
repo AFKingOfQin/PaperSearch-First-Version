@@ -187,7 +187,7 @@ def store_shard(root, generated, *, semantic=False):
     return locations, reused
 
 
-def process_batch(engine, root, limit, lease_seconds, encoder=None):
+def process_batch(engine, root, limit, lease_seconds, encoder=None, *, use_cache=True):
     jobs = []
     for _ in range(limit):
         job = claim_job(engine, lease_seconds, kind=KIND if encoder else TEST_KIND)
@@ -205,12 +205,16 @@ def process_batch(engine, root, limit, lease_seconds, encoder=None):
         missing = {}
         for key, job in {job["cache_key"]: job for job in jobs}.items():
             artifact = (
-                conn.execute(
-                    text("SELECT * FROM derived_artifacts WHERE cache_key=:key"),
-                    dict(key=key),
+                (
+                    conn.execute(
+                        text("SELECT * FROM derived_artifacts WHERE cache_key=:key"),
+                        dict(key=key),
+                    )
+                    .mappings()
+                    .first()
                 )
-                .mappings()
-                .first()
+                if use_cache
+                else None
             )
             if artifact is None:
                 if encoder is None:
