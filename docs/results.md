@@ -2,6 +2,14 @@
 
 **M8, S4 and S5 passed.** On one laptop, PaperSearch accounted for all 3,050,852 lines in Cornell arXiv snapshot v287 and verified 3,050,173 current papers against an independent reference. The published reviewer still serves 100,000 lexical records and 4,878 semantic vectors. [Capacity readback](evidence/phase8-capacity.json) · [Reviewer manifest](evidence/phase6-snapshot.json)
 
+The [clean-start verification](evidence/phase9-clean-run.md) exercises the smaller redistributable fixture from empty volumes. It also records a fresh readback of the published 100k package and checks the retained capacity evidence. Full-corpus semantic encoding (S6) remains deferred.
+
+### Input provenance
+
+The 100k reviewer uses a source-order prefix of Cornell arXiv v287 retrieved November 21, 2026 UTC. The full ZIP finished downloading November 22 UTC. Cornell's data card assigns CC0 to metadata and identifies individual paper licenses separately. The subset manifest and capacity evidence retain the input byte counts and hashes. [Selection and license](reviewer.md) · [Subset manifest](evidence/phase5-subset.json) · [Full ZIP identity](evidence/phase8-capacity.json)
+
+The ranking evaluation uses three complete Cohen 2006 review tables retrieved November 21, 2026 UTC. The pinned ASReview index lists each of Antihistamines, NSAIDS and Triptans under a “custom open license” and points to the original OHSU terms, which request citation of Cohen and colleagues. The repository retains pool hashes and scores. Fetch the source tables separately to reproduce the evaluation. The BGE model is MIT-licensed and pinned by revision and file hashes. [Pinned dataset index](https://raw.githubusercontent.com/asreview/synergy-dataset/38b35218e4d0f99621cec5a8a25a0147bb88c654/index.json) · [OHSU attribution and codebook](https://dmice.ohsu.edu/cohenaa/systematic-drug-class-review-data.html) · [Exact pool identities](evidence/phase6-evaluation.json) · [Model provenance](semantic-ranking.md)
+
 ## Rebuild, update and cache reuse
 
 All 12 publication trials produced the same 56 winners, lexical rows and ordered semantic vectors. Each full rebuild read 70 deliveries and inserted 68 revisions. Each update read 22 deliveries and added 20 revisions to the same 48-paper base. Two replays added zero revisions. All four configurations published 298,532 bytes. [Raw trials, workload digests and source fingerprints](evidence/phase8-system.json)

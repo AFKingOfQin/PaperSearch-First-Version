@@ -6,6 +6,18 @@ The reviewer offers BM25 over 100,000 real papers and exact cosine search over a
 
 The laptop benchmarks measure what happens when papers arrive, text changes, a consumer crashes, or metadata outgrows the published index. [Measured results and reproduction commands](docs/results.md)
 
+## Start here
+
+On a new Windows checkout, follow the [setup and recovery runbook](docs/runbook.md). It takes you from an empty database to a search, saved decision, restart, revised abstract and CSV export. After setup, repeat the offline check with `.\.venv\Scripts\python scripts/review_demo.py`.
+
+| Collection | Current metadata | Searchable with BM25 | Searchable with cosine |
+|---|---:|---:|---:|
+| Offline reviewer demo | 1 | 1 | 0 |
+| Measured arXiv reviewer | 100,000 | 100,000 | 4,878 |
+| Separate full v287 capacity database | 3,050,173 | 0 | 0 |
+
+Read the [architecture and code walkthrough](docs/architecture.md) for the transaction and publication boundaries, the [data dictionary](docs/data_dictionary.md) for the durable records, and the [CS544 mapping](docs/cs544_mapping.md) for the experiments behind each design choice. The [final acceptance checklist](docs/ACCEPTANCE_CHECKLIST.md) links the project evidence.
+
 ## Verify the Spark batch merge
 
 With the pinned Spark image cached, run `.\.venv\Scripts\python scripts/verify-spark-fixture.py` from the configured Windows checkout. It checks the offline batch output against the original revision fixture. The larger comparison uses the retained 100,000-paper publication, measures fresh and warmed Spark applications, and checks every merged record and storage row. [Batch setup, input contract and reproduction commands](docs/spark-batch.md)
@@ -79,11 +91,11 @@ py -3.14 -m venv .venv
 .\.venv\Scripts\papersearch --env-file .env.example config
 .\.venv\Scripts\python -m pytest -q
 .\.venv\Scripts\ruff check src migrations tests
-.\.venv\Scripts\alembic heads
+.\.venv\Scripts\python -m alembic heads
 .\.venv\Scripts\papersearch doctor
 ```
 
-Expect 5 GiB and 100 GiB in the configuration output. Alembic starts with an empty revision history. The doctor reports host RAM, disk, WSL distributions and Docker engine limits. It exits with code 1 when a prerequisite is missing. The commands above work offline once dependencies are installed.
+Expect 5 GiB and 100 GiB in the configuration output and `0002_search_snapshots (head)` from Alembic. The doctor reports host RAM, disk, WSL distributions and Docker engine limits. It exits with code 1 when a prerequisite is missing. The commands above work offline once dependencies are installed.
 
 ## Enable the service runtime
 

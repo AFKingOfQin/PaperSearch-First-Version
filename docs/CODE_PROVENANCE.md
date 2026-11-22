@@ -19,3 +19,4 @@ Python modules, tests and the fixture generator carry inline Codex attribution. 
 | `docs/evidence/phase8-system.json`, `phase8-timings.csv` and `phase8-timings.png` | Real Docker, MySQL, Kafka and CPU model measurements from the Codex-authored experiment drivers. The CSV contains individual trial measurements. The base R figure plots those observations. |
 | `docs/evidence/phase8-capacity.json` and `phase8-blocks.csv` | Runtime input checksums, delivery outcomes, database reconciliation, timings and resource samples from the isolated Cornell v287 metadata expansion. |
 | `docs/evidence/phase8-checks.json` | Observed assertion lines and checksums from the real-service recovery scripts, local tests, and the M5 and M7 readbacks. |
+| `docs/evidence/phase9-status.json` and `phase9-decision.csv` | Unmodified HTTP status response (serialized by the demo) and exported screening CSV from the clean fixture run. Paper, edits, label and note are synthetic. |

@@ -19,3 +19,5 @@ dist/
 /artifacts/
 /volumes/
 *.vhdx
+# Ship the final review checklist even in checkouts with local planning-file exclusions.
+!/docs/ACCEPTANCE_CHECKLIST.md

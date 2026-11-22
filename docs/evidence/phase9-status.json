@@ -1,0 +1,88 @@
+{
+  "corpus_generation": 2,
+  "artifact_epoch": 0,
+  "recipe": {
+    "kind": "embedding",
+    "model_id": "BAAI/bge-small-en-v1.5",
+    "model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+    "preprocessing": "text-v1"
+  },
+  "jobs": [
+    {
+      "kind": "embedding",
+      "status": "pending",
+      "n": 2
+    }
+  ],
+  "recent_errors": [],
+  "active": {
+    "artifact_epoch": 0,
+    "corpus_sha256": "08f9c6e11a128eae0741423895d4c3730bf8df2309e7a01499a822030f627b33",
+    "coverage": {
+      "fixture_eligible": 1,
+      "lexical": 1,
+      "metadata": 1,
+      "semantic": 0,
+      "test_vectors": 0
+    },
+    "created_at": "2026-11-22T04:57:50.158687+00:00",
+    "eligibility": "paper_id starts with fixture:",
+    "files": {
+      "corpus.parquet": {
+        "bytes": 5938,
+        "sha256": "4c3c975b67812c0e4ef39e85b4467fe589a87a8e7b748e83748ff7593e308a2f"
+      },
+      "lexical.sqlite": {
+        "bytes": 24576,
+        "sha256": "1ccdd9dfcfaf6efd2b728ebec7c8ee6ebb5dd0215320210a0820b5af6fa44012"
+      },
+      "test-vectors.parquet": {
+        "bytes": 829,
+        "sha256": "7212d1ed41728e5283d2487cb194d13f14aad3aeffdb97d6ee5f3f6acd7d210c"
+      }
+    },
+    "format_version": 1,
+    "generation": 2,
+    "lexical_format": "SQLite FTS5 unicode61",
+    "recipe": {
+      "kind": "embedding",
+      "model_id": "BAAI/bge-small-en-v1.5",
+      "model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+      "preprocessing": "text-v1"
+    },
+    "snapshot_id": "c71e03ea802e45ef96a3cf2256787a1b",
+    "test_vector_format": "SHA-256 fixture bytes, width 32"
+  },
+  "metadata_generations_behind": 0,
+  "artifacts_changed_since_build": false,
+  "recipe_changed_since_build": false,
+  "input": {
+    "processed_events": 2,
+    "rejected_events": 0,
+    "current_revisions": 1
+  },
+  "broker": {
+    "topic": "papers",
+    "partitions": {
+      "0": {
+        "committed": null,
+        "beginning": 0,
+        "end": 0,
+        "lag": 0
+      },
+      "1": {
+        "committed": 2,
+        "beginning": 0,
+        "end": 2,
+        "lag": 0
+      },
+      "2": {
+        "committed": null,
+        "beginning": 0,
+        "end": 0,
+        "lag": 0
+      }
+    },
+    "lag": 0
+  }
+}

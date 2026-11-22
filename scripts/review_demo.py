@@ -240,7 +240,7 @@ def demo(keep_running):
         ).stdout
 
     def cli(*args, capture=False):
-        return run("run", "--rm", "--no-deps", "snapshot", *args, capture=capture)
+        return run("run", "--rm", "--pull", "never", "--no-deps", "snapshot", *args, capture=capture)
 
     def ingest(file):
         archived = cli(
@@ -315,6 +315,17 @@ def demo(keep_running):
         wait_http(base + "/ready")
         wait_http(browser + "/_stcore/health")
         workflow(base, folder, restart, revise, build)
+        response = requests.get(base + "/status", timeout=30)
+        response.raise_for_status()
+        status = response.json()
+        coverage = status["active"]["coverage"]
+        assert status["input"] == dict(current_revisions=1, processed_events=2, rejected_events=0)
+        assert {key: coverage[key] for key in ("metadata", "lexical", "semantic")} == {
+            "metadata": 1, "lexical": 1, "semantic": 0,
+        }
+        assert status["metadata_generations_behind"] == status["broker"]["lag"] == 0
+        (folder / "status.json").write_text(json.dumps(status, indent=2) + "\n")
+        print("PASS fixture coverage: 1 metadata, 1 lexical, 0 semantic; 2 events, zero lag", flush=True)
         print("PASS offline reviewer demo", project, browser, flush=True)
     finally:
         if not keep_running:
