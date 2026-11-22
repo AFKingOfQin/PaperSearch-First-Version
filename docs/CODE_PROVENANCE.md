@@ -15,3 +15,4 @@ Python modules, tests and the fixture generator carry inline Codex attribution. 
 | `docs/evidence/phase6-evaluation.json` | Runtime output from the Codex-authored evaluator using three pinned public review tables and their original final inclusion decisions. |
 | `docs/evidence/phase6-serving.json` | Measured HTTP and Streamlit results and independent cosine checks from the Codex-authored serving verifier. |
 | `docs/evidence/phase6-snapshot.json` | Unmodified manifest from the CPU semantic package published against the retained 100k collection. |
+| `docs/evidence/phase7-batch.json` | Runtime output from the Codex-authored batch verifier. Includes real source identity, deterministic synthetic update controls, input/output file hashes, laptop timings and reference equality checks. |

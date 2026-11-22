@@ -5,6 +5,26 @@ from .adapters import json_record, parse_record, raw_lines
 from .contracts import RecordError, digest, provenance, utc
 
 
+def select_revision(paper, revisions):
+    """Skip each disputed priority, retaining the newest unambiguous alternative."""
+    winner = None
+    conflicts = []
+    for (number, updated), alternatives in sorted(revisions.items(), reverse=True):
+        if len(alternatives) > 1:
+            conflicts.append(
+                dict(
+                    reason="revision_conflict",
+                    paper_id=paper,
+                    source_version=number or None,
+                    source_updated_at=updated,
+                    event_ids=sorted(alternatives),
+                )
+            )
+        elif winner is None:
+            winner = next(iter(alternatives.values()))
+    return winner, conflicts
+
+
 def process_files(
     paths: list[Path], fmt: str, batch_id: str, collected_at: str
 ) -> dict:
@@ -44,19 +64,10 @@ def process_files(
     papers = {}
     conflicts = []
     for paper, revisions in sorted(history.items()):
-        for (number, updated), alternatives in sorted(revisions.items(), reverse=True):
-            if len(alternatives) > 1:
-                conflicts.append(
-                    dict(
-                        reason="revision_conflict",
-                        paper_id=paper,
-                        source_version=number or None,
-                        source_updated_at=updated,
-                        event_ids=sorted(alternatives),
-                    )
-                )
-            elif paper not in papers:
-                papers[paper] = next(iter(alternatives.values()))
+        winner, disputed = select_revision(paper, revisions)
+        if winner is not None:
+            papers[paper] = winner
+        conflicts.extend(disputed)
     return dict(
         records=total,
         duplicates=duplicates,

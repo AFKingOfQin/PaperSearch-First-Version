@@ -4,6 +4,10 @@ PaperSearch lets you search a published paper collection by title and abstract, 
 
 The reviewer offers BM25 over 100,000 real papers and exact cosine search over a published subset. It shows the number of papers each method can search and how often the encoder shortened an input. [Semantic search setup and verification](docs/semantic-ranking.md)
 
+## Verify the Spark batch merge
+
+With the pinned Spark image cached, run `.\.venv\Scripts\python scripts/verify-spark-fixture.py` from the configured Windows checkout. It checks the offline batch output against the original revision fixture. The larger comparison uses the retained 100,000-paper publication, measures fresh and warmed Spark applications, and checks every merged record and storage row. [Batch setup, input contract and reproduction commands](docs/spark-batch.md)
+
 ## Verify the reviewer workflow
 
 With Docker Desktop and the local credentials configured, prepare the images and run the demo from the repository root.
@@ -118,7 +122,7 @@ Clients on the Compose network use `mysql:3306` and `kafka:9092`. Both services 
 | core | MySQL and one KRaft Kafka broker | 768 MiB and 1 GiB respectively, 1 CPU each |
 | test | One-shot CLI for independent client connections | 256 MiB, 1 CPU |
 | snapshot | Leased fixture workers, Parquet and lexical package verification | 768 MiB, 1 CPU |
-| batch | `docker compose --profile batch run --rm spark` prints the Spark runtime version | 3 GiB, 2 CPUs |
+| batch | Local Spark history merge and CSV/Parquet analytics on isolated files | 3 GiB, 2 CPUs |
 | embedding | Generate pinned CPU embeddings for eligible, leased papers | 2 GiB, 2 CPUs |
 
 Run the heavy profiles separately. Spark and embeddings compete for the laptop's RAM and CPU. Kafka bounds its broker request queue at 64 and configures retention at 24 hours or 128 MiB per partition, with 16 MiB segments. Segment cleanup is asynchronous. Replay beyond this window uses the archived inputs.

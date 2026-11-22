@@ -114,6 +114,13 @@ services:
     image: spark:4.1.1-scala2.13-java17-python3-ubuntu@sha256:6383b28979b5356455c51dff1153e603b182ee1b250938bf20261590dca0b1ad
     entrypoint: ["/opt/spark/bin/spark-submit"]
     command: ["--version"]
+    network_mode: none
+    hostname: localhost
+    environment:
+      SPARK_LOCAL_IP: "127.0.0.1"
+    volumes:
+      - ./src/papersearch/batch:/jobs:ro
+      - ${BATCH_DIR:-./artifacts/batch}:/batch
     mem_limit: ${BATCH_MEMORY:-3g}
     cpus: ${BATCH_CPUS:-2}
   embedding:
