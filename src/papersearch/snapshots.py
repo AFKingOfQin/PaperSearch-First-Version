@@ -21,8 +21,10 @@ from .snapshot_format import (
     FILES,
     VECTORS,
     CorpusDigest,
+    SemanticScope,
     file_sha,
     flat_row,
+    include_date,
     validate,
 )
 from .storage.metadata import current_page
@@ -34,6 +36,11 @@ STATE = """SELECT d.*,s.generation FROM derivation_state d JOIN system_state s
 def write_package(engine, root, directory, snapshot_id, page_size):
     corpus = CorpusDigest()
     indexed = eligible = semantic_count = candidates = truncated = title_only = 0
+    semantic_dates = None
+    scope = SemanticScope([
+        dict(start="2024-01-01", before=None, categories=["cs.CL", "cs.CV"]),
+        dict(start="2024-01-01", before="2025-01-01", categories=["stat.ML"]),
+    ])
     with (
         engine.connect().execution_options(isolation_level="REPEATABLE READ") as conn,
         conn.begin(),
@@ -68,7 +75,9 @@ def write_package(engine, root, directory, snapshot_id, page_size):
                 metadata.append(flat_row(corpus.count, record))
                 after = item.paper_id
                 eligible += after.startswith("fixture:")
-                if semantic and semantic_eligible(after):
+                if semantic:
+                    scope.add(record["payload"], bool(item.cache_key))
+                if semantic and semantic_eligible(after, record["payload"]):
                     candidates += 1
                     if item.cache_key:
                         raw = verified_vector(
@@ -89,6 +98,9 @@ def write_package(engine, root, directory, snapshot_id, page_size):
                             )
                         )
                         semantic_count += 1
+                        semantic_dates = include_date(
+                            semantic_dates, record["payload"]["published"]
+                        )
                         truncated += length > MAX_TOKENS
                         title_only += not record["payload"]["abstract"]
                 if item.cache_key and recipe["kind"] == TEST_KIND:
@@ -146,6 +158,8 @@ def write_package(engine, root, directory, snapshot_id, page_size):
         files=files,
     )
     if semantic:
+        manifest["semantic_scope"] = scope.summary()
+        manifest["semantic_submission_dates"] = semantic_dates
         manifest["coverage"].update(
             semantic_eligible=candidates,
             semantic_truncated=truncated,
@@ -159,8 +173,8 @@ def write_package(engine, root, directory, snapshot_id, page_size):
 
 
 def publish_snapshot(engine, root: Path, page_size=32):
-    if not 1 <= page_size <= 128:
-        raise ValueError("page_size must be between 1 and 128")
+    if not 1 <= page_size <= 1024:
+        raise ValueError("page_size must be between 1 and 1024")
     bind_store(engine, root)
     snapshots = root / "snapshots"
     snapshots.mkdir(parents=True, exist_ok=True)

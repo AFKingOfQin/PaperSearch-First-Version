@@ -8,7 +8,11 @@ MAX_ATTEMPTS = 3
 
 
 def claim_job(
-    engine: Engine, lease_seconds: int = 60, *, kind: str | None = None
+    engine: Engine,
+    lease_seconds: int = 60,
+    *,
+    kind: str | None = None,
+    job_id: int | None = None,
 ) -> dict | None:
     if not 1 <= lease_seconds <= 86400:
         raise ValueError("lease_seconds must be between 1 and 86400")
@@ -17,13 +21,14 @@ def claim_job(
             with conn.begin():
                 job = (
                     conn.execute(
-                        text("""
+                        text(f"""
                     SELECT job_id,paper_id,text_hash,kind,model_id,model_revision,preprocessing,attempts
-                    FROM derived_jobs WHERE (:kind IS NULL OR kind=:kind) AND
+                    FROM derived_jobs WHERE {("job_id=:job_id AND" if job_id is not None else "")}
+                        (:kind IS NULL OR kind=:kind) AND
                         (status='pending' OR (status='leased' AND lease_until<=UTC_TIMESTAMP(6)))
                     ORDER BY job_id LIMIT 1 FOR UPDATE SKIP LOCKED
                 """),
-                        {"kind": kind},
+                        {"kind": kind, "job_id": job_id},
                     )
                     .mappings()
                     .first()

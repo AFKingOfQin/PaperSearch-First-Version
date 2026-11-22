@@ -1,0 +1,551 @@
+{
+  "snapshot": "91432e599277430688c2ab978babca2c",
+  "corpus_sha256": "225aa138a621f57e39cc00068cef60224353d8e7a634f63baa38e75f6e6f4bbe",
+  "recipe": {
+    "kind": "bge-onnx-cpu-v1",
+    "model_id": "BAAI/bge-small-en-v1.5",
+    "model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+    "preprocessing": "title-lf-abstract-cls128-v1"
+  },
+  "coverage": {
+    "fixture_eligible": 0,
+    "lexical": 451283,
+    "metadata": 451283,
+    "semantic": 14883,
+    "semantic_eligible": 356161,
+    "semantic_title_only": 0,
+    "semantic_truncated": 13325,
+    "test_vectors": 0
+  },
+  "scope": {
+    "cohorts": [
+      {
+        "before": null,
+        "categories": [
+          "cs.CL",
+          "cs.CV"
+        ],
+        "eligible": 4109,
+        "indexed": 4109,
+        "start": "2024-01-01"
+      },
+      {
+        "before": "2025-01-01",
+        "categories": [
+          "stat.ML"
+        ],
+        "eligible": 5908,
+        "indexed": 5908,
+        "start": "2024-01-01"
+      }
+    ],
+    "other_dates": [
+      "2007-03-31",
+      "2008-12-19"
+    ],
+    "other_indexed": 4878,
+    "recent_categories": {
+      "astro-ph.CO": 10,
+      "astro-ph.GA": 3,
+      "astro-ph.HE": 1,
+      "astro-ph.IM": 14,
+      "astro-ph.SR": 3,
+      "cond-mat.dis-nn": 77,
+      "cond-mat.mes-hall": 1,
+      "cond-mat.mtrl-sci": 11,
+      "cond-mat.other": 1,
+      "cond-mat.soft": 5,
+      "cond-mat.stat-mech": 30,
+      "cond-mat.str-el": 2,
+      "cs.AI": 3076,
+      "cs.AR": 3,
+      "cs.CC": 26,
+      "cs.CE": 37,
+      "cs.CG": 8,
+      "cs.CL": 4297,
+      "cs.CR": 202,
+      "cs.CV": 4318,
+      "cs.CY": 157,
+      "cs.DB": 15,
+      "cs.DC": 41,
+      "cs.DL": 16,
+      "cs.DM": 15,
+      "cs.DS": 157,
+      "cs.ET": 8,
+      "cs.FL": 1,
+      "cs.GR": 38,
+      "cs.GT": 41,
+      "cs.HC": 128,
+      "cs.IR": 159,
+      "cs.IT": 190,
+      "cs.LG": 6371,
+      "cs.LO": 8,
+      "cs.MA": 67,
+      "cs.MM": 251,
+      "cs.MS": 5,
+      "cs.NA": 174,
+      "cs.NE": 69,
+      "cs.NI": 6,
+      "cs.PF": 4,
+      "cs.PL": 2,
+      "cs.RO": 192,
+      "cs.SC": 9,
+      "cs.SD": 74,
+      "cs.SE": 15,
+      "cs.SI": 79,
+      "cs.SY": 97,
+      "econ.EM": 85,
+      "econ.GN": 12,
+      "econ.TH": 4,
+      "eess.AS": 80,
+      "eess.IV": 89,
+      "eess.SP": 116,
+      "eess.SY": 97,
+      "gr-qc": 1,
+      "hep-ex": 9,
+      "hep-lat": 3,
+      "hep-ph": 17,
+      "hep-th": 9,
+      "math-ph": 13,
+      "math.AC": 1,
+      "math.AG": 7,
+      "math.AP": 13,
+      "math.AT": 12,
+      "math.CA": 4,
+      "math.CO": 17,
+      "math.CT": 2,
+      "math.CV": 1,
+      "math.DG": 14,
+      "math.DS": 56,
+      "math.FA": 25,
+      "math.GN": 1,
+      "math.GR": 1,
+      "math.GT": 4,
+      "math.HO": 1,
+      "math.IT": 190,
+      "math.KT": 1,
+      "math.LO": 1,
+      "math.MG": 4,
+      "math.MP": 13,
+      "math.NA": 174,
+      "math.NT": 3,
+      "math.OA": 2,
+      "math.OC": 497,
+      "math.PR": 226,
+      "math.QA": 1,
+      "math.RA": 1,
+      "math.RT": 6,
+      "math.SP": 9,
+      "math.ST": 585,
+      "nlin.AO": 4,
+      "nlin.CD": 17,
+      "nlin.PS": 1,
+      "nucl-th": 1,
+      "physics.ao-ph": 28,
+      "physics.app-ph": 2,
+      "physics.bio-ph": 2,
+      "physics.chem-ph": 15,
+      "physics.comp-ph": 37,
+      "physics.data-an": 49,
+      "physics.flu-dyn": 9,
+      "physics.geo-ph": 8,
+      "physics.ins-det": 1,
+      "physics.med-ph": 3,
+      "physics.optics": 3,
+      "physics.soc-ph": 3,
+      "q-bio.BM": 15,
+      "q-bio.CB": 1,
+      "q-bio.GN": 16,
+      "q-bio.MN": 1,
+      "q-bio.NC": 42,
+      "q-bio.PE": 8,
+      "q-bio.QM": 62,
+      "q-fin.CP": 18,
+      "q-fin.EC": 12,
+      "q-fin.MF": 9,
+      "q-fin.PM": 9,
+      "q-fin.PR": 4,
+      "q-fin.RM": 14,
+      "q-fin.ST": 33,
+      "q-fin.TR": 11,
+      "quant-ph": 44,
+      "stat.AP": 239,
+      "stat.CO": 258,
+      "stat.ME": 639,
+      "stat.ML": 5914,
+      "stat.OT": 9,
+      "stat.TH": 585
+    },
+    "recent_dates": [
+      "2024-01-01",
+      "2026-05-21"
+    ],
+    "recent_eligible": 351283,
+    "recent_indexed": 10005,
+    "recent_years": {
+      "2024": 7578,
+      "2025": 1798,
+      "2026": 629
+    }
+  },
+  "queries": {
+    "VLM KV Cache": {
+      "top_five": [
+        {
+          "paper_id": "arxiv:2605.02262",
+          "rank": 1,
+          "title": "WindowQuant: Mixed-Precision KV Cache Quantization based on Window-Level Similarity for VLMs Inference Optimization",
+          "score": 0.7671871185302734
+        },
+        {
+          "paper_id": "arxiv:2410.23317",
+          "rank": 2,
+          "title": "VL-Cache: Sparsity and Modality-Aware KV Cache Compression for Vision-Language Model Inference Acceleration",
+          "score": 0.7419816851615906
+        },
+        {
+          "paper_id": "arxiv:2406.18139",
+          "rank": 3,
+          "title": "LOOK-M: Look-Once Optimization in KV Cache for Efficient Multimodal Long-Context Inference",
+          "score": 0.7278132438659668
+        },
+        {
+          "paper_id": "arxiv:2504.04704",
+          "rank": 4,
+          "title": "LagKV: Lag-Relative Information of the KV Cache Tells Which Tokens Are Important",
+          "score": 0.7197458744049072
+        },
+        {
+          "paper_id": "arxiv:2605.17447",
+          "rank": 5,
+          "title": "FastOCR: Dynamic Visual Fixation via KV Cache Pruning for Efficient Document Parsing",
+          "score": 0.6962389349937439
+        }
+      ],
+      "target_ranks": {
+        "arxiv:2410.23317": 2,
+        "arxiv:2406.18139": 3
+      }
+    },
+    "Compressing the attention key and value cache to reduce memory during inference in vision-language models": {
+      "top_five": [
+        {
+          "paper_id": "arxiv:2410.23317",
+          "rank": 1,
+          "title": "VL-Cache: Sparsity and Modality-Aware KV Cache Compression for Vision-Language Model Inference Acceleration",
+          "score": 0.8753842711448669
+        },
+        {
+          "paper_id": "arxiv:2505.18855",
+          "rank": 2,
+          "title": "Inference Compute-Optimal Video Vision Language Models",
+          "score": 0.8608179092407227
+        },
+        {
+          "paper_id": "arxiv:2601.11464",
+          "rank": 3,
+          "title": "MHA2MLA-VLM: Enabling DeepSeek's Economical Multi-Head Latent Attention across Vision-Language Models",
+          "score": 0.8572239875793457
+        },
+        {
+          "paper_id": "arxiv:2403.06764",
+          "rank": 4,
+          "title": "An Image is Worth 1/2 Tokens After Layer 2: Plug-and-Play Inference Acceleration for Large Vision-Language Models",
+          "score": 0.8522825837135315
+        },
+        {
+          "paper_id": "arxiv:2503.18556",
+          "rank": 5,
+          "title": "Instruction-Aligned Visual Attention for Mitigating Hallucinations in Large Vision-Language Models",
+          "score": 0.8522160053253174
+        }
+      ],
+      "target_ranks": {
+        "arxiv:2410.23317": 1,
+        "arxiv:2406.18139": 49
+      }
+    },
+    "Why do image captioning models hallucinate objects that are absent from a picture?": {
+      "top_five": [
+        {
+          "paper_id": "arxiv:2406.14492",
+          "rank": 1,
+          "title": "Does Object Grounding Really Reduce Hallucination of Large Vision-Language Models?",
+          "score": 0.8291661143302917
+        },
+        {
+          "paper_id": "arxiv:2502.20034",
+          "rank": 2,
+          "title": "Do Vision Encoders Truly Explain Object Hallucination?: Mitigating Object Hallucination via Simple Fine-Grained CLIPScore",
+          "score": 0.807166576385498
+        },
+        {
+          "paper_id": "arxiv:2604.19412",
+          "rank": 3,
+          "title": "VCE: A zero-cost hallucination mitigation method of LVLMs via visual contrastive editing",
+          "score": 0.8004992008209229
+        },
+        {
+          "paper_id": "arxiv:2402.08680",
+          "rank": 4,
+          "title": "Mitigating Object Hallucination in Large Vision-Language Models via Image-Grounded Guidance",
+          "score": 0.7911404371261597
+        },
+        {
+          "paper_id": "arxiv:2408.16809",
+          "rank": 5,
+          "title": "See or Guess: Counterfactually Regularized Image Captioning",
+          "score": 0.7900569438934326
+        }
+      ]
+    },
+    "answering questions about charts and diagrams": {
+      "top_five": [
+        {
+          "paper_id": "arxiv:2605.00905",
+          "rank": 1,
+          "title": "DIAGRAMS: A Review Framework for Reasoning-Level Attribution in Diagram QA",
+          "score": 0.8286136388778687
+        },
+        {
+          "paper_id": "arxiv:2604.21344",
+          "rank": 2,
+          "title": "Beyond Single Plots: A Benchmark for Question Answering on Multi-Charts",
+          "score": 0.8271843791007996
+        },
+        {
+          "paper_id": "arxiv:2405.00021",
+          "rank": 3,
+          "title": "SIMPLOT: Enhancing Chart Question Answering by Distilling Essentials",
+          "score": 0.8209553956985474
+        },
+        {
+          "paper_id": "arxiv:2403.16385",
+          "rank": 4,
+          "title": "Synthesize Step-by-Step: Tools, Templates and LLMs as Data Generators for Reasoning-Based Chart VQA",
+          "score": 0.8179032206535339
+        },
+        {
+          "paper_id": "arxiv:2408.04852",
+          "rank": 5,
+          "title": "MSG-Chart: Multimodal Scene Graph for ChartQA",
+          "score": 0.816784143447876
+        }
+      ]
+    },
+    "prediction intervals with conformal inference": {
+      "top_five": [
+        {
+          "paper_id": "arxiv:2410.16493",
+          "rank": 1,
+          "title": "Building Conformal Prediction Intervals with Approximate Message Passing",
+          "score": 0.8783239722251892
+        },
+        {
+          "paper_id": "arxiv:2406.07449",
+          "rank": 2,
+          "title": "Boosted Conformal Prediction Intervals",
+          "score": 0.8697235584259033
+        },
+        {
+          "paper_id": "arxiv:2405.18601",
+          "rank": 3,
+          "title": "From Conformal Predictions to Confidence Regions",
+          "score": 0.8674055337905884
+        },
+        {
+          "paper_id": "arxiv:2402.07307",
+          "rank": 4,
+          "title": "Self-Calibrating Conformal Prediction",
+          "score": 0.8584029078483582
+        },
+        {
+          "paper_id": "arxiv:2402.05203",
+          "rank": 5,
+          "title": "Bellman Conformal Inference: Calibrating Prediction Intervals For Time Series",
+          "score": 0.8563246130943298
+        }
+      ]
+    },
+    "discovering causal relationships from observational data": {
+      "top_five": [
+        {
+          "paper_id": "arxiv:2407.18755",
+          "rank": 1,
+          "title": "Score matching through the roof: linear, nonlinear, and latent variables causal discovery",
+          "score": 0.8612625598907471
+        },
+        {
+          "paper_id": "arxiv:2403.06499",
+          "rank": 2,
+          "title": "Detection of Unobserved Common Causes based on NML Code in Discrete, Mixed, and Continuous Variables",
+          "score": 0.8583088517189026
+        },
+        {
+          "paper_id": "arxiv:2408.04819",
+          "rank": 3,
+          "title": "Interventional Causal Structure Discovery over Graphical Models with Convergence and Optimality Guarantees",
+          "score": 0.841378927230835
+        },
+        {
+          "paper_id": "arxiv:2411.05331",
+          "rank": 4,
+          "title": "Discovering Latent Causal Graphs from Spatiotemporal Data",
+          "score": 0.834801435470581
+        },
+        {
+          "paper_id": "arxiv:2409.19377",
+          "rank": 5,
+          "title": "Interpretable, multi-dimensional Evaluation Framework for Causal Discovery from observational i.i.d. Data",
+          "score": 0.8340728878974915
+        }
+      ]
+    },
+    "Bayesian optimization for expensive black-box functions": {
+      "top_five": [
+        {
+          "paper_id": "arxiv:2405.15119",
+          "rank": 1,
+          "title": "Bayesian Optimization of Functions over Node Subsets in Graphs",
+          "score": 0.8680105805397034
+        },
+        {
+          "paper_id": "arxiv:2406.04739",
+          "rank": 2,
+          "title": "A survey and benchmark of high-dimensional Bayesian optimization of discrete sequences",
+          "score": 0.8667014837265015
+        },
+        {
+          "paper_id": "arxiv:2405.14540",
+          "rank": 3,
+          "title": "This Too Shall Pass: Removing Stale Observations in Dynamic Bayesian Optimization",
+          "score": 0.8659839034080505
+        },
+        {
+          "paper_id": "arxiv:2406.20062",
+          "rank": 4,
+          "title": "Cost-aware Bayesian Optimization via the Pandora's Box Gittins Index",
+          "score": 0.8642940521240234
+        },
+        {
+          "paper_id": "arxiv:2408.17387",
+          "rank": 5,
+          "title": "Bayesian Optimization for Non-Convex Two-Stage Stochastic Optimization Problems",
+          "score": 0.8641138076782227
+        }
+      ]
+    },
+    "How can an image-and-text transformer use less memory for the attention keys and values it saves during generation?": {
+      "top_five": [
+        {
+          "paper_id": "arxiv:2402.00522",
+          "rank": 1,
+          "title": "Understanding the Expressive Power and Mechanisms of Transformer for Sequence Modeling",
+          "score": 0.7511160969734192
+        },
+        {
+          "paper_id": "arxiv:2412.06538",
+          "rank": 2,
+          "title": "Understanding Factual Recall in Transformers via Associative Memories",
+          "score": 0.743314266204834
+        },
+        {
+          "paper_id": "arxiv:2506.05399",
+          "rank": 3,
+          "title": "Attention-based transformer models for image captioning across languages: An in-depth survey and evaluation",
+          "score": 0.7353105545043945
+        },
+        {
+          "paper_id": "arxiv:2412.12391",
+          "rank": 4,
+          "title": "Efficient Scaling of Diffusion Transformers for Text-to-Image Generation",
+          "score": 0.7289730906486511
+        },
+        {
+          "paper_id": "arxiv:2402.01258",
+          "rank": 5,
+          "title": "Transformers Learn Nonlinear Features In Context: Nonconvex Mean-field Dynamics on the Attention Landscape",
+          "score": 0.7236780524253845
+        }
+      ],
+      "target_ranks_in_first_1000": {
+        "arxiv:2406.18139": 166,
+        "arxiv:2410.23317": 506
+      }
+    },
+    "detecting invented objects in image descriptions": {
+      "top_five": [
+        {
+          "paper_id": "arxiv:2404.19360",
+          "rank": 1,
+          "title": "Large Language Model Informed Patent Image Retrieval",
+          "score": 0.8161741495132446
+        },
+        {
+          "paper_id": "arxiv:2405.02793",
+          "rank": 2,
+          "title": "ImageInWords: Unlocking Hyper-Detailed Image Descriptions",
+          "score": 0.7856342792510986
+        },
+        {
+          "paper_id": "arxiv:2505.07704",
+          "rank": 3,
+          "title": "Through the Looking Glass: Common Sense Consistency Evaluation of Weird Images",
+          "score": 0.7813658118247986
+        },
+        {
+          "paper_id": "arxiv:2507.18915",
+          "rank": 4,
+          "title": "Mining Contextualized Visual Associations from Images for Creativity Understanding",
+          "score": 0.7803217172622681
+        },
+        {
+          "paper_id": "arxiv:2410.20890",
+          "rank": 5,
+          "title": "Generative Example-Based Explanations: Bridging the Gap between Generative Modeling and Explainability",
+          "score": 0.7801640629768372
+        }
+      ],
+      "first_title_mentioning_hallucination_in_top_100": 43
+    }
+  },
+  "audit": {
+    "previous": "09fef16a43604fff8c31e594533f75c9",
+    "unchanged_prior_mappings": 4878,
+    "checked_mappings": 14883,
+    "distinct_vector_keys": 14882,
+    "cohort_union": 10004,
+    "missing_cohort_papers": 0,
+    "target_rows": [
+      {
+        "paper_id": "arxiv:2406.18139",
+        "row_id": 159803,
+        "event_id": "56b17eaa66790cf5a4afe440a63601dd4b07e84a75df58349e63df34eeca3ea9",
+        "embedding_text_hash": "dd8e5f7eb7d01aa4a89fe1e7794d8fd58cad02ddeb962450afb94d9b1797a588",
+        "categories": [
+          "cs.CL",
+          "cs.CV"
+        ],
+        "published": "2024-06-26"
+      },
+      {
+        "paper_id": "arxiv:2410.23317",
+        "row_id": 204203,
+        "event_id": "ee67912b81ed51a80725df66f5cd761ae857f1eb2ce660bd6b2503ec53219dfc",
+        "embedding_text_hash": "cbb3df568f5e98d223c6ebae23e28a58cf020b89c4a3fa71eaaf46a595c7135f",
+        "categories": [
+          "cs.AI",
+          "cs.CL",
+          "cs.CV",
+          "cs.DC",
+          "cs.PF"
+        ],
+        "published": "2024-10-29"
+      }
+    ],
+    "reencoded_cosine": {
+      "arxiv:2406.18139": 1.000000238418579,
+      "arxiv:2410.23317": 1.0
+    }
+  }
+}

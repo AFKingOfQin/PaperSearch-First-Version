@@ -3,13 +3,23 @@ import hashlib
 import json
 import sqlite3
 import struct
+from collections import Counter
 from itertools import zip_longest
 
 import pyarrow as pa
 import pyarrow.parquet as pq
 
 from .contracts import digest
-from .encoder import DIM, ELIGIBILITY, MAX_TOKENS, RECIPE, eligible, unpack_vector
+from .encoder import (
+    DIM,
+    ELIGIBILITY,
+    LEGACY_ELIGIBILITY,
+    MAX_TOKENS,
+    RECIPE,
+    eligible,
+    recent_cs,
+    unpack_vector,
+)
 from .derivation import TEST_KIND, WIDTH, cache_key, fixture_vector
 
 STR = pa.string()
@@ -101,6 +111,70 @@ def flat_row(number, record):
     )
 
 
+def include_date(bounds, day):
+    if not day:
+        return bounds
+    if bounds is None:
+        return [day, day]
+    return [min(bounds[0], day), max(bounds[1], day)]
+
+
+class SemanticScope:
+    """Count current papers and actual vector mappings, including cross-listed categories."""
+
+    def __init__(self, cohorts):
+        self.recent_candidates = 0
+        self.recent_indexed = 0
+        self.categories = Counter()
+        self.years = Counter()
+        self.recent_dates = None
+        self.other_dates = None
+        self.other_indexed = 0
+        self.cohorts = [
+            dict(
+                start=c["start"],
+                before=c["before"],
+                categories=c["categories"],
+                eligible=0,
+                indexed=0,
+            )
+            for c in cohorts
+        ]
+
+    def add(self, payload, indexed):
+        day = payload["published"]
+        if recent_cs(payload):
+            self.recent_candidates += 1
+            for cohort in self.cohorts:
+                if (
+                    day >= cohort["start"]
+                    and (not cohort["before"] or day < cohort["before"])
+                    and all(c in payload["categories"] for c in cohort["categories"])
+                ):
+                    cohort["eligible"] += 1
+                    cohort["indexed"] += int(indexed)
+            if indexed:
+                self.recent_indexed += 1
+                self.categories.update(set(payload["categories"]))
+                self.years[day[:4]] += 1
+                self.recent_dates = include_date(self.recent_dates, day)
+        elif indexed:
+            self.other_indexed += 1
+            self.other_dates = include_date(self.other_dates, day)
+
+    def summary(self):
+        return dict(
+            recent_eligible=self.recent_candidates,
+            recent_indexed=self.recent_indexed,
+            recent_dates=self.recent_dates,
+            recent_categories=dict(self.categories),
+            recent_years=dict(self.years),
+            other_indexed=self.other_indexed,
+            other_dates=self.other_dates,
+            cohorts=self.cohorts,
+        )
+
+
 def parquet_rows(path, schema):
     with pq.ParquetFile(path) as parquet:
         if parquet.schema_arrow != schema:
@@ -128,11 +202,16 @@ def validate(directory, expected_sha):
     vectors = parquet_rows(directory / "test-vectors.parquet", VECTORS)
     vector = next(vectors, None)
     indexed = fixtures = semantic_count = candidate_count = truncated = title_only = 0
+    semantic_dates = None
+    scope = SemanticScope(manifest.get("semantic_scope", {}).get("cohorts", []))
     semantic_rows = (
         parquet_rows(directory / "semantic.parquet", SEMANTIC) if semantic else iter(())
     )
     entry = next(semantic_rows, None)
-    if semantic and (recipe != RECIPE or manifest["eligibility"] != ELIGIBILITY):
+    if semantic and (
+        recipe != RECIPE
+        or manifest["eligibility"] not in (LEGACY_ELIGIBILITY, ELIGIBILITY)
+    ):
         raise ValueError("Unsupported semantic package recipe or scope")
     previous_id = ""
     db = sqlite3.connect(
@@ -190,13 +269,18 @@ def validate(directory, expected_sha):
             previous_id = paper
             corpus.add(row)
             fixtures += paper.startswith("fixture:")
-            if semantic and eligible(paper):
+            new_policy = semantic and manifest["eligibility"] == ELIGIBILITY
+            candidate = semantic and eligible(paper, payload if new_policy else None)
+            mapped = entry is not None and entry["row_id"] == number
+            if new_policy:
+                scope.add(payload, mapped)
+            if candidate:
                 candidate_count += 1
-            if entry is not None and entry["row_id"] == number:
+            if mapped:
                 raw = struct.pack("<I", entry["tokens"]) + entry["value"]
                 length = unpack_vector(raw)
                 if (
-                    not eligible(paper)
+                    not candidate
                     or entry["vector_row"] != semantic_count
                     or (entry["paper_id"], entry["event_id"], entry["text_hash"])
                     != (paper, event, text_hash)
@@ -205,6 +289,7 @@ def validate(directory, expected_sha):
                 ):
                     raise ValueError("Invalid semantic vector identity or row mapping")
                 semantic_count += 1
+                semantic_dates = include_date(semantic_dates, payload["published"])
                 truncated += length > MAX_TOKENS
                 title_only += not payload["abstract"]
                 entry = next(semantic_rows, None)
@@ -232,6 +317,11 @@ def validate(directory, expected_sha):
         vectors.close()
         if semantic:
             semantic_rows.close()
+    if (
+        "semantic_submission_dates" in manifest
+        and manifest["semantic_submission_dates"] != semantic_dates
+    ):
+        raise ValueError("Semantic submission dates do not match published vectors")
     counts = dict(
         metadata=corpus.count,
         lexical=corpus.count,
@@ -240,6 +330,11 @@ def validate(directory, expected_sha):
         test_vectors=indexed,
     )
     if semantic:
+        if (
+            manifest["eligibility"] == ELIGIBILITY
+            and manifest.get("semantic_scope") != scope.summary()
+        ):
+            raise ValueError("Semantic scope does not match published mappings")
         counts.update(
             semantic_eligible=candidate_count,
             semantic_truncated=truncated,

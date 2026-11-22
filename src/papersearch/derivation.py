@@ -76,6 +76,15 @@ def configure(
     return configure_recipe(engine, recipe)
 
 
+def enqueue_jobs(conn, recipe, papers):
+    conn.execute(
+        text("""INSERT INTO derived_jobs(paper_id,text_hash,kind,model_id,model_revision,preprocessing)
+        VALUES(:paper,:hash,:kind,:model_id,:model_revision,:preprocessing)
+        ON DUPLICATE KEY UPDATE job_id=derived_jobs.job_id"""),
+        [dict(paper=p, hash=h, **recipe) for p, h in papers],
+    )
+
+
 def configure_recipe(engine, recipe):
     with engine.begin() as conn:
         conn.execute(
@@ -111,12 +120,7 @@ def configure_recipe(engine, recipe):
             ).all()
             if not page:
                 return recipe
-            conn.execute(
-                text("""INSERT INTO derived_jobs(paper_id,text_hash,kind,model_id,model_revision,preprocessing)
-                VALUES(:paper,:hash,:kind,:model_id,:model_revision,:preprocessing)
-                ON DUPLICATE KEY UPDATE job_id=derived_jobs.job_id"""),
-                [dict(paper=p, hash=h, **recipe) for p, h in page],
-            )
+            enqueue_jobs(conn, recipe, page)
             after = page[-1].paper_id
 
 
@@ -187,12 +191,18 @@ def store_shard(root, generated, *, semantic=False):
     return locations, reused
 
 
-def process_batch(engine, root, limit, lease_seconds, encoder=None, *, use_cache=True):
+def process_batch(
+    engine, root, limit, lease_seconds, encoder=None, *, use_cache=True, job_ids=None
+):
     jobs = []
-    for _ in range(limit):
-        job = claim_job(engine, lease_seconds, kind=KIND if encoder else TEST_KIND)
+    for job_id in job_ids if job_ids is not None else [None] * limit:
+        job = claim_job(
+            engine, lease_seconds, kind=KIND if encoder else TEST_KIND, job_id=job_id
+        )
         if job is None:
-            break
+            if job_id is None:
+                break
+            continue
         job["cache_key"] = cache_key(job["text_hash"], job)
         jobs.append(job)
     counts = Counter(claimed=len(jobs))

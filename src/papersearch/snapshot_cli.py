@@ -1,5 +1,6 @@
 # AI-generated code (Codex): commands for materializing fixture work and publishing a pinned corpus.
 import json
+from datetime import date
 from pathlib import Path
 
 from .derivation import (
@@ -40,6 +41,19 @@ def add_commands(commands):
     semantic.add_argument("--batch-size", type=int, default=8)
     semantic.add_argument("--max-jobs", type=int, default=100000)
     semantic.add_argument("--lease-seconds", type=int, default=180)
+    cohort = actions.add_parser(
+        "backfill",
+        help="Encode eligible published papers in a calendar and category slice",
+    )
+    cohort.add_argument("--start", required=True, type=date.fromisoformat)
+    cohort.add_argument("--before", required=True, type=date.fromisoformat)
+    cohort.add_argument(
+        "--category",
+        action="append",
+        default=[],
+        help="Require this category (repeat for an intersection)",
+    )
+    cohort.add_argument("--batch-size", type=int, default=16)
     actions.add_parser("retry-semantic").add_argument("job_id", type=int)
     work = actions.add_parser(
         "work", help="Run a bounded number of fixture job attempts"
@@ -51,9 +65,10 @@ def add_commands(commands):
     actions.add_parser(
         "retry", help="Release a terminally failed fixture job for retry"
     ).add_argument("job_id", type=int)
-    actions.add_parser(
+    build = actions.add_parser(
         "build", help="Build, validate and publish one consistent package"
     )
+    build.add_argument("--page-size", type=int, default=32)
     actions.add_parser(
         "verify", help="Verify the active package including every row mapping"
     )
@@ -71,6 +86,12 @@ def run(args, engine):
         )
     elif args.action == "configure-semantic":
         result = configure_recipe(engine, RECIPE)
+    elif args.action == "backfill":
+        from .semantic_backfill import backfill
+
+        result = backfill(
+            engine, args.root, args.start, args.before, args.category, args.batch_size
+        )
     elif args.action == "embed":
         result = run_semantic(
             engine, args.root, args.batch_size, args.max_jobs, args.lease_seconds
@@ -91,7 +112,7 @@ def run(args, engine):
         retry_job(engine, args.job_id)
         result = dict(requeued=args.job_id)
     elif args.action == "build":
-        result = publish_snapshot(engine, args.root)
+        result = publish_snapshot(engine, args.root, page_size=args.page_size)
     elif args.action == "verify":
         _, result = active_snapshot(engine, args.root)
     else:

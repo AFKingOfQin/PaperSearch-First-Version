@@ -1,0 +1,276 @@
+{
+  "project": "papersearch-m5-real",
+  "database": "papersearch",
+  "mysql_volume": "papersearch-m5-real_mysql-data",
+  "mysql_server_uuid": "3a69d21a-e5e4-11f1-a52c-fea6df06e48a",
+  "base_commit": "7f2273c58242e9498685ce6d9cdd4f420db6d623",
+  "working_source_sha256": {
+    "encoder.py": "eebab782c651f867cc0f1af20e2b42d50d7d7e818b83ab8391e1e1bf079e65ac",
+    "derivation.py": "64ac849ecd95aee9be89a8236a2c4770fe6fba593e6662260dd69ebc5f24339e",
+    "semantic_backfill.py": "16d05e07a1c370a3649ab2aa7a3a41ef3700e9a5397da9ebeb1183a376eb6660",
+    "storage/jobs.py": "772f3e40b385241b18f204162ceb7690cd7a97b15129637a1eb4533a0d45671b",
+    "storage/metadata.py": "58580e249485e6a30737e06a09b661a3c33d37872a252b4c50244b2351eef89a",
+    "snapshot_cli.py": "d5034f6f47d354ba88c35910c5208aa3aa014305b35e443cef526a44ca18fe23",
+    "snapshots.py": "805779ea7d89951d1bbffd7c603587becbc10fa75c23345445e7c35083db7968",
+    "snapshot_format.py": "67cc726090f27551a88cbcc229f25474da187ae7bfd43c4bfb7b7e71d34a1b3b",
+    "reviewer.py": "1c613fd5ab0e392353d6701662de5d6cc5cbe79c413f293c6590059ba1c31ea4",
+    "semantic_search.py": "f10239bc88b38a9ee7223c3f0514772c14e78f397a3c10b62d3b9b3471e5a8c1"
+  },
+  "selection": "Calendar dates and categories; deterministic, no random sampling for recent CS/ML.",
+  "previous": "09fef16a43604fff8c31e594533f75c9",
+  "published": "91432e599277430688c2ab978babca2c",
+  "corpus_sha256": "225aa138a621f57e39cc00068cef60224353d8e7a634f63baa38e75f6e6f4bbe",
+  "recipe": {
+    "kind": "bge-onnx-cpu-v1",
+    "model_id": "BAAI/bge-small-en-v1.5",
+    "model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+    "preprocessing": "title-lf-abstract-cls128-v1"
+  },
+  "coverage": {
+    "fixture_eligible": 0,
+    "lexical": 451283,
+    "metadata": 451283,
+    "semantic": 14883,
+    "semantic_eligible": 356161,
+    "semantic_title_only": 0,
+    "semantic_truncated": 13325,
+    "test_vectors": 0
+  },
+  "cohorts": [
+    {
+      "before": null,
+      "categories": [
+        "cs.CL",
+        "cs.CV"
+      ],
+      "eligible": 4109,
+      "indexed": 4109,
+      "start": "2024-01-01"
+    },
+    {
+      "before": "2025-01-01",
+      "categories": [
+        "stat.ML"
+      ],
+      "eligible": 5908,
+      "indexed": 5908,
+      "start": "2024-01-01"
+    }
+  ],
+  "queue": {
+    "pending": 341278,
+    "done": 14883
+  },
+  "pilot_replay": {
+    "before": "2024-04-01",
+    "categories": [
+      "cs.CL",
+      "cs.CV"
+    ],
+    "claimed": 0,
+    "seconds": 9.815,
+    "selected": 367,
+    "snapshot": "09fef16a43604fff8c31e594533f75c9",
+    "start": "2024-01-01",
+    "superseded": 0
+  },
+  "pending_cache_reconciliation": {
+    "claimed": 1,
+    "computed": 0,
+    "hits": 1,
+    "completed": 1
+  },
+  "bm25_file_sha256_before": "25938c279e7bff2a4a362cb161c7761c766479ffc5006fb2e4fe74d294c51150",
+  "bm25_file_sha256_after": "25938c279e7bff2a4a362cb161c7761c766479ffc5006fb2e4fe74d294c51150",
+  "baseline_queries": {
+    "VLM KV Cache": [
+      {
+        "rank": 1,
+        "title": "The VLT-FLAMES Survey of Massive Stars",
+        "paper_id": "arxiv:0803.2820"
+      },
+      {
+        "rank": 2,
+        "title": "Neutralino relic density from ILC measurements in the CPV MSSM",
+        "paper_id": "arxiv:0803.2584"
+      },
+      {
+        "rank": 3,
+        "title": "Discovery of VHE gamma-rays from RGB J0152+017",
+        "paper_id": "arxiv:0808.2466"
+      }
+    ],
+    "How can an image-and-text transformer use less memory for the attention keys and values it saves during generation?": [
+      {
+        "rank": 1,
+        "title": "Probabilistic Visual Secret Sharing Schemes for Gray-scale images and Color images",
+        "paper_id": "arxiv:0712.4183"
+      },
+      {
+        "rank": 2,
+        "title": "Bloomier Filters: A second look",
+        "paper_id": "arxiv:0807.0928"
+      },
+      {
+        "rank": 3,
+        "title": "The Rate Loss of Single-Letter Characterization: The \"Dirty\" Multiple Access Channel",
+        "paper_id": "arxiv:0803.1120"
+      }
+    ]
+  },
+  "environment": {
+    "cpu": "Intel Core i7-12700H",
+    "host_free_kib": 6570052,
+    "docker_memory_bytes": 16626053120,
+    "artifact_drive_free_bytes": 237742862336,
+    "worker_cpus": 2,
+    "worker_limit_gib": 2,
+    "worker_sample_mib": 348.7,
+    "publisher_sample_mib": 76.8,
+    "batch_size": 16
+  },
+  "batches": [
+    {
+      "before": "2024-04-01",
+      "categories": [
+        "cs.CL",
+        "cs.CV"
+      ],
+      "claimed": 367,
+      "completed": 367,
+      "computed": 367,
+      "hits": 0,
+      "seconds": 27.423,
+      "selected": 367,
+      "shards_reused": 0,
+      "snapshot": "09fef16a43604fff8c31e594533f75c9",
+      "start": "2024-01-01",
+      "superseded": 0
+    },
+    {
+      "before": "2025-01-01",
+      "categories": [
+        "cs.CL",
+        "cs.CV"
+      ],
+      "claimed": 1316,
+      "completed": 1316,
+      "computed": 1316,
+      "hits": 0,
+      "seconds": 78.73,
+      "selected": 1316,
+      "shards_reused": 0,
+      "snapshot": "09fef16a43604fff8c31e594533f75c9",
+      "start": "2024-04-01",
+      "superseded": 0
+    },
+    {
+      "before": "2026-01-01",
+      "categories": [
+        "cs.CL",
+        "cs.CV"
+      ],
+      "claimed": 1797,
+      "completed": 1797,
+      "computed": 1797,
+      "hits": 0,
+      "seconds": 140.551,
+      "selected": 1797,
+      "shards_reused": 0,
+      "snapshot": "09fef16a43604fff8c31e594533f75c9",
+      "start": "2025-01-01",
+      "superseded": 0
+    },
+    {
+      "before": "2027-01-01",
+      "categories": [
+        "cs.CL",
+        "cs.CV"
+      ],
+      "claimed": 629,
+      "completed": 629,
+      "computed": 629,
+      "hits": 0,
+      "seconds": 78.788,
+      "selected": 629,
+      "shards_reused": 0,
+      "snapshot": "09fef16a43604fff8c31e594533f75c9",
+      "start": "2026-01-01",
+      "superseded": 0
+    },
+    {
+      "before": "2024-07-01",
+      "categories": [
+        "stat.ML"
+      ],
+      "claimed": 2972,
+      "completed": 2972,
+      "computed": 2972,
+      "hits": 0,
+      "seconds": 273.936,
+      "selected": 2981,
+      "shards_reused": 0,
+      "snapshot": "09fef16a43604fff8c31e594533f75c9",
+      "start": "2024-01-01",
+      "superseded": 0
+    },
+    {
+      "before": "2025-01-01",
+      "categories": [
+        "stat.ML"
+      ],
+      "claimed": 2923,
+      "completed": 2923,
+      "computed": 2923,
+      "hits": 0,
+      "seconds": 287.394,
+      "selected": 2927,
+      "shards_reused": 0,
+      "snapshot": "09fef16a43604fff8c31e594533f75c9",
+      "start": "2024-07-01",
+      "superseded": 0
+    }
+  ],
+  "worker_seconds_sum": 886.822,
+  "first_container_launch": "2026-11-22T15:29:47-06:00",
+  "last_worker_report": "2026-11-22T15:43:23.555983-06:00",
+  "elapsed_seconds_including_gaps_and_overlap": 816.6,
+  "queue_command_seconds": 234.1890042,
+  "validated_publication_seconds": 1352.776,
+  "previous_full_validation_seconds": 72.623,
+  "publication_preconditions": [
+    "Unchanged canonical corpus digest and BM25 count",
+    "Both declared cohorts fully mapped",
+    "All 4,878 prior vector checksums and row identities retained",
+    "Full package validator passed"
+  ],
+  "review_tables_before": {
+    "review_projects": {
+      "rows": 14,
+      "sha256": "09f443fef8c5ba19052b95dc710516d73cb347bd8feee7e8316b3ac1d4eb94d8"
+    },
+    "screening_decisions": {
+      "rows": 6,
+      "sha256": "8132f6026cf1e3d347fd0fcfe52b316097d0ca2fd8971b7113d76432a19d8c96"
+    },
+    "screening_history": {
+      "rows": 10,
+      "sha256": "7ebf48076bedeb02c7d89cfa748ece2e628b27064248e0a2ff5b7dc11fc71f9d"
+    }
+  },
+  "review_tables_after_reviewer_restart": {
+    "review_projects": {
+      "rows": 14,
+      "sha256": "09f443fef8c5ba19052b95dc710516d73cb347bd8feee7e8316b3ac1d4eb94d8"
+    },
+    "screening_decisions": {
+      "rows": 6,
+      "sha256": "8132f6026cf1e3d347fd0fcfe52b316097d0ca2fd8971b7113d76432a19d8c96"
+    },
+    "screening_history": {
+      "rows": 10,
+      "sha256": "7ebf48076bedeb02c7d89cfa748ece2e628b27064248e0a2ff5b7dc11fc71f9d"
+    }
+  },
+  "saved_decision_and_history_response_sha256": "82cebffef81b381d675a12441ceebd7270ab07d54bd593a41bd0c640d6e3aab9"
+}

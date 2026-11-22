@@ -26,17 +26,31 @@ def passage(title, abstract):
     return title + "\n" + abstract if abstract else title
 
 
-# The fixed membership rule also applies to new imports and revisions.
-ELIGIBILITY = "CRC32(UTF-8 paper_id) modulo 100 < 5"
+LEGACY_ELIGIBILITY = "CRC32(UTF-8 paper_id) modulo 100 < 5"
+RECENT_START = "2024-01-01"
+ELIGIBILITY = f"Submitted since {RECENT_START} with any cs.* or stat.ML category, or {LEGACY_ELIGIBILITY}"
 PAYLOAD_BYTES = 4 + DIM * 4
 
 
-def eligible(paper):
-    return zlib.crc32(paper.encode("utf-8")) % 100 < 5
+def recent_cs(payload):
+    return (payload["published"] or "") >= RECENT_START and any(
+        c.startswith("cs.") or c == "stat.ML" for c in payload["categories"]
+    )
+
+
+def eligible(paper, payload=None):
+    return (payload is not None and recent_cs(payload)) or zlib.crc32(
+        paper.encode("utf-8")
+    ) % 100 < 5
 
 
 def eligibility_sql(paper_column, kind):
-    return f"(({kind}='{KIND}' AND MOD(CRC32({paper_column}),100)<5) OR ({kind}<>'{KIND}' AND {paper_column} LIKE 'fixture:%'))"
+    categories = "r.record_json->'$.payload.categories'"
+    recent = f"""(r.record_json->>'$.payload.published' BETWEEN '{RECENT_START}' AND '9999-12-31'
+        AND (JSON_SEARCH({categories},'one','cs.%') IS NOT NULL OR
+             JSON_CONTAINS({categories},JSON_QUOTE('stat.ML'))))"""
+    return f"""(({kind}='{KIND}' AND (MOD(CRC32({paper_column}),100)<5 OR {recent}))
+        OR ({kind}<>'{KIND}' AND {paper_column} LIKE 'fixture:%'))"""
 
 
 def unpack_vector(payload):

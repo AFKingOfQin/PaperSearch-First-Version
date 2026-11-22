@@ -25,3 +25,16 @@ def test_semantic_identity_and_payload():
     assert key != cache_key("b" * 64, RECIPE)
     population = [eligible(f"arxiv:{i}") for i in range(1000)]
     assert 0 < sum(population) < 1000
+
+
+def test_recent_eligibility_uses_submission_and_any_category():
+    paper = next(f"arxiv:{i}" for i in range(100) if not eligible(f"arxiv:{i}"))
+    for day, categories, expected in (
+        ("2023-12-31", ["cs.CV"], False),
+        ("2024-01-01", ["physics.optics", "cs.CL"], True),
+        ("2025-12-01", ["stat.ML"], True),
+        ("2025-12-01", ["stat.ME", "physics.optics"], False),
+        (None, ["cs.AI"], False),
+        ("2024-01-01", [], False),
+    ):
+        assert eligible(paper, dict(published=day, categories=categories)) is expected

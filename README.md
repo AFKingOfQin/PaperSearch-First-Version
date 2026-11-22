@@ -2,7 +2,7 @@
 
 PaperSearch lets you search a published paper collection by title and abstract, inspect revisions and save project-specific screening decisions. Kafka delivers metadata updates to MySQL. The reviewer keeps the revision you labeled and flags changed text for reconsideration. [Reviewer setup, offline demo and real-data reproduction](docs/reviewer.md)
 
-The reviewer offers BM25 over 100,000 real papers and exact cosine search over a published subset. It shows the number of papers each method can search and how often the encoder shortened an input. [Semantic search setup and verification](docs/semantic-ranking.md)
+Exact cosine search covers **14,883 papers**. The 10,005 recent papers include the full vision/language cross-list and every 2024 statistical ML paper in this collection. Another 4,878 come from the historical sample. The interface shows both counts and the collection boundaries. [Semantic results](docs/evidence/reviewer-semantic.json)
 
 The laptop benchmarks measure what happens when papers arrive, text changes, a consumer crashes, or metadata outgrows the published index. [Measured results and reproduction commands](docs/results.md)
 
@@ -13,7 +13,8 @@ On a new Windows checkout, follow the [setup and recovery runbook](docs/runbook.
 | Collection | Current metadata | Searchable with BM25 | Searchable with cosine |
 |---|---:|---:|---:|
 | Offline reviewer demo | 1 | 1 | 0 |
-| Measured arXiv reviewer | 100,000 | 100,000 | 4,878 |
+| Live arXiv reviewer | 451,283 | 451,283 | 14,883 |
+| Original benchmark snapshot | 100,000 | 100,000 | 4,878 |
 | Separate full v287 capacity database | 3,050,173 | 0 | 0 |
 
 Read the [architecture and code walkthrough](docs/architecture.md) for the transaction and publication boundaries, the [data dictionary](docs/data_dictionary.md) for the durable records, and the [CS544 mapping](docs/cs544_mapping.md) for the experiments behind each design choice. The [final acceptance checklist](docs/ACCEPTANCE_CHECKLIST.md) links the project evidence.

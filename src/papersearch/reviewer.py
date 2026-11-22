@@ -75,6 +75,34 @@ with st.expander("Processing status", expanded=False):
 if not active:
     st.info("Publish a search snapshot to begin screening.")
     st.stop()
+coverage = active["coverage"]
+st.caption(f"BM25 searches {coverage['lexical']:,} papers. Semantic search covers {coverage['semantic']:,}.")
+if semantic_scope := active.get("semantic_scope"):
+    recent = semantic_scope["recent_indexed"]
+    pending = semantic_scope["recent_eligible"] - recent
+    st.caption(f"Recent CS/ML semantic coverage: {recent:,} indexed, {pending:,} eligible papers pending. "
+               f"Eligibility includes any cs.* or stat.ML category from 2024-01-01.")
+    if recent:
+        start, end = semantic_scope["recent_dates"]
+        common = [cat for cat, count in semantic_scope["recent_categories"].items() if count == recent]
+        shared = f" All carry {', '.join(common)}." if common else ""
+        st.caption(f"Indexed recent submissions span {start} to {end}.{shared}")
+        for cohort in semantic_scope["cohorts"]:
+            period = f"from {cohort['start']}"
+            if cohort["before"]:
+                period += f" to before {cohort['before']}"
+            st.caption(f"{' + '.join(cohort['categories'])} · {period} · "
+                       f"{cohort['indexed']:,} of {cohort['eligible']:,} papers indexed.")
+        with st.expander("Semantic vectors by year and category"):
+            st.write("By submission year", semantic_scope["recent_years"])
+            st.write("By category (a cross-listed paper counts in each category)", semantic_scope["recent_categories"])
+    other = semantic_scope["other_indexed"]
+    if other:
+        span = semantic_scope["other_dates"]
+        dated = f" ({span[0]} to {span[1]} among dated papers)" if span else ""
+        st.caption(f"The historical ID sample contributes another {other:,} vectors{dated}.")
+elif dates := active.get("semantic_submission_dates"):
+    st.caption(f"Papers with published semantic vectors and known submission dates span {dates[0]} to {dates[1]}.")
 if stats["metadata_generations_behind"]:
     st.warning(
         f"Search is {stats['metadata_generations_behind']} metadata generations behind. "

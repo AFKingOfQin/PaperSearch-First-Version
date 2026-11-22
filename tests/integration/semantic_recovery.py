@@ -5,6 +5,7 @@ import shutil
 import subprocess
 import sys
 import time
+from datetime import date
 from pathlib import Path
 
 import pyarrow as pa
@@ -17,6 +18,7 @@ from papersearch.config import mysql_url
 from papersearch.storage.metadata import apply_file
 from papersearch.snapshots import publish_snapshot, active_snapshot
 from papersearch.semantic_search import SemanticReader
+from papersearch.semantic_backfill import backfill
 from papersearch.lexical import LexicalReader
 from papersearch.snapshot_format import SEMANTIC, file_sha, validate
 
@@ -29,7 +31,7 @@ def main(root):
     ]
     a, b, c = names
 
-    def add(name, version, title, abstract):
+    def add(name, version, title, abstract, **metadata):
         path = root / "input.jsonl"
         path.write_text(
             json.dumps(
@@ -39,6 +41,7 @@ def main(root):
                     source_updated_at=f"2020-01-0{version}T00:00:00Z",
                     title=title,
                     abstract=abstract,
+                    **metadata,
                 )
             )
             + "\n"
@@ -151,6 +154,38 @@ def main(root):
         raise AssertionError("Published vector accepted a different paper revision")
     print(
         "PASS cross-file validation rejected a swapped revision with matching file checksums"
+    )
+
+    fresh, revised, outside = [
+        f"recent-{i}" for i in range(50) if not eligible(f"fixture:recent-{i}")
+    ][:3]
+    text_fields = ("Cross-modal reasoning", "Image and language representations.")
+    add(fresh, 1, *text_fields, published="2024-01-01", categories=["cs.CL", "cs.CV"])
+    add(revised, 1, *text_fields, published="2024-01-01", categories=["math.PR"])
+    add(revised, 2, *text_fields, published="2024-01-01", categories=["stat.ML"])
+    add(outside, 1, *text_fields, published="2023-12-31", categories=["cs.CV"])
+    before = publish_snapshot(engine, root)
+    assert before["semantic_scope"]["recent_eligible"] == 2
+    with engine.connect() as conn:
+        jobs = conn.scalars(
+            text("SELECT paper_id FROM derived_jobs WHERE status='pending'")
+        ).all()
+        assert set(jobs) == {"fixture:" + fresh, "fixture:" + revised}
+
+    def run_slice():
+        return backfill(
+            engine, root, date(2024, 1, 1), date(2025, 1, 1), ["cs.CV", "cs.CL"], 16
+        )
+
+    assert run_slice()["computed"] == 1
+    assert run_slice()["claimed"] == 0
+    assert worker()["hits"] == 1
+    after = publish_snapshot(engine, root)
+    assert after["semantic_scope"]["recent_indexed"] == 2
+    assert after["coverage"]["semantic"] == 5
+    assert active_snapshot(engine, root)[1] == after
+    print(
+        "PASS recent eligibility on import, category-only revision, bounded cohort replay and shared text reuse"
     )
 
 
