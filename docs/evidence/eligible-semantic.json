@@ -1,0 +1,171 @@
+{
+  "snapshot": "c0e77a02d4d94f858ff8c35fe1adbeac",
+  "previous": "2af6901087c44a38be395e9e90ebc4ac",
+  "coverage": {
+    "fixture_eligible": 0,
+    "lexical": 3050173,
+    "metadata": 3050173,
+    "semantic": 486123,
+    "semantic_eligible": 486123,
+    "semantic_title_only": 0,
+    "semantic_truncated": 455052,
+    "test_vectors": 0
+  },
+  "eligible_scope": {
+    "recent_eligible": 351283,
+    "recent_indexed": 351283,
+    "other_indexed": 134840,
+    "recent_dates": [
+      "2024-01-01",
+      "2026-05-21"
+    ],
+    "other_dates": [
+      "1990-01-01",
+      "2026-05-21"
+    ]
+  },
+  "retained_revision_and_vector_hashes": 14883,
+  "jobs": [
+    {
+      "kind": "bge-onnx-cpu-v1",
+      "status": "done",
+      "n": 486123
+    }
+  ],
+  "queries": {
+    "VLM KV Cache": {
+      "seconds": 83.907,
+      "top_three": [
+        {
+          "rank": 1,
+          "paper_id": "arxiv:2605.00789",
+          "title": "Make Your LVLM KV Cache More Lightweight"
+        },
+        {
+          "rank": 2,
+          "paper_id": "arxiv:2603.17803",
+          "title": "Swarm: Co-Activation Aware KVCache Offloading Across Multiple SSDs"
+        },
+        {
+          "rank": 3,
+          "paper_id": "arxiv:2410.03111",
+          "title": "LoRC: Low-Rank Compression for LLMs KV Cache with a Progressive Compression Strategy"
+        }
+      ],
+      "cache_papers_in_first_100": {
+        "arxiv:2410.23317": 35,
+        "arxiv:2406.18139": 76
+      }
+    },
+    "How can an image-and-text transformer use less memory for the attention keys and values it saves during generation?": {
+      "seconds": 0.415,
+      "top_three": [
+        {
+          "rank": 1,
+          "paper_id": "arxiv:2512.23852",
+          "title": "Trellis: Learning to Compress Key-Value Memory in Attention Models"
+        },
+        {
+          "rank": 2,
+          "paper_id": "arxiv:2411.12992",
+          "title": "MemoryFormer: Minimize Transformer Computation by Removing Fully-Connected Layers"
+        },
+        {
+          "rank": 3,
+          "paper_id": "arxiv:2601.11471",
+          "title": "Low-Rank Key Value Attention"
+        }
+      ],
+      "cache_papers_in_first_100": {}
+    },
+    "prediction intervals with conformal inference": {
+      "seconds": 0.509,
+      "top_three": [
+        {
+          "rank": 1,
+          "paper_id": "arxiv:2410.16493",
+          "title": "Building Conformal Prediction Intervals with Approximate Message Passing"
+        },
+        {
+          "rank": 2,
+          "paper_id": "arxiv:2406.07449",
+          "title": "Boosted Conformal Prediction Intervals"
+        },
+        {
+          "rank": 3,
+          "paper_id": "arxiv:2505.08158",
+          "title": "Feature Fitted Online Conformal Prediction for Deep Time Series Forecasting Model"
+        }
+      ],
+      "cache_papers_in_first_100": {}
+    },
+    "gravitational waves from merging black holes": {
+      "seconds": 0.306,
+      "top_three": [
+        {
+          "rank": 1,
+          "paper_id": "arxiv:2508.01414",
+          "title": "Gravitational Waves from Simulated Mergers of 2 and 3 Black Holes"
+        },
+        {
+          "rank": 2,
+          "paper_id": "arxiv:gr-qc/0003027",
+          "title": "Gravitational waves from black hole collisions via an eclectic approach"
+        },
+        {
+          "rank": 3,
+          "paper_id": "arxiv:gr-qc/9710129",
+          "title": "Measuring gravitational waves from binary black hole coalescences: II. the waves' information and its extraction, with and without templates"
+        }
+      ],
+      "cache_papers_in_first_100": {}
+    },
+    "path planning for mobile robots": {
+      "seconds": 0.303,
+      "top_three": [
+        {
+          "rank": 1,
+          "paper_id": "arxiv:2602.09714",
+          "title": "Fast Motion Planning for Non-Holonomic Mobile Robots via a Rectangular Corridor Representation of Structured Environments"
+        },
+        {
+          "rank": 2,
+          "paper_id": "arxiv:2410.20635",
+          "title": "Generating and Optimizing Topologically Distinct Guesses for Mobile Manipulator Path Planning with Path Constraints"
+        },
+        {
+          "rank": 3,
+          "paper_id": "arxiv:2502.16515",
+          "title": "Path Planning using Instruction-Guided Probabilistic Roadmaps"
+        }
+      ],
+      "cache_papers_in_first_100": {}
+    }
+  },
+  "worker": {
+    "new_jobs": 471240,
+    "computed": 471214,
+    "cache_hits": 26,
+    "seconds": 14828.1,
+    "workers": 4
+  },
+  "publication_run": {
+    "started_utc": "2026-11-23T06:30:09.650431654Z",
+    "finished_utc": "2026-11-23T11:47:28.250786072Z",
+    "seconds_including_embedding": 19038.6
+  },
+  "review_fingerprints_matching_before_and_after": {
+    "review_projects": {
+      "rows": 14,
+      "sha256": "09f443fef8c5ba19052b95dc710516d73cb347bd8feee7e8316b3ac1d4eb94d8"
+    },
+    "screening_decisions": {
+      "rows": 6,
+      "sha256": "8132f6026cf1e3d347fd0fcfe52b316097d0ca2fd8971b7113d76432a19d8c96"
+    },
+    "screening_history": {
+      "rows": 10,
+      "sha256": "7ebf48076bedeb02c7d89cfa748ece2e628b27064248e0a2ff5b7dc11fc71f9d"
+    }
+  }
+}

@@ -2,6 +2,7 @@
 import json
 import os
 import sqlite3
+import shutil
 import tempfile
 from contextlib import ExitStack, closing
 from datetime import datetime, timezone
@@ -172,7 +173,7 @@ def write_package(engine, root, directory, snapshot_id, page_size):
     return state
 
 
-def publish_snapshot(engine, root: Path, page_size=32):
+def publish_snapshot(engine, root: Path, page_size=32, *, verify_collection=None, work_dir=None):
     if not 1 <= page_size <= 1024:
         raise ValueError("page_size must be between 1 and 1024")
     bind_store(engine, root)
@@ -181,10 +182,43 @@ def publish_snapshot(engine, root: Path, page_size=32):
     snapshot_id = uuid4().hex
     with tempfile.TemporaryDirectory(prefix=".building-", dir=snapshots) as staging:
         directory = Path(staging) / "package"
-        directory.mkdir()
-        view = write_package(engine, root, directory, snapshot_id, page_size)
+        if work_dir is None:
+            directory.mkdir()
+            view = write_package(engine, root, directory, snapshot_id, page_size)
+        else:
+            # Keep random FTS writes on local storage when publishing to a shared mount.
+            with tempfile.TemporaryDirectory(dir=work_dir) as scratch:
+                view = write_package(engine, root, Path(scratch), snapshot_id, page_size)
+                shutil.copytree(scratch, directory)
+            for path in directory.iterdir():
+                with path.open("rb+") as copied:
+                    os.fsync(copied.fileno())
+            sync_dir(directory)
         sha = file_sha(directory / "manifest.json")
         manifest = validate(directory, sha)
+        if verify_collection is not None:
+            collection = verify_collection(directory, manifest)
+        elif view["active_snapshot"]:
+            with engine.connect() as conn:
+                try:
+                    previous = published_manifest(conn, root, view["active_snapshot"])
+                except FileNotFoundError, ValueError:
+                    # A rebuild can repair a missing or corrupt manifest without inheriting its scope.
+                    previous = {}
+            collection = (
+                previous.get("collection")
+                if previous.get("corpus_sha256") == manifest["corpus_sha256"]
+                else None
+            )
+        else:
+            collection = None
+        if collection is not None:
+            manifest["collection"] = collection
+            write_atomic(
+                directory / "manifest.json",
+                json.dumps(manifest, sort_keys=True, indent=2).encode() + b"\n",
+            )
+            sha = file_sha(directory / "manifest.json")
         directory.rename(snapshots / snapshot_id)
         sync_dir(snapshots)
     crash_at("snapshot-renamed")

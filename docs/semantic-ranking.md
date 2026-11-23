@@ -2,7 +2,7 @@
 
 The reviewer can rank papers by terms shared with the query (BM25) or by the cosine similarity of learned representations of the query and each paper. The original 100,000-paper benchmark published 4,878 vectors selected by a stable hash of each paper ID. The current policy also admits every paper first submitted since January 1, 2024 with any `cs.*` or `stat.ML` category. The historical sample remains eligible and uses the same vector cache. The interface shows the current lexical and semantic counts, how many eligible vectors are ready, how many inputs were shortened and how many used only a title. Both modes open the same revision-aware review and screening controls. [Measurements and evaluation](evidence/phase6-ranking.md) · [Current collection and reproduction](reviewer.md)
 
-The retained reviewer serves 14,883 semantic paper mappings to 14,882 distinct cached vectors. Of those papers, 10,005 are recent (2024-01-01 through 2026-05-21) and 4,878 belong to the 2007–2008 sample. The 341,278 remaining eligible papers have durable pending jobs. [Live ranks and checksums](evidence/reviewer-semantic.json) · [Backfill and publication timings](evidence/semantic-backfill.json)
+The populated reviewer serves all 486,123 papers admitted by its semantic policy. This includes 351,283 recent CS/ML papers and 134,840 additional papers from the archive-wide ID sample. The full-policy backfill took 4 hours 7 minutes with four workers. The complete run including validated publication took 5 hours 17 minutes. [Published coverage and live query results](evidence/eligible-semantic.json)
 
 ## Open the retained reviewer
 
@@ -74,7 +74,7 @@ docker compose -p $project --profile snapshot run --rm --no-deps snapshot snapsh
 & $python scripts/check-semantic-coverage.py http://127.0.0.1:18805 artifacts/semantic-repeat.json
 ```
 
-## What the live queries returned
+## What the initial 14,883-paper release returned
 
 | Semantic query | VL-Cache rank | LOOK-M rank |
 |---|---:|---:|
@@ -116,3 +116,17 @@ docker compose -p $project --profile review run -d --rm --no-deps --name paperse
 docker stop papersearch-m6-no-model
 docker compose -p $project --profile core --profile review stop
 ```
+
+## Backfill every paper admitted by the current policy
+
+The populated reviewer uses the Cornell v287 collection and its existing BGE queue. From this checkout, the following PowerShell command drains the queue with four workers. Jobs commit in small batches, so a repeat run reuses completed work. The publication step verifies full BM25 membership and one semantic mapping per eligible paper before switching the active snapshot.
+
+```powershell
+$repo = (Resolve-Path .).Path
+$env:ARTIFACT_DIR = 'D:/PaperSearch-M5'
+$env:EMBED_CPUS = '8'
+$env:EMBED_MEMORY = '5g'
+docker compose -p papersearch-m5-real --profile embedding run --rm --no-deps --pull never -e PYTHONPATH=/workspace -v "${repo}/src:/workspace:ro" -v "${repo}/scripts:/tasks:ro" -v D:/PaperSearch-M8/input:/source:ro --entrypoint sh embedding -ec 'python -u /tasks/backfill-eligible.py && python -u /tasks/publish-full-arxiv.py /source --publish-only --require-all-semantic --work-dir /tmp'
+```
+
+The reviewer shows completed jobs under **Processing status**. The searchable count changes when the verified snapshot is published. For this collection, the API has a 2 GiB memory limit to hold the model and the 486,123-row exact cosine matrix.

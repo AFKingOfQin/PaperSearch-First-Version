@@ -2,7 +2,7 @@
 
 PaperSearch lets you search a published paper collection by title and abstract, inspect revisions and save project-specific screening decisions. Kafka delivers metadata updates to MySQL. The reviewer keeps the revision you labeled and flags changed text for reconsideration. [Reviewer setup, offline demo and real-data reproduction](docs/reviewer.md)
 
-Exact cosine search covers **14,883 papers**. The 10,005 recent papers include the full vision/language cross-list and every 2024 statistical ML paper in this collection. Another 4,878 come from the historical sample. The interface shows both counts and the collection boundaries. [Semantic results](docs/evidence/reviewer-semantic.json)
+The local reviewer offers BM25 over all **3,050,173 papers** in the pinned Cornell arXiv v287 metadata snapshot, across every date and category in that release. Exact cosine search covers all **486,123 eligible papers**. This includes 351,283 recent CS/ML papers and 134,840 additional papers in the archive-wide ID sample. The interface shows both counts and the collection boundaries. [Start the populated reviewer](docs/reviewer.md#use-a-populated-project) · [Full BM25 publication](docs/reviewer.md#publish-bm25-over-the-complete-cornell-v287-snapshot) · [Semantic results](docs/evidence/eligible-semantic.json)
 
 The laptop benchmarks measure what happens when papers arrive, text changes, a consumer crashes, or metadata outgrows the published index. [Measured results and reproduction commands](docs/results.md)
 
@@ -13,7 +13,7 @@ On a new Windows checkout, follow the [setup and recovery runbook](docs/runbook.
 | Collection | Current metadata | Searchable with BM25 | Searchable with cosine |
 |---|---:|---:|---:|
 | Offline reviewer demo | 1 | 1 | 0 |
-| Live arXiv reviewer | 451,283 | 451,283 | 14,883 |
+| Live arXiv reviewer | 3,050,173 | 3,050,173 | 486,123 |
 | Original benchmark snapshot | 100,000 | 100,000 | 4,878 |
 | Separate full v287 capacity database | 3,050,173 | 0 | 0 |
 

@@ -81,3 +81,19 @@ The selector verifies the downloaded prefix checksum before extracting records. 
 The scale output includes process and container peaks, on-disk index bytes, five individual HTTP timings, and a single capacity observation per gate. MySQL table allocation and service-volume bytes use different accounting. WSL memory includes Docker and any concurrent work. The source, snapshots, volumes and raw logs stay local. [Saved results](evidence/phase5-review.md)
 
 The current snapshot, `91432e599277430688c2ab978babca2c`, serves 451,283 BM25 papers and 14,883 papers in semantic mode. Of the 351,283 recent CS/ML papers, 10,005 have a published mapping and 341,278 await encoding. The vision/language and statistical ML cohorts contain 10,004 distinct papers. An additional recent paper has identical model input and shares a vector. The reviewer also retains the original 4,878 historical mappings. Choose **semantic** in the **Ranking** selector to run these searches. [Live semantic results and mapping audit](evidence/reviewer-semantic.json) · [Measured batch timings](evidence/semantic-backfill.json)
+
+## Publish BM25 over the complete Cornell v287 snapshot
+
+Use the existing reviewer Compose project and the verified capacity input directory. The importer applies missing revisions in bounded transactions. A rerun skips recorded events. The publisher checks every indexed paper, revision and text hash against the full archive digest before switching the active snapshot.
+
+```powershell
+$env:ARTIFACT_DIR = 'D:/PaperSearch-M5'
+$repo = (Resolve-Path .).Path
+docker compose -p papersearch-m5-real --profile snapshot run --rm --no-deps -e PYTHONPATH=/workspace -v D:/PaperSearch-M8/input:/source:ro -v "${repo}/src:/workspace:ro" -v "${repo}/scripts:/tasks:ro" --entrypoint python snapshot -u /tasks/publish-full-arxiv.py /source --work-dir /tmp
+```
+
+After a completed import, add `--publish-only` to rebuild the index. Semantic search uses the compatible vectors already in the reviewer cache. The full BM25 build does not run an embedding worker.
+
+The initial full BM25 snapshot `2af6901087c44a38be395e9e90ebc4ac` contained 3,050,173 metadata records, 3,050,173 BM25 papers and 14,883 semantic mappings.
+
+Snapshot `c0e77a02d4d94f858ff8c35fe1adbeac` serves the same 3,050,173 BM25 papers and every one of the 486,123 papers eligible for semantic search. [Reproduce the full-policy backfill](semantic-ranking.md#backfill-every-paper-admitted-by-the-current-policy)
